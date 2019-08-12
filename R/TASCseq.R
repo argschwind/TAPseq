@@ -15,4 +15,10 @@
 #' @name TASCseq
 #'
 #' @import methods
+#'
+#' @import GenomicRanges
+#' @import BiocGenerics
+#'
+#' @importFrom IRanges IRanges Views
+#'
 NULL
