@@ -18,6 +18,7 @@
 #'
 #' @import GenomicRanges
 #' @import BiocGenerics
+#' @import BSgenome
 #'
 #' @importFrom IRanges IRanges Views
 #'

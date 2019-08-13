@@ -31,10 +31,8 @@
 #' @param parallel (logical) Triggers parallel computing using the \code{BiocParallel} package.
 #'   This requires that a parallel back-end was registered prior to executing the function.
 #'   (default: FALSE).
-#'
 #' @return Either a \code{GRanges} or \code{GRangesList} object containing the
 #'   truncated transcripts.
-#'
 #' @examples
 #' library(TASCseq)
 #' library(GenomicRanges)

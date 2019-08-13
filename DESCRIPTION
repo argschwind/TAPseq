@@ -16,6 +16,7 @@ Imports:
     BiocGenerics,
     S4Vectors,
     GenomeInfoDb,
-    rtracklayer
+    rtracklayer,
+    BSgenome
 Suggests: 
     BiocParallel
