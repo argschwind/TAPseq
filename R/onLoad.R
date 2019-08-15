@@ -55,12 +55,12 @@ check_tool_installation <- function() {
 
   # create tool paths for package options
   tool_opts <- tools
-  names(tool_opts) <- paste0("primer3.", names(tool_opts))
+  names(tool_opts) <- paste0("TASCseq.", names(tool_opts))
 
   ### TO DO: implement better! ---------------------------------------------------------------------
   # add default path to primer3 thermodynamic parameters
   therm_params <- paste0(dirname(tools[["primer3_core"]]), "/primer3_config/")
-  tool_opts[["primer3.thermodynamic_params_path"]] <- therm_params
+  tool_opts[["TASCseq.thermodynamic_params_path"]] <- therm_params
   ### ----------------------------------------------------------------------------------------------
 
   # create package options
