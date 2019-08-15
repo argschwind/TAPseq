@@ -21,5 +21,7 @@
 #' @import BSgenome
 #'
 #' @importFrom IRanges IRanges Views
-#'
+#' @importFrom Biostrings DNAString DNAStringSet start end subseq
+#' @importClassesFrom Biostrings DNAString DNAStringSet
+#' @importClassesFrom IRanges IRanges
 NULL
