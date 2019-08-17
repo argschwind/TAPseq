@@ -12,7 +12,7 @@ Addidtional to all R dependencies, this package requires local installations of 
 TASCseq was developed and tested using Primer3 v.2.3.7 and blastn v.2.6.0. Source code and
 installation instructions can be found under:
 
-Primer3: <http://primer3.org/releases.html>
+Primer3: <http://primer3.org/releases.html><br/>
 BLAST: <https://www.ncbi.nlm.nih.gov/books/NBK279690/>
 
 Please install these tools first and add them to your PATH. For Primer3, it's best to leave the
