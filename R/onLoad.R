@@ -12,6 +12,8 @@ check_tool_installation <- function() {
 
   # get paths to required executables
   tools[["primer3_core"]] <- Sys.which("primer3_core")
+  tools[["makeblastdb"]] <- Sys.which("makeblastdb")
+  tools[["blastn"]] <- Sys.which("blastn")
 
   # NA if a tool is not found
   tools[tools == ""] <- NA
