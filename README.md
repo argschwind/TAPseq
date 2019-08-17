@@ -1,9 +1,45 @@
 # TASCseq
-R package to design PCR primers for TASC-seq.
+An R-package to design PCR primers for TASC-seq.
 
-Let's create sequence templates for primer design for a target gene panel. First we try to infer
-likely polyadenylation (polyA) sites for the selected target genes. We then truncate target gene
-transcripts at the polyA sites, as we assume that this is their 3' end.
+## Installation
+
+The package can be installed from source by using the devtools package:
+```
+devtools::install_github("argschwind/TASCseq")
+```
+
+Addidtional to all R dependencies, this package requires local installations of Primer3 and BLASTn.
+TASCseq was developed and tested using Primer3 v.2.3.7 and blastn v.2.6.0. Source code and
+installation instructions can be found under:
+
+Primer3: <http://primer3.org/releases.html>
+BLAST: <https://www.ncbi.nlm.nih.gov/books/NBK279690/>
+
+Please install these tools first and add them to your PATH. For Primer3, it's best to leave the
+compiled binary files in the src/ directory, as it also contains config files that TASCseq needs.
+
+If you don't want to add the tools to your "global" PATH, you can add the following code to your
+.Rprofile file. This should add the tools to your PATH in R whenever you start a new session.
+```
+Sys.setenv(PATH = paste(Sys.getenv("PATH"), "/absolute/path/to/primer3-x.x.x/src", sep = ":"))
+
+Sys.setenv(PATH = paste(Sys.getenv("PATH"), "/absolute/path/to/blast+/ncbi-blast-x.x.x+/bin",
+                        sep = ":"))
+```
+
+Alternatively you can specify the paths to 3rd party software as arguments when calling TASCseq
+functions (TASCseqInput(), designPrimers(), checkPrimers()).
+
+## Example worflow
+
+This is an example workflow to design outer and inner TASC-seq primers expressed genes within a
+genomic region on chromosome 11 in K562 cells.
+
+### Sequence templates
+
+Let's first create sequence templates for primer design for a target gene panel. First we try to
+infer likely polyadenylation (polyA) sites for the selected target genes. We then truncate target
+gene transcripts at the polyA sites, as we assume that this is their 3' end.
 ```
 library(TASCseq)
 library(GenomicRanges)
@@ -29,6 +65,7 @@ polyA_sites <- inferPolyASites(target_genes, bam = dropseq_bam, polyA_downstream
 # truncate transcripts at inferred polyA sites
 truncated_txs <- truncateTxsPolyA(target_genes, polyA_sites = polyA_sites, parallel = TRUE)
 ```
+
 To create sequence templates for primer design, we extract the genome sequence for the truncated
 transcripts. Here we use Bioconductor's BSgenome, but the genome sequence could also be imported
 from a fasta file into a DNAStringSet object.
@@ -59,6 +96,8 @@ ds_primer <- reverseComplement(DNAString(ds_primer))
 seq_templates <- xscat(tx_seqs, ds_primer)
 names(seq_templates) <- names(tx_seqs)
 ```
+
+### Design outer primers
 
 Primer3 uses boulder-IO records for input and output (see: http://primer3.org/manual.html). TASCseq
 implements TsIO and TsIOList objects, which store Primer3 input and output for TASC-seq primer
@@ -123,7 +162,6 @@ outer_primers <- blastPrimers(outer_primers, blastdb = blastdb, annot = exons, m
 tascseq_primers(outer_primers$HBE1)
 ```
 
-
 To finalize our set of outer primers, we want to choose the best primer per target gene. We use the
 BLAST results to select primers with the fewest exonic, intronic and intergeni off-target hits (in
 that order).
@@ -132,6 +170,7 @@ that order).
 best_outer_primers <- pickPrimers(outer_primers, n = 1, by = "off_targets")
 ```
 
+### Design inner primers
 
 Now we need to repeat the same procedure to design a set of inner nested primers. We extract the PCR
 amplicons of the outer primers and use those as sequence templates.
@@ -156,9 +195,52 @@ inner_primers <- blastPrimers(inner_primers, blastdb = blastdb, annot = exons, m
 best_inner_primers <- pickPrimers(inner_primers, n = 1, by = "off_targets")
 ```
 
+Done! We succesfully designed TASC-seq outer and inner primer sets for our target gene panel.
+```
+mcols(tascseq_primers(best_outer_primers))
+mcols(tascseq_primers(best_inner_primers))
+```
 
-Done! We succesfully designed TASC-seq outer and inner primer panels for our target genes.
+### Multiplex compatibility
+
+As an additional last step, we can verify if the designed primer sets are compatible for PCR
+multiplexing. For that we use Primer3's "check_primers" functionality:
 ```
-tascseq_primers(best_outer_primers)
-tascseq_primers(best_inner_primers)
+# use checkPrimers to run Primer3's "check_primers"
+outer_comp <- checkPrimers(best_outer_primers, primer_opt_tm = 62, primer_min_tm = 57,
+                           primer_max_tm = 65)
+                           
+inner_comp <- checkPrimers(best_inner_primers, primer_opt_tm = 62, primer_min_tm = 57,
+                           primer_max_tm = 65)
 ```
+
+We can now for instance plot the estimated complementarity scores for every pair. We highlight
+pairs with a score higher than 47, which is considered "critical" by Primer3 during primer design
+(see Primer3 for more information).
+```
+library(dplyr)
+library(ggplot2)
+
+# merge outer and inner complementarity scores into one data.frame
+comp <- bind_rows(outer = outer_comp, inner = inner_comp, .id = "set")
+
+# add variable for pairs with any complemetarity score higher than 47
+comp <- comp %>%
+  mutate(high_compl = if_else(primer_pair_compl_any_th > 47 | primer_pair_compl_end_th > 47,
+                              true = "high", false = "ok")) %>% 
+  mutate(high_compl = factor(high_compl, levels = c("ok", "high")))
+                              
+# plot complementarity scores
+ggplot(comp, aes(primer_pair_compl_any_th, primer_pair_compl_end_th)) +
+  facet_wrap(~set, ncol = 2) +
+  geom_point(aes(color = high_compl), alpha = 0.25) +
+  scale_color_manual(values = c("black", "red"), drop = FALSE) +
+  geom_hline(aes(yintercept = 47), colour = "darkgray", linetype = "dashed") +
+  geom_vline(aes(xintercept = 47), colour = "darkgray", linetype = "dashed") +
+  labs(title = "Complementarity scores TASC-seq primer combinations",
+       color = "Complementarity") +
+  theme_bw()
+```
+
+No primer pairs with complementarity scores above 47 were found, so they should be ok to use in
+multiplex PCRs.
