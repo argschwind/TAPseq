@@ -11,6 +11,8 @@ createFasta(genome, output_fasta, annot = NULL, include_genome = TRUE,
 \item{genome}{The \code{\link[BSgenome]{BSgenome}} object of the genome to be used to obtain the
 genome and (optional) transcript sequences.}
 
+\item{output_fasta}{Path to the output fasta file.}
+
 \item{annot}{A \code{\link[GenomicRanges]{GRanges}} object containing all exons of transcripts to
 be considered. Needs to contain \code{transcript_id} and \code{gene_name} metadata columns. To
 correctly identify off-target primer binding events, \code{gene_name} should be the same as the

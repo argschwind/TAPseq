@@ -9,7 +9,7 @@ TASCseqInput(sequence_templates, reverse_primer, product_size_range,
   primer_min_tm = NA, primer_max_tm = NA)
 }
 \arguments{
-\item{sequence_templates}{A \code{\link{DNAStringSet}} object containing all sequence templates.}
+\item{sequence_templates}{A \code{\link[Biostrings]{DNAStringSet}} object containing all sequence templates.}
 
 \item{reverse_primer}{Reverse primer sequence used for all PCR reactions.}
 

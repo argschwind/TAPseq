@@ -3,7 +3,7 @@
 #' This function creates input for TASC-seq primer design from a DNAStringSet containing the
 #' sequence templates.
 #'
-#' @param sequence_templates A \code{\link{DNAStringSet}} object containing all sequence templates.
+#' @param sequence_templates A \code{\link[Biostrings]{DNAStringSet}} object containing all sequence templates.
 #' @param reverse_primer Reverse primer sequence used for all PCR reactions.
 #' @param product_size_range Numerical vector of length 2 specifying the desired length of the
 #'   resulting amplicons.

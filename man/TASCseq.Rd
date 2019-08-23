@@ -11,10 +11,10 @@ TASC-seq.
 }
 \section{Installation}{
 
-In order to use the full functionality, Primer3 needs to be installed and added to PATH.
-Furthermore, the \code{primer3_config} directory containing important config files should be
+In order to use the full functionality, Primer3 and BLAST need to be installed and added to PATH.
+Furthermore, the \code{primer3_config} directory containing important files for Primer3 should be
 located in the same directory as the \code{primer3_core} executable. If this is not practical,
-all functions interacting woth Primer3 have arguments to specify the path to these files.
+all functions interacting with Primer3 have arguments to specify the paths to these files.
 
 For more information on installation see: \url{https://github.com/argschwind/TASCseq}.
 }

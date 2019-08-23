@@ -91,6 +91,8 @@ temperature.}
 
 \item{x}{A \code{TsIO} object.}
 
+\item{value}{A valid value to assign to the chosen slot.}
+
 \item{tascseq_primers}{Slot where designed TASC-seq primers are stored. Not set by user.}
 
 \item{pcr_products}{Slot where PCR products of primers are stored. Not set by user.}

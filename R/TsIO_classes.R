@@ -26,6 +26,7 @@
 #' @param tascseq_primers Slot where designed TASC-seq primers are stored. Not set by user.
 #' @param pcr_products Slot where PCR products of primers are stored. Not set by user.
 #' @param x A \code{TsIO} object.
+#' @param value A valid value to assign to the chosen slot.
 #' @return A \code{TsIO} object.
 #' @seealso \url{http://primer3.org/manual.html} for Primer3 manual.
 #'
@@ -144,6 +145,7 @@ setValidity("TsIO", function(object) {
 #' storing of Primer3 input and output for multiple target genes.
 #'
 #' @param ... Multiple TsIO objects from which a TsIOList object should be created.
+#' @param x A \code{TsIOList} object.
 #' @return A \code{TsIOList} object.
 #' @seealso \link[TASCseq]{TsIO}
 setClass("TsIOList",
@@ -173,10 +175,11 @@ TsIOList <- function(...) {
 
 #' Accessors for TsIO objects
 #'
-#' A set of functions for getting/setting/modifying the data stored in TsIO or TsIOList class
-#' objects.
+#' A set of functions for getting/setting/modifying the data stored in \code{\link[TASCseq]{TsIO}}
+#' or \code{\link[TASCseq]{TsIOList}} class objects.
 #'
-#' @param x A TsIO class object.
+#' @param x A \code{TsIO} or \code{TsIOList} class object.
+#' @param value A valid value to assign to the chosen slot.
 #' @name accessors
 NULL
 

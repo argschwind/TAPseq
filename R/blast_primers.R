@@ -8,6 +8,7 @@
 #'
 #' @param genome The \code{\link[BSgenome]{BSgenome}} object of the genome to be used to obtain the
 #'   genome and (optional) transcript sequences.
+#' @param output_fasta Path to the output fasta file.
 #' @param annot A \code{\link[GenomicRanges]{GRanges}} object containing all exons of transcripts to
 #'   be considered. Needs to contain \code{transcript_id} and \code{gene_name} metadata columns. To
 #'   correctly identify off-target primer binding events, \code{gene_name} should be the same as the
@@ -103,7 +104,7 @@ createFasta <- function(genome, output_fasta, annot = NULL, include_genome = TRU
 #'
 #' Create a database which can be used to estimate potential off-target priming of TASC-seq primers.
 #'
-#' @param bastdb A file path to the blastdb that should be created.
+#' @param blastdb A file path to the blastdb that should be created.
 #' @param fasta A fasta file containing all sequences to be included in the database. Can be created
 #'   with \code{\link[TASCseq]{createFasta}}.
 #' @param makeblastdb Path (character) to the \code{makeblastdb} executable. Usually this is
@@ -111,7 +112,7 @@ createFasta <- function(genome, output_fasta, annot = NULL, include_genome = TRU
 #' @param compression What compression was used when generating the fasta file? Default is "auto",
 #'   which tries to infer compression from fasta filename. Currently only allows for gzip
 #'   compression (.gz file extension).
-#' @title Optional title for BLAST database.
+#' @param title Optional title for BLAST database.
 #' @export
 createBLASTDb <- function(blastdb, fasta, makeblastdb = getOption("TASCseq.makeblastdb"),
                           compression = c("auto", "gzip", "none"), title = "None") {

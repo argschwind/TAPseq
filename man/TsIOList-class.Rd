@@ -19,6 +19,8 @@ TsIOList(...)
 }
 \arguments{
 \item{...}{Multiple TsIO objects from which a TsIOList object should be created.}
+
+\item{x}{A \code{TsIOList} object.}
 }
 \value{
 A \code{TsIOList} object.

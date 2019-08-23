@@ -65,9 +65,11 @@ tascseq_primers(x)
 pcr_products(x)
 }
 \arguments{
-\item{x}{A TsIO class object.}
+\item{x}{A \code{TsIO} or \code{TsIOList} class object.}
+
+\item{value}{A valid value to assign to the chosen slot.}
 }
 \description{
-A set of functions for getting/setting/modifying the data stored in TsIO or TsIOList class
-objects.
+A set of functions for getting/setting/modifying the data stored in \code{\link[TASCseq]{TsIO}}
+or \code{\link[TASCseq]{TsIOList}} class objects.
 }

@@ -104,7 +104,7 @@ parsePrimer3Output <- function(object, primer3_output) {
 
 ## HELPER FUNCTIONS ================================================================================
 
-#' Parse Primer3 output into list of named character vectors containing all output per entry
+# Parse Primer3 output into list of named character vectors containing all output per entry
 parse_primer3_output <- function(x) {
 
   # get indices of final elements of each record (separators)
@@ -134,7 +134,7 @@ parse_primer3_output <- function(x) {
 
 }
 
-#' Parse one Primer3 output record and extract designed primers and return them as IRanges object
+# Parse one Primer3 output record and extract designed primers and return them as IRanges object
 parse_primer3_record <- function(x) {
 
   # get sequence id and template

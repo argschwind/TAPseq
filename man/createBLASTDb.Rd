@@ -2,13 +2,15 @@
 % Please edit documentation in R/blast_primers.R
 \name{createBLASTDb}
 \alias{createBLASTDb}
-\title{Optional title for BLAST database.}
+\title{Create BLAST database}
 \usage{
 createBLASTDb(blastdb, fasta,
   makeblastdb = getOption("TASCseq.makeblastdb"),
   compression = c("auto", "gzip", "none"), title = "None")
 }
 \arguments{
+\item{blastdb}{A file path to the blastdb that should be created.}
+
 \item{fasta}{A fasta file containing all sequences to be included in the database. Can be created
 with \code{\link[TASCseq]{createFasta}}.}
 
@@ -19,11 +21,8 @@ inferred when loading/attaching the package.}
 which tries to infer compression from fasta filename. Currently only allows for gzip
 compression (.gz file extension).}
 
-\item{bastdb}{A file path to the blastdb that should be created.}
+\item{title}{Optional title for BLAST database.}
 }
 \description{
-Create BLAST database
-}
-\details{
 Create a database which can be used to estimate potential off-target priming of TASC-seq primers.
 }
