@@ -55,7 +55,7 @@ data("chr11_genes")
 target_genes <- split(chr11_genes, f = chr11_genes$gene_name)
 
 # bam file containing aligned Drop-seq reads
-dropseq_bam <- system.file("extdata", "chr11_k562_dropseq.bam", package = "TASCseq")
+dropseq_bam <- system.file("extdata", "chr11_k562_dropseq.bam", package = "TAPseq")
 
 # infer polyA sites for all target genes with adjusted parameters. parameter values depend on the
 # input data and at this stage it's best to try different settings and check the results

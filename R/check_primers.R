@@ -1,9 +1,9 @@
 #' Check primers for complementarity
 #'
-#' Check a TASCseq primer set, i.e. outer or inner primers for a target gene panel, for potential
+#' Check a TAP-seq primer set, i.e. outer or inner primers for a target gene panel, for potential
 #' complementarity issues when multiplexing. Uses Primer3's \code{check_primers} functionality.
 #'
-#' @param object A \code{\link[TASCseq]{TsIO}} or \code{\link[TASCseq]{TsIOList}} object containing
+#' @param object A \code{\link[TAPseq]{TsIO}} or \code{\link[TAPseq]{TsIOList}} object containing
 #'   designed primers.
 #' @param primer_opt_tm,primer_min_tm,primer_max_tm Optimal, minumum and maximum primer melting
 #'   temperature.
@@ -16,8 +16,8 @@
 #' @export
 setGeneric("checkPrimers",
            function(object, primer_opt_tm = NA, primer_min_tm = NA, primer_max_tm = NA,
-                    thermo_params_path = getOption("TASCseq.thermodynamic_params_path"),
-                    primer3_core = getOption("TASCseq.primer3_core"))
+                    thermo_params_path = getOption("TAPseq.thermodynamic_params_path"),
+                    primer3_core = getOption("TAPseq.primer3_core"))
              standardGeneric("checkPrimers")
 )
 
@@ -27,10 +27,10 @@ setMethod("checkPrimers", "TsIO", function(object, primer_opt_tm, primer_min_tm,
                                            thermo_params_path, primer3_core) {
 
   # extract primers
-  primers <- tascseq_primers(object)
+  primers <- tapseq_primers(object)
 
   # abort if no desinged primers are found
-  if (length(primers) < 2) stop("At least 2 TASC-seq primers needed!", call. = FALSE)
+  if (length(primers) < 2) stop("At least 2 TAP-seq primers needed!", call. = FALSE)
 
   # check primers using Primer3
   check_primers(primers, primer_opt_tm = primer_opt_tm, primer_min_tm = primer_min_tm,
@@ -45,10 +45,10 @@ setMethod("checkPrimers", "TsIOList", function(object, primer_opt_tm, primer_min
                                                thermo_params_path, primer3_core) {
 
   # extract primers
-  primers <- tascseq_primers(object)
+  primers <- tapseq_primers(object)
 
   # abort if no desinged primers are found
-  if (length(primers) < 2) stop("At least 2 TASC-seq primers needed!", call. = FALSE)
+  if (length(primers) < 2) stop("At least 2 TAP-seq primers needed!", call. = FALSE)
 
   # check primers using Primer3
   check_primers(primers, primer_opt_tm = primer_opt_tm, primer_min_tm = primer_min_tm,
@@ -60,7 +60,7 @@ setMethod("checkPrimers", "TsIOList", function(object, primer_opt_tm, primer_min
 
 # HELPER FUNCTIONS =================================================================================
 
-# check primers for a set stored in an IRanges object (output of tascseq_primers())
+# check primers for a set stored in an IRanges object (output of tapseq_primers())
 check_primers <- function(primers, primer_opt_tm, primer_min_tm, primer_max_tm,
                           thermo_params_path, primer3_core) {
 

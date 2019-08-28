@@ -5,30 +5,30 @@
 \alias{blastPrimers}
 \alias{blastPrimers,TsIO-method}
 \alias{blastPrimers,TsIOList-method}
-\title{BLAST TASC-seq primers}
+\title{BLAST TAP-seq primers}
 \usage{
 blastPrimers(object, blastdb, annot, max_mismatch = 0,
   min_aligned = 0.75, tmpdir = tempdir(),
-  blastn = getOption("TASCseq.blastn"))
+  blastn = getOption("TAPseq.blastn"))
 
 \S4method{blastPrimers}{TsIO}(object, blastdb, annot, max_mismatch = 0,
   min_aligned = 0.75, tmpdir = tempdir(),
-  blastn = getOption("TASCseq.blastn"))
+  blastn = getOption("TAPseq.blastn"))
 
 \S4method{blastPrimers}{TsIOList}(object, blastdb, annot,
   max_mismatch = 0, min_aligned = 0.75, tmpdir = tempdir(),
-  blastn = getOption("TASCseq.blastn"))
+  blastn = getOption("TAPseq.blastn"))
 }
 \arguments{
-\item{object}{A \code{\link[TASCseq]{TsIO}} or \code{\link[TASCseq]{TsIOList}} object containing
+\item{object}{A \code{\link[TAPseq]{TsIO}} or \code{\link[TAPseq]{TsIOList}} object containing
 designed primers.}
 
 \item{blastdb}{BLAST database to which primers should be aligned. Can be created with
-\code{\link[TASCseq]{createBLASTDb}}.}
+\code{\link[TAPseq]{createBLASTDb}}.}
 
 \item{annot}{A \code{\link[GenomicRanges]{GRanges}} object containing exons of transcripts, which
 will be used to annotate blast hits on the genome sequence. The same object as used in
-\code{\link[TASCseq]{createFasta}}.}
+\code{\link[TAPseq]{createFasta}}.}
 
 \item{max_mismatch}{Maximum number of mismatches allowed for off-target hits (default: 0).}
 
@@ -41,11 +41,11 @@ align for off-target hits (default: 0.75).}
 loading/attaching the package.}
 }
 \value{
-A \code{\link[TASCseq]{TsIO}} or \code{\link[TASCseq]{TsIOList}} object with the number
-  of potential off-target priming hits added to the TASC-seq primer metadata.
+A \code{\link[TAPseq]{TsIO}} or \code{\link[TAPseq]{TsIOList}} object with the number
+  of potential off-target priming hits added to the TAP-seq primer metadata.
 }
 \description{
-Use BLAST to align designed TASC-seq primers against a genome and transcriptome database to
+Use BLAST to align designed TAP-seq primers against a genome and transcriptome database to
 estimate off-target priming potential. Only hits where at least a specified portion of the
 sequence involving the 3' end of the primer aligns with not more than a certain number of
 mismatches are considered.

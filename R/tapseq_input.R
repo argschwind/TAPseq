@@ -1,6 +1,6 @@
-#' Create TASCseq input from sequence templates
+#' Create TAPseq input from sequence templates
 #'
-#' This function creates input for TASC-seq primer design from a DNAStringSet containing the
+#' This function creates input for TAP-seq primer design from a DNAStringSet containing the
 #' sequence templates.
 #'
 #' @param sequence_templates A \code{\link[Biostrings]{DNAStringSet}} object containing all sequence templates.
@@ -12,9 +12,9 @@
 #'   a sequence template is too short to allow the specified \code{product_size_range}.
 #' @param primer_opt_tm,primer_min_tm,primer_max_tm Optimal, minumum and maximum primer melting
 #'   temperature.
-#' @return \code{\link[TASCseq]{TsIOList}} object.
+#' @return \code{\link[TAPseq]{TsIOList}} object.
 #' @export
-TASCseqInput <- function(sequence_templates, reverse_primer, product_size_range,
+TAPseqInput <- function(sequence_templates, reverse_primer, product_size_range,
                          primer_num_return = 5, min_primer_region = 100, primer_opt_tm = NA,
                          primer_min_tm = NA, primer_max_tm = NA) {
 
@@ -39,13 +39,13 @@ TASCseqInput <- function(sequence_templates, reverse_primer, product_size_range,
 
 #' Create boulder IO record
 #'
-#' Takes a \code{\link[TASCseq]{TsIO}} or \code{\link[TASCseq]{TsIOList}} object and converts it
+#' Takes a \code{\link[TAPseq]{TsIO}} or \code{\link[TAPseq]{TsIOList}} object and converts it
 #' into a boulder IO record for Primer3. Essentially it converts it into a list of character vectors
 #' that each contain the tag and the value in the form: "TAG=VALUE". More on this format can be
 #' found in the \href{http://primer3.org/manual.html}{Primer3 manual}.
 #'
 #' This function is usually not needed by the user, because functions such as
-#' \code{\link[TASCseq]{designPrimers}} handle IO record generation. However, this function can for
+#' \code{\link[TAPseq]{designPrimers}} handle IO record generation. However, this function can for
 #' instance be useful to generate IO records, write them to a file and pass them to Primer3 in the
 #' conventional way.
 #'
@@ -56,7 +56,7 @@ TASCseqInput <- function(sequence_templates, reverse_primer, product_size_range,
 #' @seealso \url{http://primer3.org/manual.html} for Primer3 manual.
 #' @export
 setGeneric("createIORecord",
-           function(object, thermo_params_path = getOption("TASCseq.thermodynamic_params_path"))
+           function(object, thermo_params_path = getOption("TAPseq.thermodynamic_params_path"))
              standardGeneric("createIORecord")
 )
 
@@ -68,7 +68,7 @@ setMethod("createIORecord", "TsIO", function(object, thermo_params_path) {
   slot_names <- slotNames(object)
 
   # exclude any slots intended for output
-  output_slots <- c("tascseq_primers", "pcr_products", "blast_off_targets")
+  output_slots <- c("tapseq_primers", "pcr_products", "blast_off_targets")
   slot_names <- slot_names[!slot_names %in% output_slots]
 
   # exclude min_primer_region and product_size_range, since it's are processed separately

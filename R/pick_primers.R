@@ -1,12 +1,12 @@
-#' Pick best TASC-seq primers
+#' Pick best TAP-seq primers
 #'
 #' Pick based primers from designed primers for every target based on Primer3 penalty score or
-#' off-target priming estimated with \code{\link[TASCseq]{blastPrimers}}.
+#' off-target priming estimated with \code{\link[TAPseq]{blastPrimers}}.
 #'
 #' If \code{by} is set to \code{off_targets} top primers are picked based on the lowest number of
 #' exonic, intronic and intergenic off-targets (in that priority).
 #'
-#' @param object A \code{\link[TASCseq]{TsIO}} or \code{\link[TASCseq]{TsIOList}} object containing
+#' @param object A \code{\link[TAPseq]{TsIO}} or \code{\link[TAPseq]{TsIOList}} object containing
 #'   designed primers.
 #' @param n The number of top primers to pick (default: 1, which returns the best primer).
 #' @param by Attribute by which primers should be picked. Can be either \code{penalty} or
@@ -26,7 +26,7 @@ setMethod("pickPrimers", "TsIO", function(object, n, by) {
   by <- match.arg(by)
 
   # get all primers and their pcr products
-  primers <- tascseq_primers(object)
+  primers <- tapseq_primers(object)
   pcr_prods <- pcr_products(object)
 
   if (length(primers) > 0) {
@@ -50,7 +50,7 @@ setMethod("pickPrimers", "TsIO", function(object, n, by) {
     picked_pcr_prods <- pcr_prods[names(picked_primers)]
 
     # replace primersand pcr products in object by picked primers and return object
-    tascseq_primers(object) <- picked_primers
+    tapseq_primers(object) <- picked_primers
     pcr_products(object) <- picked_pcr_prods
     return(object)
 

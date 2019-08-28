@@ -1,10 +1,10 @@
-Package: TASCseq
+Package: TAPseq
 Type: Package
-Title: TASC-seq primer design
-Version: 0.1.0.9001
+Title: TAP-seq primer design
+Version: 0.2.0
 Authors@R: person("Andreas", "Gschwind", email = "andreas.gschwind@stanford.edu",
                   role = c("aut", "cre"))
-Description: Design and assess TASC-seq primers using Primer3 and BLAST.
+Description: Design and assess TAP-seq primers using Primer3 and BLAST.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true

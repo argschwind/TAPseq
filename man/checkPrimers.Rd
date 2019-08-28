@@ -9,21 +9,21 @@
 \usage{
 checkPrimers(object, primer_opt_tm = NA, primer_min_tm = NA,
   primer_max_tm = NA,
-  thermo_params_path = getOption("TASCseq.thermodynamic_params_path"),
-  primer3_core = getOption("TASCseq.primer3_core"))
+  thermo_params_path = getOption("TAPseq.thermodynamic_params_path"),
+  primer3_core = getOption("TAPseq.primer3_core"))
 
 \S4method{checkPrimers}{TsIO}(object, primer_opt_tm = NA,
   primer_min_tm = NA, primer_max_tm = NA,
-  thermo_params_path = getOption("TASCseq.thermodynamic_params_path"),
-  primer3_core = getOption("TASCseq.primer3_core"))
+  thermo_params_path = getOption("TAPseq.thermodynamic_params_path"),
+  primer3_core = getOption("TAPseq.primer3_core"))
 
 \S4method{checkPrimers}{TsIOList}(object, primer_opt_tm = NA,
   primer_min_tm = NA, primer_max_tm = NA,
-  thermo_params_path = getOption("TASCseq.thermodynamic_params_path"),
-  primer3_core = getOption("TASCseq.primer3_core"))
+  thermo_params_path = getOption("TAPseq.thermodynamic_params_path"),
+  primer3_core = getOption("TAPseq.primer3_core"))
 }
 \arguments{
-\item{object}{A \code{\link[TASCseq]{TsIO}} or \code{\link[TASCseq]{TsIOList}} object containing
+\item{object}{A \code{\link[TAPseq]{TsIO}} or \code{\link[TAPseq]{TsIOList}} object containing
 designed primers.}
 
 \item{primer_opt_tm, primer_min_tm, primer_max_tm}{Optimal, minumum and maximum primer melting
@@ -39,7 +39,7 @@ inferred when loading/attaching the package.}
 A \code{\link[base]{data.frame}} with \code{check_primers} results.
 }
 \description{
-Check a TASCseq primer set, i.e. outer or inner primers for a target gene panel, for potential
+Check a TAP-seq primer set, i.e. outer or inner primers for a target gene panel, for potential
 complementarity issues when multiplexing. Uses Primer3's \code{check_primers} functionality.
 }
 \section{Methods (by class)}{

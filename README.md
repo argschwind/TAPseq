@@ -1,22 +1,22 @@
-# TASCseq
-An R-package to design PCR primers for TASC-seq.
+# TAPseq
+An R-package to design PCR primers for TAP-seq.
 
 ## Installation
 
 The package can be installed from source by using the devtools package:
 ```
-devtools::install_github("argschwind/TASCseq")
+devtools::install_github("argschwind/TAPseq")
 ```
 
 Addidtional to all R dependencies, this package requires local installations of Primer3 and BLASTn.
-TASCseq was developed and tested using Primer3 v.2.3.7 and blastn v.2.6.0. Source code and
+TAPseq was developed and tested using Primer3 v.2.3.7 and blastn v.2.6.0. Source code and
 installation instructions can be found under:
 
 Primer3: <http://primer3.org/releases.html><br/>
 BLAST: <https://www.ncbi.nlm.nih.gov/books/NBK279690/>
 
 Please install these tools first and add them to your PATH. For Primer3, it's best to leave the
-compiled binary files in the src/ directory, as it also contains config files that TASCseq needs.
+compiled binary files in the src/ directory, as it also contains config files that TAPseq needs.
 
 If you don't want to add the tools to your "global" PATH, you can add the following code to your
 .Rprofile file. This should add the tools to your PATH in R whenever you start a new session.
@@ -27,12 +27,12 @@ Sys.setenv(PATH = paste(Sys.getenv("PATH"), "/absolute/path/to/blast+/ncbi-blast
                         sep = ":"))
 ```
 
-Alternatively you can specify the paths to 3rd party software as arguments when calling TASCseq
-functions (TASCseqInput(), designPrimers(), checkPrimers()).
+Alternatively you can specify the paths to 3rd party software as arguments when calling TAPseq
+functions (TAPseqInput(), designPrimers(), checkPrimers()).
 
 ## Example worflow
 
-This is an example workflow to design outer and inner TASC-seq primers expressed genes within a
+This is an example workflow to design outer and inner TAP-seq primers expressed genes within a
 genomic region on chromosome 11 in K562 cells.
 
 ### Sequence templates
@@ -41,7 +41,7 @@ Let's first create sequence templates for primer design for a target gene panel.
 infer likely polyadenylation (polyA) sites for the selected target genes. We then truncate target
 gene transcripts at the polyA sites, as we assume that this is their 3' end.
 ```
-library(TASCseq)
+library(TAPseq)
 library(GenomicRanges)
 library(BiocParallel)
 
@@ -53,7 +53,7 @@ target_genes <- chr11_genes
 target_genes <- split(chr11_genes, f = chr11_genes$gene_name)
 
 # K562 Drop-seq read data (this is just a small example file within the R package)
-dropseq_bam <- system.file("extdata", "chr11_k562_dropseq.bam", package = "TASCseq")
+dropseq_bam <- system.file("extdata", "chr11_k562_dropseq.bam", package = "TAPseq")
 
 # register backend for parallelization
 register(MulticoreParam(workers = 5))
@@ -99,8 +99,8 @@ names(seq_templates) <- names(tx_seqs)
 
 ### Design outer primers
 
-Primer3 uses boulder-IO records for input and output (see: http://primer3.org/manual.html). TASCseq
-implements TsIO and TsIOList objects, which store Primer3 input and output for TASC-seq primer
+Primer3 uses boulder-IO records for input and output (see: http://primer3.org/manual.html). TAPseq
+implements TsIO and TsIOList objects, which store Primer3 input and output for TAP-seq primer
 design in R's S4 class system. They serve as the users interface to Primer3 during primer design.
 
 First we create Primer3 input for outer forward primer design based on the generated sequence
@@ -110,8 +110,8 @@ suitable to work with it.
 # reverse primer used in all PCR reactions.
 reverse_primer <- "AAGCAGTGGTATCAACGCAGAGT"
 
-# create TASCseq IO for outer forward primers with similar melting temperatures like the rev. primer
-outer_primers <- TASCseqInput(seq_templates, reverse_primer = reverse_primer,
+# create TAPseq IO for outer forward primers with similar melting temperatures like the rev. primer
+outer_primers <- TAPseqInput(seq_templates, reverse_primer = reverse_primer,
                               product_size_range = c(350, 500), primer_num_return = 5,
                               primer_opt_tm = 62, primer_min_tm = 57, primer_max_tm = 65)
                               
@@ -119,11 +119,11 @@ outer_primers <- TASCseqInput(seq_templates, reverse_primer = reverse_primer,
 outer_primers <- designPrimers(outer_primers)
 
 # the TsIO objects in outer_primers now contain the designed primers and expected amplicons
-tascseq_primers(outer_primers$HBE1)
+tapseq_primers(outer_primers$HBE1)
 pcr_products(outer_primers$HBE1)
 
 # these can also be accessed for all genes
-tascseq_primers(outer_primers)
+tapseq_primers(outer_primers)
 pcr_products(outer_primers)
 ```
 
@@ -159,7 +159,7 @@ outer_primers <- blastPrimers(outer_primers, blastdb = blastdb, annot = exons, m
                               min_aligned = 0.75, tmpdir = tmp_dir)
                               
 # the primers now contain the number of estimated off-targets
-tascseq_primers(outer_primers$HBE1)
+tapseq_primers(outer_primers$HBE1)
 ```
 
 To finalize our set of outer primers, we want to choose the best primer per target gene. We use the
@@ -180,7 +180,7 @@ inner_templates <- pcr_products(best_outer_primers)
 names(inner_templates) <- sub(".primer_left_\\d+", "", names(inner_templates))
 
 # create new TsIO objects for inner primers, note the different product size
-inner_primers <- TASCseqInput(inner_templates, reverse_primer = reverse_primer,
+inner_primers <- TAPseqInput(inner_templates, reverse_primer = reverse_primer,
                               product_size_range = c(150, 300), primer_num_return = 5,
                               primer_opt_tm = 62, primer_min_tm = 57, primer_max_tm = 65)
                               
@@ -195,10 +195,10 @@ inner_primers <- blastPrimers(inner_primers, blastdb = blastdb, annot = exons, m
 best_inner_primers <- pickPrimers(inner_primers, n = 1, by = "off_targets")
 ```
 
-Done! We succesfully designed TASC-seq outer and inner primer sets for our target gene panel.
+Done! We succesfully designed TAP-seq outer and inner primer sets for our target gene panel.
 ```
-mcols(tascseq_primers(best_outer_primers))
-mcols(tascseq_primers(best_inner_primers))
+mcols(tapseq_primers(best_outer_primers))
+mcols(tapseq_primers(best_inner_primers))
 ```
 
 ### Multiplex compatibility
@@ -237,7 +237,7 @@ ggplot(comp, aes(primer_pair_compl_any_th, primer_pair_compl_end_th)) +
   scale_color_manual(values = c("black", "red"), drop = FALSE) +
   geom_hline(aes(yintercept = 47), colour = "darkgray", linetype = "dashed") +
   geom_vline(aes(xintercept = 47), colour = "darkgray", linetype = "dashed") +
-  labs(title = "Complementarity scores TASC-seq primer combinations",
+  labs(title = "Complementarity scores TAP-seq primer combinations",
        color = "Complementarity") +
   theme_bw()
 ```

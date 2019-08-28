@@ -2,12 +2,12 @@
 
 #' TsIO class
 #'
-#' TsIO objects store TASC-seq input and output for Primer3.
+#' TsIO objects store TAP-seq input and output for Primer3.
 #'
 #' The TsIO class is based on the Boulder IO records used by Primer3
 #' (\href{http://primer3.sourceforge.net/primer3_manual.htm}{Primer3 manual}). These objects allow
 #' storing of required input such as the sequence template and additional Primer3 arguments
-#' relevant for TASC-seq primer design. Once Primer3 is used to design TASC-seq primers based on
+#' relevant for TAP-seq primer design. Once Primer3 is used to design TAP-seq primers based on
 #' a TsIO object, the output is added to the TsIO object.
 #'
 #' Use \code{TsIO()} to construct a new TsIO object from scratch.
@@ -23,7 +23,7 @@
 #'   a sequence template is too short to allow the specified \code{product_size_range}.
 #' @param primer_opt_tm,primer_min_tm,primer_max_tm Optimal, minumum and maximum primer melting
 #'   temperature.
-#' @param tascseq_primers Slot where designed TASC-seq primers are stored. Not set by user.
+#' @param tapseq_primers Slot where designed TAP-seq primers are stored. Not set by user.
 #' @param pcr_products Slot where PCR products of primers are stored. Not set by user.
 #' @param x A \code{TsIO} object.
 #' @param value A valid value to assign to the chosen slot.
@@ -41,7 +41,7 @@ setClass("TsIO",
     primer_opt_tm = "integer",
     primer_min_tm = "integer",
     primer_max_tm = "integer",
-    tascseq_primers = "IRanges",
+    tapseq_primers = "IRanges",
     pcr_products = "DNAStringSet"
   ),
   prototype = list(
@@ -54,7 +54,7 @@ setClass("TsIO",
     primer_opt_tm = NA_integer_,
     primer_min_tm = NA_integer_,
     primer_max_tm = NA_integer_,
-    tascseq_primers = new("IRanges"),
+    tapseq_primers = new("IRanges"),
     pcr_products = new("DNAStringSet")
   )
 )
@@ -141,13 +141,13 @@ setValidity("TsIO", function(object) {
 
 #' TsIOList class
 #'
-#' TsIOList class is a container to store multiple \code{\link[TASCseq]{TsIO}} objects. This enables
+#' TsIOList class is a container to store multiple \code{\link[TAPseq]{TsIO}} objects. This enables
 #' storing of Primer3 input and output for multiple target genes.
 #'
 #' @param ... Multiple TsIO objects from which a TsIOList object should be created.
 #' @param x A \code{TsIOList} object.
 #' @return A \code{TsIOList} object.
-#' @seealso \link[TASCseq]{TsIO}
+#' @seealso \link[TAPseq]{TsIO}
 setClass("TsIOList",
          contains = "SimpleList",
          prototype = prototype(elementType = "TsIO"))
@@ -175,8 +175,8 @@ TsIOList <- function(...) {
 
 #' Accessors for TsIO objects
 #'
-#' A set of functions for getting/setting/modifying the data stored in \code{\link[TASCseq]{TsIO}}
-#' or \code{\link[TASCseq]{TsIOList}} class objects.
+#' A set of functions for getting/setting/modifying the data stored in \code{\link[TAPseq]{TsIO}}
+#' or \code{\link[TAPseq]{TsIOList}} class objects.
 #'
 #' @param x A \code{TsIO} or \code{TsIOList} class object.
 #' @param value A valid value to assign to the chosen slot.
@@ -257,10 +257,10 @@ setGeneric("primer_max_tm<-", function(x, value) standardGeneric("primer_max_tm<
 
 #' @rdname accessors
 #' @export
-setGeneric("tascseq_primers", function(x) standardGeneric("tascseq_primers"))
+setGeneric("tapseq_primers", function(x) standardGeneric("tapseq_primers"))
 
 #' @keywords internal
-setGeneric("tascseq_primers<-", function(x, value) standardGeneric("tascseq_primers<-"))
+setGeneric("tapseq_primers<-", function(x, value) standardGeneric("tapseq_primers<-"))
 
 #' @rdname accessors
 #' @export
@@ -390,13 +390,13 @@ setMethod("primer_max_tm<-", "TsIO", function(x, value) {
   x
 })
 
-#' @describeIn TsIO Get tascseq_primers
+#' @describeIn TsIO Get tapseq_primers
 #' @export
-setMethod("tascseq_primers", "TsIO", function(x) x@tascseq_primers)
+setMethod("tapseq_primers", "TsIO", function(x) x@tapseq_primers)
 
 #' @keywords internal
-setMethod("tascseq_primers<-", "TsIO", function(x, value) {
-  x@tascseq_primers <- value
+setMethod("tapseq_primers<-", "TsIO", function(x, value) {
+  x@tapseq_primers <- value
   x
 })
 
@@ -420,10 +420,10 @@ setMethod("sequence_template", "TsIOList", function(x) {
   Biostrings::DNAStringSet(seq_templates)
 })
 
-#' @describeIn TsIOList Get tascseq_primers
+#' @describeIn TsIOList Get tapseq_primers
 #' @export
-setMethod("tascseq_primers", "TsIOList", function(x) {
-  primers <- lapply(x, FUN = tascseq_primers)
+setMethod("tapseq_primers", "TsIOList", function(x) {
+  primers <- lapply(x, FUN = tapseq_primers)
   names(primers) <- NULL
   BiocGenerics::unlist(IRanges::IRangesList(primers))
 })

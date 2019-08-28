@@ -8,16 +8,16 @@
 \title{Design primers}
 \usage{
 designPrimers(object,
-  thermo_params_path = getOption("TASCseq.thermodynamic_params_path"),
-  primer3_core = getOption("TASCseq.primer3_core"))
+  thermo_params_path = getOption("TAPseq.thermodynamic_params_path"),
+  primer3_core = getOption("TAPseq.primer3_core"))
 
 \S4method{designPrimers}{TsIO}(object,
-  thermo_params_path = getOption("TASCseq.thermodynamic_params_path"),
-  primer3_core = getOption("TASCseq.primer3_core"))
+  thermo_params_path = getOption("TAPseq.thermodynamic_params_path"),
+  primer3_core = getOption("TAPseq.primer3_core"))
 
 \S4method{designPrimers}{TsIOList}(object,
-  thermo_params_path = getOption("TASCseq.thermodynamic_params_path"),
-  primer3_core = getOption("TASCseq.primer3_core"))
+  thermo_params_path = getOption("TAPseq.thermodynamic_params_path"),
+  primer3_core = getOption("TAPseq.primer3_core"))
 }
 \arguments{
 \item{object}{TsIO of TsIOList object for which primers should be designed.}
@@ -32,7 +32,7 @@ inferred when loading/attaching the package.}
 A new \code{TsIO} or \code{TsIOList} object containing all Primer3 output.
 }
 \description{
-Design primers based on \code{\link[TASCseq]{TsIO}} or \code{\link[TASCseq]{TsIOList}} objects.
+Design primers based on \code{\link[TAPseq]{TsIO}} or \code{\link[TAPseq]{TsIOList}} objects.
 Creates boulder-IO records, passes input to Primer3 and parses the output.
 }
 \section{Methods (by class)}{

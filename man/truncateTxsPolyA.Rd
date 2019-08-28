@@ -25,7 +25,7 @@ transcripts to be truncated.}
 
 \item{polyA_sites}{A \code{GRanges} object containing the polyA sites. This needs to contain a
 metadata entry names "score" if the option \code{polyA_select = "score"} is used. PolyA sites
-can be either obtained via running \code{\link[TASCseq]{inferPolyASites}} or imported from
+can be either obtained via running \code{\link[TAPseq]{inferPolyASites}} or imported from
 an existing bed file via \code{\link[rtracklayer]{import}}.}
 
 \item{extend_3prime_end}{Specifies how far (bp) 3' ends of transcripts should be extended when
@@ -36,7 +36,7 @@ occur downstream of annotated 3' ends.}
 truncate the transcripts if multiple overlapping polyA sites are found. By default
 \code{"downstream"} is used which choses the most downstream polyA site. \code{"score"} selects
 the polyA site with the highest score, which correspons to the read coverage when using
-\code{\link[TASCseq]{inferPolyASites}} to estimate polyA sites.}
+\code{\link[TAPseq]{inferPolyASites}} to estimate polyA sites.}
 
 \item{ignore_strand}{(logical) Specifies whether the strand of polyA sites should be ignored when
 looking for overlapping polyA sites. Default is \code{FALSE} and therefore only polyA sites on
@@ -53,7 +53,7 @@ Either a \code{GRanges} or \code{GRangesList} object containing the
 }
 \description{
 Truncate transcripts at overlapping polyadenylation (polyA) sites to infer  likely 3' ends of
-transcripts. This is crucial to correctly design TASC-seq primers that amplify fragments of
+transcripts. This is crucial to correctly design TAP-seq primers that amplify fragments of
 specific lengths. Typically the exons of all annotated transcripts per gene are provided as
 input. If a polyA site overlaps a single transcript of a given gene, this transcript is truncated
 and returned. In case a polyA site overlaps multiple transcripts of the same gene, a
@@ -71,7 +71,7 @@ the merged exons of that gene is generated and returned.
 }}
 
 \examples{
-library(TASCseq)
+library(TAPseq)
 library(GenomicRanges)
 
 # protein-coding exons of genes within chr11 region

@@ -5,7 +5,7 @@
 \alias{TsIOList-class}
 \alias{TsIOList}
 \alias{sequence_template,TsIOList-method}
-\alias{tascseq_primers,TsIOList-method}
+\alias{tapseq_primers,TsIOList-method}
 \alias{pcr_products,TsIOList-method}
 \title{TsIOList class}
 \usage{
@@ -13,7 +13,7 @@ TsIOList(...)
 
 \S4method{sequence_template}{TsIOList}(x)
 
-\S4method{tascseq_primers}{TsIOList}(x)
+\S4method{tapseq_primers}{TsIOList}(x)
 
 \S4method{pcr_products}{TsIOList}(x)
 }
@@ -26,18 +26,18 @@ TsIOList(...)
 A \code{TsIOList} object.
 }
 \description{
-TsIOList class is a container to store multiple \code{\link[TASCseq]{TsIO}} objects. This enables
+TsIOList class is a container to store multiple \code{\link[TAPseq]{TsIO}} objects. This enables
 storing of Primer3 input and output for multiple target genes.
 }
 \section{Methods (by generic)}{
 \itemize{
 \item \code{sequence_template}: Get sequence_templates
 
-\item \code{tascseq_primers}: Get tascseq_primers
+\item \code{tapseq_primers}: Get tapseq_primers
 
 \item \code{pcr_products}: Get pcr_products
 }}
 
 \seealso{
-\link[TASCseq]{TsIO}
+\link[TAPseq]{TsIO}
 }

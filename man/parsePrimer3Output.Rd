@@ -7,7 +7,7 @@
 parsePrimer3Output(object, primer3_output)
 }
 \arguments{
-\item{object}{The \code{\link[TASCseq]{TsIO}} or \code{\link[TASCseq]{TsIOList}} object used to
+\item{object}{The \code{\link[TAPseq]{TsIO}} or \code{\link[TAPseq]{TsIOList}} object used to
 design primers. No errors or warnings if this is another \code{TsIO} or \code{TsIOList} object!}
 
 \item{primer3_output}{Character vector containing raw Primer3 output.}
@@ -16,7 +16,7 @@ design primers. No errors or warnings if this is another \code{TsIO} or \code{Ts
 \code{TsIO} or \code{TsIOList} object with added Primer3 output
 }
 \description{
-Parse Primer3 output and add to input \code{\link[TASCseq]{TsIO}} or
-\code{\link[TASCseq]{TsIOList}} object.
+Parse Primer3 output and add to input \code{\link[TAPseq]{TsIO}} or
+\code{\link[TAPseq]{TsIOList}} object.
 }
 \keyword{internal}

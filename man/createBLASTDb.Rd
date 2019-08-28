@@ -5,14 +5,14 @@
 \title{Create BLAST database}
 \usage{
 createBLASTDb(blastdb, fasta,
-  makeblastdb = getOption("TASCseq.makeblastdb"),
+  makeblastdb = getOption("TAPseq.makeblastdb"),
   compression = c("auto", "gzip", "none"), title = "None")
 }
 \arguments{
 \item{blastdb}{A file path to the blastdb that should be created.}
 
 \item{fasta}{A fasta file containing all sequences to be included in the database. Can be created
-with \code{\link[TASCseq]{createFasta}}.}
+with \code{\link[TAPseq]{createFasta}}.}
 
 \item{makeblastdb}{Path (character) to the \code{makeblastdb} executable. Usually this is
 inferred when loading/attaching the package.}
@@ -24,5 +24,5 @@ compression (.gz file extension).}
 \item{title}{Optional title for BLAST database.}
 }
 \description{
-Create a database which can be used to estimate potential off-target priming of TASC-seq primers.
+Create a database which can be used to estimate potential off-target priming of TAP-seq primers.
 }

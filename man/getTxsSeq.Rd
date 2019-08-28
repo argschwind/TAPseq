@@ -41,7 +41,7 @@ correctly sorted according to their position in the transcript (3' to 5').
 }}
 
 \examples{
-library(TASCseq)
+library(TAPseq)
 library(GenomicRanges)
 
 # protein-coding exons of transcripts within chr11 region
