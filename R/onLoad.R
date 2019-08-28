@@ -23,7 +23,7 @@ check_tool_installation <- function() {
 
 }
 
-#' Actions to perform on loading
+#' Actions to perform when package is attached
 #'
 #' Check for required tools and set tool paths as package options.
 #'
@@ -44,14 +44,14 @@ check_tool_installation <- function() {
 
   }else{
 
-    # create strings combining tool name and path to tool
+    # create printable string listing tool names and path to tools
     tools_print <- lapply(1:length(tools), FUN = function(x) {
       paste(names(tools)[x], tools[[x]] , sep = ": ")
     })
+    tools_print <- paste(unlist(tools_print), collapse = "\n")
 
-    message("\nUsing the following tools:\n",
-            paste(unlist(tools_print), collapse = "\n"),
-            "\n")
+    # print start up message providing name and paths of used tools
+    packageStartupMessage("\nUsing the following tools:\n", tools_print, "\n")
 
   }
 

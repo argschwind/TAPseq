@@ -1,7 +1,7 @@
 Package: TASCseq
 Type: Package
 Title: TASC-seq primer design
-Version: 0.1.0.9000
+Version: 0.1.0.9001
 Authors@R: person("Andreas", "Gschwind", email = "andreas.gschwind@stanford.edu",
                   role = c("aut", "cre"))
 Description: Design and assess TASC-seq primers using Primer3 and BLAST.
