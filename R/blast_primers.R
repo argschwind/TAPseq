@@ -39,23 +39,8 @@ createFasta <- function(genome, output_fasta, annot = NULL, include_genome = TRU
     # containing all exons of a given transcript
     txs <- split(annot, f = tx_ids)
 
-    # split transcripts according to strand
-    txs_pos <- txs[all(strand(txs) == "+")]
-    txs_neg <- txs[all(strand(txs) == "-")]
-
     # get sequences of all transcripts
-    txs_seqs_pos <- getSeq(x = genome, names = txs_pos)
-    txs_seqs_neg <- getSeq(x = genome, names = txs_neg)
-
-    # concatenate (unlist) sequences of all exons per transcript
-    txs_seqs_pos_cat <- DNAStringSet(lapply(X = txs_seqs_pos, FUN = unlist))
-    txs_seqs_neg_cat <- DNAStringSet(lapply(X = txs_seqs_neg, FUN = function(x){
-      unlist(rev(x))
-    }))
-
-    # merge sequences from positive and negative strand and sort according to name
-    txs_seqs <- c(txs_seqs_pos_cat, txs_seqs_neg_cat)
-    txs_seqs <- txs_seqs[order(names(txs_seqs))]
+    txs_seqs <- getTxsSeq(txs, genome = genome)
 
   }else{
     txs_seqs <- DNAStringSet()
