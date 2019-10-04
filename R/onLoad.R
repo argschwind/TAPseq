@@ -23,7 +23,7 @@ check_tool_installation <- function() {
 
 }
 
-#' Actions to perform on loading
+#' Actions to perform when package is attached
 #'
 #' Check for required tools and set tool paths as package options.
 #'
@@ -44,25 +44,25 @@ check_tool_installation <- function() {
 
   }else{
 
-    # create strings combining tool name and path to tool
+    # create printable string listing tool names and path to tools
     tools_print <- lapply(1:length(tools), FUN = function(x) {
       paste(names(tools)[x], tools[[x]] , sep = ": ")
     })
+    tools_print <- paste(unlist(tools_print), collapse = "\n")
 
-    message("\nUsing the following tools:\n",
-            paste(unlist(tools_print), collapse = "\n"),
-            "\n")
+    # print start up message providing name and paths of used tools
+    packageStartupMessage("\nUsing the following tools:\n", tools_print, "\n")
 
   }
 
   # create tool paths for package options
   tool_opts <- tools
-  names(tool_opts) <- paste0("TASCseq.", names(tool_opts))
+  names(tool_opts) <- paste0("TAPseq.", names(tool_opts))
 
   ### TO DO: implement better! ---------------------------------------------------------------------
   # add default path to primer3 thermodynamic parameters
   therm_params <- paste0(dirname(tools[["primer3_core"]]), "/primer3_config/")
-  tool_opts[["TASCseq.thermodynamic_params_path"]] <- therm_params
+  tool_opts[["TAPseq.thermodynamic_params_path"]] <- therm_params
   ### ----------------------------------------------------------------------------------------------
 
   # create package options

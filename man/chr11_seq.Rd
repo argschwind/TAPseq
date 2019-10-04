@@ -10,7 +10,7 @@ chr11_seq
 }
 \description{
 The human hg38 sequence of chromosome 11 as \code{\link[Biostrings]{DNAStringSet}} object. This
-data is intended for examples for \code{\link[TASCseq]{getTxsSeq}}. In a real world application,
+data is intended for examples for \code{\link[TAPseq]{getTxsSeq}}. In a real world application,
 such an object would probably contain all chromosome sequences loaded from a .fasta file.
 }
 \keyword{datasets}

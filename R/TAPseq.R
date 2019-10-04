@@ -1,7 +1,7 @@
-#' TASCseq: R-package to design primers for TASC-seq
+#' TAPseq: R-package to design primers for TAP-seq
 #'
 #' This package provides functions to select transcript isoforms and design PCR primers for
-#' TASC-seq.
+#' TAP-seq.
 #'
 #' @section Installation:
 #' In order to use the full functionality, Primer3 and BLAST need to be installed and added to PATH.
@@ -9,10 +9,10 @@
 #' located in the same directory as the \code{primer3_core} executable. If this is not practical,
 #' all functions interacting with Primer3 have arguments to specify the paths to these files.
 #'
-#' For more information on installation see: \url{https://github.com/argschwind/TASCseq}.
+#' For more information on installation see: \url{https://github.com/argschwind/TAPseq}.
 #'
 #' @docType package
-#' @name TASCseq
+#' @name TAPseq
 #'
 #' @import methods
 #'

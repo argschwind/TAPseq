@@ -29,6 +29,6 @@ scaffolds with "_" by default. Set to NULL to include all chromosomes in genome.
 }
 \description{
 Create a fasta file containing the DNA sequences of a genome and its transcripts. This function
-is used to create the input for \code{\link[TASCseq]{createBLASTDb}}. Currently only tested with
+is used to create the input for \code{\link[TAPseq]{createBLASTDb}}. Currently only tested with
 human and mouse genomes.
 }

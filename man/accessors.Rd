@@ -20,7 +20,7 @@
 \alias{primer_min_tm<-}
 \alias{primer_max_tm}
 \alias{primer_max_tm<-}
-\alias{tascseq_primers}
+\alias{tapseq_primers}
 \alias{pcr_products}
 \title{Accessors for TsIO objects}
 \usage{
@@ -60,7 +60,7 @@ primer_max_tm(x)
 
 primer_max_tm(x) <- value
 
-tascseq_primers(x)
+tapseq_primers(x)
 
 pcr_products(x)
 }
@@ -70,6 +70,6 @@ pcr_products(x)
 \item{value}{A valid value to assign to the chosen slot.}
 }
 \description{
-A set of functions for getting/setting/modifying the data stored in \code{\link[TASCseq]{TsIO}}
-or \code{\link[TASCseq]{TsIOList}} class objects.
+A set of functions for getting/setting/modifying the data stored in \code{\link[TAPseq]{TsIO}}
+or \code{\link[TAPseq]{TsIOList}} class objects.
 }

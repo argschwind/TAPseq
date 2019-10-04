@@ -15,7 +15,7 @@
 #' @return A \code{\link[Biostrings]{DNAString}} or \code{\link[Biostrings]{DNAStringSet}} object
 #'   containing the transcript sequence(s).
 #' @examples
-#' library(TASCseq)
+#' library(TAPseq)
 #' library(GenomicRanges)
 #'
 #' # protein-coding exons of transcripts within chr11 region

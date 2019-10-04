@@ -22,7 +22,7 @@
 \alias{primer_min_tm<-,TsIO-method}
 \alias{primer_max_tm,TsIO-method}
 \alias{primer_max_tm<-,TsIO-method}
-\alias{tascseq_primers,TsIO-method}
+\alias{tapseq_primers,TsIO-method}
 \alias{pcr_products,TsIO-method}
 \title{TsIO class}
 \usage{
@@ -66,7 +66,7 @@ TsIO(sequence_template, sequence_id = NA, reverse_primer,
 
 \S4method{primer_max_tm}{TsIO}(x) <- value
 
-\S4method{tascseq_primers}{TsIO}(x)
+\S4method{tapseq_primers}{TsIO}(x)
 
 \S4method{pcr_products}{TsIO}(x)
 }
@@ -93,7 +93,7 @@ temperature.}
 
 \item{value}{A valid value to assign to the chosen slot.}
 
-\item{tascseq_primers}{Slot where designed TASC-seq primers are stored. Not set by user.}
+\item{tapseq_primers}{Slot where designed TAP-seq primers are stored. Not set by user.}
 
 \item{pcr_products}{Slot where PCR products of primers are stored. Not set by user.}
 }
@@ -101,13 +101,13 @@ temperature.}
 A \code{TsIO} object.
 }
 \description{
-TsIO objects store TASC-seq input and output for Primer3.
+TsIO objects store TAP-seq input and output for Primer3.
 }
 \details{
 The TsIO class is based on the Boulder IO records used by Primer3
 (\href{http://primer3.sourceforge.net/primer3_manual.htm}{Primer3 manual}). These objects allow
 storing of required input such as the sequence template and additional Primer3 arguments
-relevant for TASC-seq primer design. Once Primer3 is used to design TASC-seq primers based on
+relevant for TAP-seq primer design. Once Primer3 is used to design TAP-seq primers based on
 a TsIO object, the output is added to the TsIO object.
 
 Use \code{TsIO()} to construct a new TsIO object from scratch.
@@ -150,7 +150,7 @@ Use \code{TsIO()} to construct a new TsIO object from scratch.
 
 \item \code{primer_max_tm<-}: Set product_size_range
 
-\item \code{tascseq_primers}: Get tascseq_primers
+\item \code{tapseq_primers}: Get tapseq_primers
 
 \item \code{pcr_products}: Get pcr_products
 }}

@@ -1,6 +1,6 @@
 #' Design primers
 #'
-#' Design primers based on \code{\link[TASCseq]{TsIO}} or \code{\link[TASCseq]{TsIOList}} objects.
+#' Design primers based on \code{\link[TAPseq]{TsIO}} or \code{\link[TAPseq]{TsIOList}} objects.
 #' Creates boulder-IO records, passes input to Primer3 and parses the output.
 #'
 #' @param object TsIO of TsIOList object for which primers should be designed.
@@ -12,8 +12,8 @@
 #' @seealso \url{http://primer3.org/manual.html} for Primer3 manual.
 #' @export
 setGeneric("designPrimers",
-           function(object, thermo_params_path = getOption("TASCseq.thermodynamic_params_path"),
-                    primer3_core = getOption("TASCseq.primer3_core"))
+           function(object, thermo_params_path = getOption("TAPseq.thermodynamic_params_path"),
+                    primer3_core = getOption("TAPseq.primer3_core"))
              standardGeneric("designPrimers")
 )
 
@@ -63,10 +63,10 @@ setMethod("designPrimers", "TsIOList", function(object, thermo_params_path, prim
 
 #' Parse Primer3 Output
 #'
-#' Parse Primer3 output and add to input \code{\link[TASCseq]{TsIO}} or
-#' \code{\link[TASCseq]{TsIOList}} object.
+#' Parse Primer3 output and add to input \code{\link[TAPseq]{TsIO}} or
+#' \code{\link[TAPseq]{TsIOList}} object.
 #'
-#' @param object The \code{\link[TASCseq]{TsIO}} or \code{\link[TASCseq]{TsIOList}} object used to
+#' @param object The \code{\link[TAPseq]{TsIO}} or \code{\link[TAPseq]{TsIOList}} object used to
 #'   design primers. No errors or warnings if this is another \code{TsIO} or \code{TsIOList} object!
 #' @param primer3_output Character vector containing raw Primer3 output.
 #' @return \code{TsIO} or \code{TsIOList} object with added Primer3 output
@@ -88,7 +88,7 @@ parsePrimer3Output <- function(object, primer3_output) {
   primers <- lapply(primer3_output, FUN = parse_primer3_record)
 
   # add designed primers to TsIO object(s)
-  output <- mendoapply(FUN = `tascseq_primers<-`, object, primers)
+  output <- mendoapply(FUN = `tapseq_primers<-`, object, primers)
 
   # infer pcr products
   output <- endoapply(output, FUN = infer_pcr_products)
@@ -222,7 +222,7 @@ infer_pcr_products <- function(object) {
 
   # get sequence template and designed primers
   seq_template <- sequence_template(object)
-  primers <- tascseq_primers(object)
+  primers <- tapseq_primers(object)
 
   # find binding site of provided reverse primer
   rev_primer <- reverse_primer(object)

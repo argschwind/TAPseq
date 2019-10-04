@@ -3,7 +3,7 @@
 #' Create genome and transcriptome fasta file
 #'
 #' Create a fasta file containing the DNA sequences of a genome and its transcripts. This function
-#' is used to create the input for \code{\link[TASCseq]{createBLASTDb}}. Currently only tested with
+#' is used to create the input for \code{\link[TAPseq]{createBLASTDb}}. Currently only tested with
 #' human and mouse genomes.
 #'
 #' @param genome The \code{\link[BSgenome]{BSgenome}} object of the genome to be used to obtain the
@@ -39,23 +39,8 @@ createFasta <- function(genome, output_fasta, annot = NULL, include_genome = TRU
     # containing all exons of a given transcript
     txs <- split(annot, f = tx_ids)
 
-    # split transcripts according to strand
-    txs_pos <- txs[all(strand(txs) == "+")]
-    txs_neg <- txs[all(strand(txs) == "-")]
-
     # get sequences of all transcripts
-    txs_seqs_pos <- getSeq(x = genome, names = txs_pos)
-    txs_seqs_neg <- getSeq(x = genome, names = txs_neg)
-
-    # concatenate (unlist) sequences of all exons per transcript
-    txs_seqs_pos_cat <- DNAStringSet(lapply(X = txs_seqs_pos, FUN = unlist))
-    txs_seqs_neg_cat <- DNAStringSet(lapply(X = txs_seqs_neg, FUN = function(x){
-      unlist(rev(x))
-    }))
-
-    # merge sequences from positive and negative strand and sort according to name
-    txs_seqs <- c(txs_seqs_pos_cat, txs_seqs_neg_cat)
-    txs_seqs <- txs_seqs[order(names(txs_seqs))]
+    txs_seqs <- getTxsSeq(txs, genome = genome)
 
   }else{
     txs_seqs <- DNAStringSet()
@@ -102,11 +87,11 @@ createFasta <- function(genome, output_fasta, annot = NULL, include_genome = TRU
 
 #' Create BLAST database
 #'
-#' Create a database which can be used to estimate potential off-target priming of TASC-seq primers.
+#' Create a database which can be used to estimate potential off-target priming of TAP-seq primers.
 #'
 #' @param blastdb A file path to the blastdb that should be created.
 #' @param fasta A fasta file containing all sequences to be included in the database. Can be created
-#'   with \code{\link[TASCseq]{createFasta}}.
+#'   with \code{\link[TAPseq]{createFasta}}.
 #' @param makeblastdb Path (character) to the \code{makeblastdb} executable. Usually this is
 #'   inferred when loading/attaching the package.
 #' @param compression What compression was used when generating the fasta file? Default is "auto",
@@ -114,7 +99,7 @@ createFasta <- function(genome, output_fasta, annot = NULL, include_genome = TRU
 #'   compression (.gz file extension).
 #' @param title Optional title for BLAST database.
 #' @export
-createBLASTDb <- function(blastdb, fasta, makeblastdb = getOption("TASCseq.makeblastdb"),
+createBLASTDb <- function(blastdb, fasta, makeblastdb = getOption("TAPseq.makeblastdb"),
                           compression = c("auto", "gzip", "none"), title = "None") {
 
   # get compression argument
@@ -150,32 +135,32 @@ createBLASTDb <- function(blastdb, fasta, makeblastdb = getOption("TASCseq.makeb
   }
 }
 
-#' BLAST TASC-seq primers
+#' BLAST TAP-seq primers
 #'
-#' Use BLAST to align designed TASC-seq primers against a genome and transcriptome database to
+#' Use BLAST to align designed TAP-seq primers against a genome and transcriptome database to
 #' estimate off-target priming potential. Only hits where at least a specified portion of the
 #' sequence involving the 3' end of the primer aligns with not more than a certain number of
 #' mismatches are considered.
 #'
-#' @param object A \code{\link[TASCseq]{TsIO}} or \code{\link[TASCseq]{TsIOList}} object containing
+#' @param object A \code{\link[TAPseq]{TsIO}} or \code{\link[TAPseq]{TsIOList}} object containing
 #'   designed primers.
 #' @param blastdb BLAST database to which primers should be aligned. Can be created with
-#'   \code{\link[TASCseq]{createBLASTDb}}.
+#'   \code{\link[TAPseq]{createBLASTDb}}.
 #' @param annot A \code{\link[GenomicRanges]{GRanges}} object containing exons of transcripts, which
 #'   will be used to annotate blast hits on the genome sequence. The same object as used in
-#'   \code{\link[TASCseq]{createFasta}}.
+#'   \code{\link[TAPseq]{createFasta}}.
 #' @param max_mismatch Maximum number of mismatches allowed for off-target hits (default: 0).
 #' @param min_aligned Minimum portion of the primer sequence starting from the 3' end that must
 #'   align for off-target hits (default: 0.75).
 #' @param tmpdir Directory needed to store temporary files.
 #' @param blastn Path (character) to the \code{blastn} executable. Usually this is inferred when
 #'   loading/attaching the package.
-#' @return A \code{\link[TASCseq]{TsIO}} or \code{\link[TASCseq]{TsIOList}} object with the number
-#'   of potential off-target priming hits added to the TASC-seq primer metadata.
+#' @return A \code{\link[TAPseq]{TsIO}} or \code{\link[TAPseq]{TsIOList}} object with the number
+#'   of potential off-target priming hits added to the TAP-seq primer metadata.
 #' @export
 setGeneric("blastPrimers",
            function(object, blastdb, annot, max_mismatch = 0, min_aligned = 0.75,
-                    tmpdir = tempdir(), blastn = getOption("TASCseq.blastn"))
+                    tmpdir = tempdir(), blastn = getOption("TAPseq.blastn"))
              standardGeneric("blastPrimers")
 )
 
@@ -184,8 +169,8 @@ setGeneric("blastPrimers",
 setMethod("blastPrimers", "TsIO", function(object, blastdb, annot, max_mismatch, min_aligned,
                                            tmpdir, blastn) {
 
-  # extract designed tasc-seq primers
-  primers <- tascseq_primers(object)
+  # extract designed tap-seq primers
+  primers <- tapseq_primers(object)
 
   if (length(primers) > 0) {
 
@@ -194,7 +179,7 @@ setMethod("blastPrimers", "TsIO", function(object, blastdb, annot, max_mismatch,
                              min_aligned = min_aligned, tmpdir = tmpdir, blastn = blastn)
 
     # add annotated primers back to input object
-    tascseq_primers(object) <- primers
+    tapseq_primers(object) <- primers
     return(object)
 
   }else{
@@ -209,8 +194,8 @@ setMethod("blastPrimers", "TsIO", function(object, blastdb, annot, max_mismatch,
 setMethod("blastPrimers", "TsIOList", function(object, blastdb, annot, max_mismatch, min_aligned,
                                                tmpdir, blastn) {
 
-  # extract designed tasc-seq primers
-  primers <- tascseq_primers(object)
+  # extract designed tap-seq primers
+  primers <- tapseq_primers(object)
 
   if (length(primers) > 0) {
 
@@ -223,7 +208,7 @@ setMethod("blastPrimers", "TsIOList", function(object, blastdb, annot, max_misma
     primers_split <- S4Vectors::split(primers, f = targets)
 
     # add primers to every TsIO object
-    mendoapply(FUN = `tascseq_primers<-`, object, primers_split)
+    mendoapply(FUN = `tapseq_primers<-`, object, primers_split)
 
   }else{
     message("No primers found in TsIOList object!")
