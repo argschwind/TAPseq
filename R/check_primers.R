@@ -72,19 +72,21 @@ check_primers <- function(primers, primer_opt_tm, primer_min_tm, primer_max_tm,
 
   # create IO record for all primer pairs and catch any errors or warnings
   message("Creating input for Primer3...")
-  io <- tryCatch({
-    lapply(pairs, FUN = check_primers_io, primer_opt_tm = primer_opt_tm,
-           primer_min_tm = primer_min_tm, primer_max_tm = primer_max_tm,
-           primer_thermodynamic_parameters_path = thermo_params_path)
-  }, error = function(e){
-    message("Error in check_primers_io() for primer pair: ")
-    message(e, "")
-    return(NULL)
-  }, warning = function(w){
-    message("Warning in check_primers_io() for primer pair: ")
-    message(e, "")
-    return(NULL)
-  })
+  io <- lapply(pairs, FUN = function(pair){
+    tryCatch({
+       check_primers_io(pair, primer_opt_tm = primer_opt_tm, primer_min_tm = primer_min_tm,
+                        primer_max_tm = primer_max_tm,
+                        primer_thermodynamic_parameters_path = thermo_params_path)
+     }, error = function(e){
+       message("Error in check_primers_io() for primer pair: ")
+       message(e, "")
+       return(NULL)
+     }, warning = function(w){
+       message("Warning in check_primers_io() for primer pair: ")
+       message(e, "")
+       return(NULL)
+     })
+   })
 
   # reduce to one vector and return
   io <- unlist(io)
