@@ -1,5 +1,7 @@
 context("Infer polyA sites from Drop-seq/10X data")
 
+library(GenomicRanges)
+
 # load input annotations and get drop-seq bam file path
 data("chr11_genes")
 target_genes <- split(chr11_genes, f = chr11_genes$gene_name)

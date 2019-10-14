@@ -14,6 +14,14 @@
 #' @format object of \code{GRanges} class.
 "chr11_polyA_sites"
 
+#' Chromosome 11 truncated transcripts
+#'
+#' Annotations of transcripts within chromosome 11 region that were truncated at inferred polyA
+#' sites using \code{\link[TAPseq]{truncateTxsPolyA}}.
+#'
+#' @format object of \code{GRanges} class.
+"chr11_truncated_txs"
+
 #' Chromosome 11 sequence
 #'
 #' The human hg38 sequence of chromosome 11 as \code{\link[Biostrings]{DNAStringSet}} object. This

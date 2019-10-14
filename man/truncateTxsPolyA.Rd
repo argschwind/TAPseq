@@ -9,24 +9,31 @@
 \usage{
 truncateTxsPolyA(transcripts, polyA_sites, extend_3prime_end = 0,
   polyA_select = c("downstream", "upstream", "score"),
-  ignore_strand = FALSE, parallel = FALSE)
+  transcript_id = "transcript_id", gene_id = "gene_id",
+  exon_number = "exon_number", ignore_strand = FALSE,
+  parallel = FALSE)
 
 \S4method{truncateTxsPolyA}{GRanges}(transcripts, polyA_sites,
   extend_3prime_end = 0, polyA_select = c("downstream", "upstream",
-  "score"), ignore_strand = FALSE)
+  "score"), transcript_id = "transcript_id", gene_id = "gene_id",
+  exon_number = "exon_number", ignore_strand = FALSE,
+  parallel = FALSE)
 
 \S4method{truncateTxsPolyA}{GRangesList}(transcripts, polyA_sites,
   extend_3prime_end = 0, polyA_select = c("downstream", "upstream",
-  "score"), ignore_strand = FALSE, parallel = FALSE)
+  "score"), transcript_id = "transcript_id", gene_id = "gene_id",
+  exon_number = "exon_number", ignore_strand = FALSE,
+  parallel = FALSE)
 }
 \arguments{
 \item{transcripts}{A \code{GRanges} or \code{GRangesList} object containing  exons of the
-transcripts to be truncated.}
+transcripts to be truncated. Transcripts for multiple genes can be provided as \code{GRanges}
+objects within a \code{GRangesList}.}
 
 \item{polyA_sites}{A \code{GRanges} object containing the polyA sites. This needs to contain a
 metadata entry names "score" if the option \code{polyA_select = "score"} is used. PolyA sites
 can be either obtained via running \code{\link[TAPseq]{inferPolyASites}} or imported from
-an existing bed file via \code{\link[rtracklayer]{import}}.}
+an existing .bed file via \code{\link[rtracklayer]{import}}.}
 
 \item{extend_3prime_end}{Specifies how far (bp) 3' ends of transcripts should be extended when
 looking for overlapping polyA sites (default = 0). This enables capturing of polyA sites that
@@ -38,14 +45,22 @@ truncate the transcripts if multiple overlapping polyA sites are found. By defau
 the polyA site with the highest score, which correspons to the read coverage when using
 \code{\link[TAPseq]{inferPolyASites}} to estimate polyA sites.}
 
+\item{transcript_id}{(character) Name of the column in the metadata of \code{transcripts}
+providing transcript id for each exon (default: \code{"transcript_id"}). Set to \code{NULL} to
+ignore transcript ids and assume that all exons per gene belong to the same transcript.}
+
+\item{gene_id, exon_number}{(character) Optional names of columns in metadata of
+\code{transcripts} containing gene id and exon number. These are only used to create new
+metadata when merging multiple transcripts into a meta transcript.}
+
 \item{ignore_strand}{(logical) Specifies whether the strand of polyA sites should be ignored when
 looking for overlapping polyA sites. Default is \code{FALSE} and therefore only polyA sites on
-the same strand as the transcripts are considered. PolyA sites with strand equals to \code{*}
-has the same effect as \code{ignore_strand = TRUE}.}
+the same strand as the transcripts are considered. PolyA sites with strand \code{*} has the
+same effect as \code{ignore_strand = TRUE}.}
 
 \item{parallel}{(logical) Triggers parallel computing using the \code{BiocParallel} package.
 This requires that a parallel back-end was registered prior to executing the function.
-(default: FALSE).}
+(default: \code{FALSE}).}
 }
 \value{
 Either a \code{GRanges} or \code{GRangesList} object containing the
@@ -54,9 +69,9 @@ Either a \code{GRanges} or \code{GRangesList} object containing the
 \description{
 Truncate transcripts at overlapping polyadenylation (polyA) sites to infer  likely 3' ends of
 transcripts. This is crucial to correctly design TAP-seq primers that amplify fragments of
-specific lengths. Typically the exons of all annotated transcripts per gene are provided as
-input. If a polyA site overlaps a single transcript of a given gene, this transcript is truncated
-and returned. In case a polyA site overlaps multiple transcripts of the same gene, a
+specific lengths. Typically the exons of all annotated transcripts per target gene are provided
+as input. If a polyA site overlaps a single transcript of a given gene, this transcript is
+truncated and returned. In case a polyA site overlaps multiple transcripts of the same gene, a
 "metatranscript" consisting of all annotated exons of the overlapping transcripts is generated
 and truncated. No statements about expressed transcripts can be made if no overlapping polyA
 sites are found for any transcripts of a gene. In that case a "metatranscript" consisting of

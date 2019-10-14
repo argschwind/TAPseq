@@ -20,6 +20,7 @@
 #' @import BiocGenerics
 #' @import BSgenome
 #'
+#' @importFrom S4Vectors endoapply queryHits subjectHits mcols DataFrame
 #' @importFrom IRanges IRanges Views
 #' @importFrom Biostrings DNAString DNAStringSet start end subseq
 #' @importClassesFrom Biostrings DNAString DNAStringSet
