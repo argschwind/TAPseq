@@ -11,7 +11,7 @@ chr11_seq <- hg38$chr11
 chr11_seq <- subseq(chr11_seq, 1, chr11_region_end)
 
 # convert to DNAStringSet
-chr11_seq <- DNAStringSet(list("11" = chr11_seq))
+chr11_seq <- DNAStringSet(list("chr11" = chr11_seq))
 
 # save RData file in data directory
 usethis::use_data(chr11_seq, overwrite = TRUE)
