@@ -4,12 +4,12 @@
 \name{chr11_truncated_txs}
 \alias{chr11_truncated_txs}
 \title{Chromosome 11 truncated transcripts}
-\format{object of \code{GRanges} class.}
+\format{object of \code{GRangesList} class.}
 \usage{
 chr11_truncated_txs
 }
 \description{
-Annotations of transcripts within chromosome 11 region that were truncated at inferred polyA
-sites using \code{\link[TAPseq]{truncateTxsPolyA}}.
+Annotations of target gene transcripts within human chromosome 11 region that were truncated at
+inferred polyA sites using \code{\link[TAPseq]{truncateTxsPolyA}}.
 }
 \keyword{datasets}

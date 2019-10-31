@@ -9,9 +9,9 @@
 chr11_polyA_sites
 }
 \description{
-Example polyadenylation sites for expressed protein-coding genes in chromosome 11 genomic region.
-This dataset was created using \code{\link[TAPseq]{inferPolyASites}} on available K562 Drop-seq
-data. In a real world appliaction these sites would have to be pruned manually before further
-use.
+Example polyadenylation sites for expressed protein-coding genes within human chromosome 11
+genomic region. This dataset was created using \code{\link[TAPseq]{inferPolyASites}} on available
+K562 Drop-seq data. In a real world appliaction these sites would have to be pruned manually
+before further use.
 }
 \keyword{datasets}

@@ -11,19 +11,20 @@
 #'   assumed to belong to the same transcript. Multiple transcripts can be provided in a
 #'   \code{\link[GenomicRanges]{GRangesList}} object.
 #' @param  genome A \code{\link[BSgenome]{BSgenome}} or \code{\link[Biostrings]{DNAStringSet}}
-#'   object containing the genome sequence which should be used to extract transcript sequences.
+#'   object containing chromosome sequences which should be used to extract transcript sequences.
 #' @return A \code{\link[Biostrings]{DNAString}} or \code{\link[Biostrings]{DNAStringSet}} object
 #'   containing the transcript sequence(s).
 #' @examples
 #' library(TAPseq)
-#' library(GenomicRanges)
+#' library(Biostrings)
 #'
 #' # protein-coding exons of transcripts within chr11 region
 #' data("chr11_genes")
 #' target_txs <- split(chr11_genes, f = chr11_genes$transcript_id)
 #'
-#' # human chr11 sequence as DNAStringSet
-#' data(chr11_seq)
+#' # load human chr11 sequence from fasta file
+#' chr11_seq_fasta <- system.file("extdata", "chr11_sequence.fasta.gz", package = "TAPseq")
+#' chr11_seq <- readDNAStringSet(chr11_seq_fasta)
 #'
 #' # get sequences for all target transcripts in chr11 region
 #' tx_seqs <- getTxsSeq(target_txs, genome = chr11_seq)
@@ -35,9 +36,6 @@
 #'
 #' # human genome (hg38) BSgenome object (needs to be istalled separately from Bioconductor)
 #' hg38 <- getBSgenome("BSgenome.Hsapiens.UCSC.hg38")
-#'
-#' # change chromosome names to ENSEMBL style...
-#' seqnames(hg38) <- sub("chr", "", seqnames(hg38))
 #'
 #' # get sequences for all target transcripts on chr11
 #' tx_seqs <- getTxsSeq(target_txs, genome = hg38)

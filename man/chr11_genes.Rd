@@ -4,11 +4,12 @@
 \name{chr11_genes}
 \alias{chr11_genes}
 \title{Chromosome 11 genes}
-\format{object of \code{GRangesList} class.}
+\format{object of \code{GRanges} class.}
 \usage{
 chr11_genes
 }
 \description{
-GENCODE exon annotations of all protein-coding genes within a genomic region on chromosome 11.
+GENCODE exon annotations of all protein-coding genes within a genomic region on human chromosome
+11.
 }
 \keyword{datasets}
