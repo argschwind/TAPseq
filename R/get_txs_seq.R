@@ -47,53 +47,54 @@ setGeneric("getTxsSeq", function(transcripts, genome) standardGeneric("getTxsSeq
 #' @export
 setMethod("getTxsSeq", "GRangesList", function(transcripts, genome) {
 
-    # abort if genome is not a BSgenome or DNAStringSet object
-    if (class(genome) != "BSgenome" & class(genome) != "DNAStringSet") {
-      stop("genome must be of class BSgenome or DNAStringSet!", call. = FALSE)
-    }
-
-    # get indices of transcripts on positive and negative strand
-    txs_pos <- which(all(BiocGenerics::strand(transcripts) == "+"))
-    txs_neg <- which(all(BiocGenerics::strand(transcripts) == "-"))
-
-    # get transcripts with incorrect or conflicting strand information
-    bad_txs <- setdiff(1:length(transcripts), sort(c(txs_pos, txs_neg)))
-
-    # abort if any are found
-    if (length(bad_txs) > 0) {
-      if (!is.null(names(transcripts))) {
-        stop("Incorrect strand information in transcripts! ",
-             "Strand of all exons per transcript must be + or -.\n",
-             "Check strand for transcript(s): ",
-             paste(names(transcripts)[bad_txs], collapse = ", "))
-      }else{
-        stop("Incorrect strand information in transcripts! ",
-             "Strand of all exons per transcript must be + or -.")
-      }
-    }
-
-    # order exons of each transcript according to order in transcript (5' -> 3')
-    transcripts[txs_pos] <- sort(transcripts[txs_pos], decreasing = FALSE)
-    transcripts[txs_neg] <- sort(transcripts[txs_neg], decreasing = TRUE)
-
-    # get sequences of transcripts
-    GenomicFeatures::extractTranscriptSeqs(genome, transcripts = transcripts)
-
+  # abort if genome is not a BSgenome or DNAStringSet object
+  if (class(genome) != "BSgenome" & class(genome) != "DNAStringSet") {
+    stop("genome must be of class BSgenome or DNAStringSet!", call. = FALSE)
   }
+
+  # get indices of transcripts on positive and negative strand
+  txs_pos <- which(all(strand(transcripts) == "+"))
+  txs_neg <- which(all(strand(transcripts) == "-"))
+
+  # get transcripts with incorrect or conflicting strand information
+  bad_txs <- setdiff(1:length(transcripts), sort(c(txs_pos, txs_neg)))
+
+  # abort if any are found
+  if (length(bad_txs) > 0) {
+    if (!is.null(names(transcripts))) {
+      stop("Incorrect strand information in transcripts! ",
+           "Strand of all exons per transcript must be '+' or '-' ('*' is not allowed).\n",
+           "Check strand for transcript(s): ",
+           paste(names(transcripts)[bad_txs], collapse = ", "), call. = FALSE)
+    }else{
+      stop("Incorrect strand information in transcripts! ",
+           "Strand of all exons per transcript must be '+' or '-' ('*' is not allowed).",
+           call. = FALSE)
+    }
+  }
+
+  # order exons of each transcript according to order in transcript (5' -> 3')
+  transcripts[txs_pos] <- sort(transcripts[txs_pos], decreasing = FALSE)
+  transcripts[txs_neg] <- sort(transcripts[txs_neg], decreasing = TRUE)
+
+  # get sequences of transcripts
+  GenomicFeatures::extractTranscriptSeqs(genome, transcripts = transcripts)
+
+}
 )
 
 #' @describeIn getTxsSeq Obtain transcript sequence from \code{GRanges} input
 #' @export
 setMethod("getTxsSeq", "GRanges", function(transcripts, genome) {
 
-    # transform transcripts to GRangesList
-    transcripts <- GenomicRanges::GRangesList(transcripts)
+  # transform transcripts to GRangesList
+  transcripts <- GenomicRanges::GRangesList(transcripts)
 
-    # obtain transcript sequence
-    seq <- getTxsSeq(transcripts, genome = genome)
+  # obtain transcript sequence
+  seq <- getTxsSeq(transcripts, genome = genome)
 
-    # return transcript sequence as DNAString
-    seq[[1]]
+  # return transcript sequence as DNAString
+  seq[[1]]
 
-  }
+}
 )
