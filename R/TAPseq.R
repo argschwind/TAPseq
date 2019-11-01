@@ -22,7 +22,7 @@
 #'
 #' @importFrom S4Vectors endoapply queryHits subjectHits mcols DataFrame
 #' @importFrom IRanges IRanges Views
-#' @importFrom Biostrings DNAString DNAStringSet start end subseq
+#' @importFrom Biostrings DNAString DNAStringSet start end subseq reverseComplement
 #' @importClassesFrom Biostrings DNAString DNAStringSet
 #' @importClassesFrom IRanges IRanges
 NULL

@@ -3,7 +3,8 @@
 #' This function creates input for TAP-seq primer design from a DNAStringSet containing the
 #' sequence templates.
 #'
-#' @param sequence_templates A \code{\link[Biostrings]{DNAStringSet}} object containing all sequence templates.
+#' @param sequence_templates A \code{\link[Biostrings]{DNAStringSet}} object containing all sequence
+#'   templates.
 #' @param reverse_primer Reverse primer sequence used for all PCR reactions.
 #' @param product_size_range Numerical vector of length 2 specifying the desired length of the
 #'   resulting amplicons.
@@ -13,10 +14,23 @@
 #' @param primer_opt_tm,primer_min_tm,primer_max_tm Optimal, minumum and maximum primer melting
 #'   temperature.
 #' @return \code{\link[TAPseq]{TsIOList}} object.
+#' @examples
+#' library(TAPseq)
+#'
+#' # chromosome 11 region sequence templates
+#' data("chr11_sequence_templates")
+#'
+#' # reverse primer used in all PCR reactions
+#' reverse_primer <- "AAGCAGTGGTATCAACGCAGAGT"
+#'
+#' # create TsIOList object from sequence templates
+#' obj <- TAPseqInput(chr11_sequence_templates, reverse_primer = reverse_primer,
+#'                    product_size_range = c(350, 500))
+#' obj
 #' @export
 TAPseqInput <- function(sequence_templates, reverse_primer, product_size_range,
-                         primer_num_return = 5, min_primer_region = 100, primer_opt_tm = NA,
-                         primer_min_tm = NA, primer_max_tm = NA) {
+                        primer_num_return = 5, min_primer_region = 100, primer_opt_tm = NA,
+                        primer_min_tm = NA, primer_max_tm = NA) {
 
   # make sure that sequence template has the right format
   if (!is(sequence_templates, "DNAStringSet")) {
@@ -54,6 +68,22 @@ TAPseqInput <- function(sequence_templates, reverse_primer, product_size_range,
 #'   the same directory where \code{primer3_core} executable is found.
 #' @return A character vectors containing the individual lines of the IO record.
 #' @seealso \url{http://primer3.org/manual.html} for Primer3 manual.
+#' @examples
+#' library(TAPseq)
+#'
+#' # chromosome 11 region sequence templates
+#' data("chr11_sequence_templates")
+#'
+#' # reverse primer used in all PCR reactions
+#' reverse_primer <- "AAGCAGTGGTATCAACGCAGAGT"
+#'
+#' # create TsIOList object from sequence templates
+#' obj <- TAPseqInput(chr11_sequence_templates[1:2], reverse_primer = reverse_primer,
+#'                    product_size_range = c(350, 500))
+#'
+#' # create boulder IO record
+#' boulder_io <- createIORecord(obj)
+#' boulder_io
 #' @export
 setGeneric("createIORecord",
            function(object, thermo_params_path = getOption("TAPseq.thermodynamic_params_path"))

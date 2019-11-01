@@ -44,6 +44,23 @@ conventional way.
 \item \code{TsIOList}: Create IO record from \code{TsIO} objects.
 }}
 
+\examples{
+library(TAPseq)
+
+# chromosome 11 region sequence templates
+data("chr11_sequence_templates")
+
+# reverse primer used in all PCR reactions
+reverse_primer <- "AAGCAGTGGTATCAACGCAGAGT"
+
+# create TsIOList object from sequence templates
+obj <- TAPseqInput(chr11_sequence_templates[1:2], reverse_primer = reverse_primer,
+                   product_size_range = c(350, 500))
+
+# create boulder IO record
+boulder_io <- createIORecord(obj)
+boulder_io
+}
 \seealso{
 \url{http://primer3.org/manual.html} for Primer3 manual.
 }

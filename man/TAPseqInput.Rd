@@ -9,7 +9,8 @@ TAPseqInput(sequence_templates, reverse_primer, product_size_range,
   primer_min_tm = NA, primer_max_tm = NA)
 }
 \arguments{
-\item{sequence_templates}{A \code{\link[Biostrings]{DNAStringSet}} object containing all sequence templates.}
+\item{sequence_templates}{A \code{\link[Biostrings]{DNAStringSet}} object containing all sequence
+templates.}
 
 \item{reverse_primer}{Reverse primer sequence used for all PCR reactions.}
 
@@ -30,4 +31,18 @@ temperature.}
 \description{
 This function creates input for TAP-seq primer design from a DNAStringSet containing the
 sequence templates.
+}
+\examples{
+library(TAPseq)
+
+# chromosome 11 region sequence templates
+data("chr11_sequence_templates")
+
+# reverse primer used in all PCR reactions
+reverse_primer <- "AAGCAGTGGTATCAACGCAGAGT"
+
+# create TsIOList object from sequence templates
+obj <- TAPseqInput(chr11_sequence_templates, reverse_primer = reverse_primer,
+                   product_size_range = c(350, 500))
+obj
 }

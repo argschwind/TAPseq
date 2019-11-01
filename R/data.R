@@ -30,3 +30,11 @@
 #'
 #' @format object of \code{DNAStringSet} class.
 "chr11_truncated_txs_seq"
+
+#' Chromosome 11 sequence templates
+#'
+#' Sequence templates for primer design examples. The templates consist of chromosome 11 truncated
+#' transcript sequences with the Drop-seq primer (polyA capture) added to the 3' ends.
+#'
+#' @format object of \code{DNAStringSet} class.
+"chr11_sequence_templates"
