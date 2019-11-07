@@ -17,6 +17,34 @@ design primers. No errors or warnings if this is another \code{TsIO} or \code{Ts
 }
 \description{
 Parse Primer3 output and add to input \code{\link[TAPseq]{TsIO}} or
-\code{\link[TAPseq]{TsIOList}} object.
+\code{\link[TAPseq]{TsIOList}} object. This function is usually not used by the user, as
+\code{\link[TAPseq]{designPrimers}} handels Primer3 output parsing.
+}
+\examples{
+\dontrun{
+library(TAPseq)
+
+# chromosome 11 region sequence templates
+data("chr11_sequence_templates")
+
+# reverse primer used in all PCR reactions
+reverse_primer <- "AAGCAGTGGTATCAACGCAGAGT"
+
+# create TsIOList object for the first two sequence templates
+tapseq_io <- TAPseqInput(chr11_sequence_templates[1:2], reverse_primer = reverse_primer,
+                         product_size_range = c(350, 500))
+
+# create boulder IO record(s)
+thermo_params_path <- getOption("TAPseq.thermodynamic_params_path")
+io_record <- createIORecord(tapseq_io, thermo_params_path = thermo_params_path)
+
+# design primers and store raw Primer3 output
+primer3_core <- getOption("TAPseq.primer3_core")
+primer3_output <- system2(command = primer3_core, input = io_record, stdout = TRUE)
+
+# parse output and add it to input TsIO object(s)
+tapseq_io <- parsePrimer3Output(tapseq_io, primer3_output)
+tapseq_primers(tapseq_io)
+}
 }
 \keyword{internal}

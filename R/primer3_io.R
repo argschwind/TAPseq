@@ -9,7 +9,26 @@
 #' @param primer3_core Path (character) to the \code{primer3_core} executable. Usually this is
 #'   inferred when loading/attaching the package.
 #' @return A new \code{TsIO} or \code{TsIOList} object containing all Primer3 output.
-#' @seealso \url{http://primer3.org/manual.html} for Primer3 manual.
+#' @seealso \url{http://primer3.org/manual.html} for Primer3 manual and \code{\link[TAPseq]{TsIO}}
+#'   for TsIO class objects.
+#' @examples
+#' library(TAPseq)
+#'
+#' # chromosome 11 region sequence templates
+#' data("chr11_sequence_templates")
+#'
+#' # reverse primer used in all PCR reactions
+#' reverse_primer <- "AAGCAGTGGTATCAACGCAGAGT"
+#'
+#' # create TsIOList object for the first two sequence templates
+#' tapseq_io <- TAPseqInput(chr11_sequence_templates[1:2], reverse_primer = reverse_primer,
+#'                          product_size_range = c(350, 500))
+#'
+#' # design primers
+#' tapseq_io <- designPrimers(tapseq_io)
+#'
+#' # tapseq_io now contains the designed primers in the tapseq_primers slot
+#' tapseq_primers(tapseq_io)
 #' @export
 setGeneric("designPrimers",
            function(object, thermo_params_path = getOption("TAPseq.thermodynamic_params_path"),
@@ -64,12 +83,39 @@ setMethod("designPrimers", "TsIOList", function(object, thermo_params_path, prim
 #' Parse Primer3 Output
 #'
 #' Parse Primer3 output and add to input \code{\link[TAPseq]{TsIO}} or
-#' \code{\link[TAPseq]{TsIOList}} object.
+#' \code{\link[TAPseq]{TsIOList}} object. This function is usually not used by the user, as
+#' \code{\link[TAPseq]{designPrimers}} handels Primer3 output parsing.
 #'
 #' @param object The \code{\link[TAPseq]{TsIO}} or \code{\link[TAPseq]{TsIOList}} object used to
 #'   design primers. No errors or warnings if this is another \code{TsIO} or \code{TsIOList} object!
 #' @param primer3_output Character vector containing raw Primer3 output.
 #' @return \code{TsIO} or \code{TsIOList} object with added Primer3 output
+#' @examples
+#' \dontrun{
+#' library(TAPseq)
+#'
+#' # chromosome 11 region sequence templates
+#' data("chr11_sequence_templates")
+#'
+#' # reverse primer used in all PCR reactions
+#' reverse_primer <- "AAGCAGTGGTATCAACGCAGAGT"
+#'
+#' # create TsIOList object for the first two sequence templates
+#' tapseq_io <- TAPseqInput(chr11_sequence_templates[1:2], reverse_primer = reverse_primer,
+#'                          product_size_range = c(350, 500))
+#'
+#' # create boulder IO record(s)
+#' thermo_params_path <- getOption("TAPseq.thermodynamic_params_path")
+#' io_record <- createIORecord(tapseq_io, thermo_params_path = thermo_params_path)
+#'
+#' # design primers and store raw Primer3 output
+#' primer3_core <- getOption("TAPseq.primer3_core")
+#' primer3_output <- system2(command = primer3_core, input = io_record, stdout = TRUE)
+#'
+#' # parse output and add it to input TsIO object(s)
+#' tapseq_io <- parsePrimer3Output(tapseq_io, primer3_output)
+#' tapseq_primers(tapseq_io)
+#' }
 #' @keywords internal
 parsePrimer3Output <- function(object, primer3_output) {
 
@@ -158,17 +204,17 @@ parse_primer3_record <- function(x) {
     }, warning = function(w){
       message("Warning in parse_primer() for: ", seq_id)
       message(w, "")
-      return(IRanges::IRanges())
+      return(IRanges())
     }, error = function(e){
       message("Error in parse_primer() for: ", seq_id)
       message(e, "")
-      return(IRanges::IRanges())
+      return(IRanges())
     })
   })
 
   # convert to one IRanges object
   names(primer_ranges) <- NULL
-  BiocGenerics::unlist(IRanges::IRangesList(primer_ranges))
+  unlist(IRangesList(primer_ranges))
 
 }
 
@@ -191,10 +237,10 @@ parse_primer <- function(primer, seq_template, seq_id){
   primer_meta <- utils::type.convert(primer_meta, as.is = TRUE)
 
   # extract primer sequence and transform to DNAString
-  primer_seq <- Biostrings::DNAString(primer["sequence"])
+  primer_seq <- DNAString(primer["sequence"])
 
   # find binding site of primer in sequence
-  primer_site <- Biostrings::matchPattern(primer_seq, subject = seq_template)
+  primer_site <- matchPattern(primer_seq, subject = seq_template)
 
   # create IRanges object with primer and it's binding site in the sequence template
   if (length(primer_site) == 1){
@@ -207,12 +253,11 @@ parse_primer <- function(primer, seq_template, seq_id){
     names(primer_range) <- paste(seq_id, primer_id, sep=".")
     return(primer_range)
 
-  }else if(length(primer_site) < 1){
-    stop("No matching sequence found for ", primer_orientation,
-         " primer in template!", call. = FALSE)
+  }else if (length(primer_site) < 1) {
+    stop("No matching sequence found for primer '", primer_id, "' in template!", call. = FALSE)
   }else{
-    stop("More than 1 matching sequence found for ", primer_orientation,
-         " primer in template!", call. = FALSE)
+    stop("More than 1 matching sequence found for primer '", primer_id, "' in template!",
+         call. = FALSE)
   }
 
 }
@@ -226,8 +271,8 @@ infer_pcr_products <- function(object) {
 
   # find binding site of provided reverse primer
   rev_primer <- reverse_primer(object)
-  rc_rev_primer <- Biostrings::reverseComplement(rev_primer)
-  rev_primer_site <- Biostrings::matchPattern(rc_rev_primer, subject = seq_template)
+  rc_rev_primer <- reverseComplement(rev_primer)
+  rev_primer_site <- matchPattern(rc_rev_primer, subject = seq_template)
 
   # create pcr products (if any primers are provided)
   pcr_products <- lapply(start(primers), FUN = subseq, x = seq_template, end = end(rev_primer_site))

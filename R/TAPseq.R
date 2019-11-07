@@ -20,9 +20,9 @@
 #' @import BiocGenerics
 #' @import BSgenome
 #'
-#' @importFrom S4Vectors endoapply queryHits subjectHits mcols DataFrame
-#' @importFrom IRanges IRanges Views
-#' @importFrom Biostrings DNAString DNAStringSet start end subseq reverseComplement
+#' @importFrom S4Vectors endoapply mendoapply queryHits subjectHits mcols DataFrame
+#' @importFrom IRanges IRanges IRangesList Views
+#' @importFrom Biostrings DNAString DNAStringSet start end subseq reverseComplement matchPattern
 #' @importClassesFrom Biostrings DNAString DNAStringSet
 #' @importClassesFrom IRanges IRanges
 NULL
