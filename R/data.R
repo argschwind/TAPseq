@@ -38,3 +38,11 @@
 #'
 #' @format object of \code{DNAStringSet} class.
 "chr11_sequence_templates"
+
+#' Chromosome 11 primers
+#'
+#' Example of a \code{\link[TAPseq]{TsIOList}} object containing input and output for chromosome 11
+#' genes primer design.
+#'
+#' @format object of \code{TsIOList} class.
+"chr11_primers"

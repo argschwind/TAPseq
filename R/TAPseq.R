@@ -20,6 +20,9 @@
 #' @import BiocGenerics
 #' @import BSgenome
 #'
+#' @importFrom dplyr bind_rows left_join distinct
+#' @importFrom tidyr separate pivot_wider
+#'
 #' @importFrom S4Vectors endoapply mendoapply queryHits subjectHits mcols DataFrame
 #' @importFrom IRanges IRanges IRangesList Views
 #' @importFrom Biostrings DNAString DNAStringSet start end subseq reverseComplement matchPattern

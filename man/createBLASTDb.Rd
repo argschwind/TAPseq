@@ -4,25 +4,59 @@
 \alias{createBLASTDb}
 \title{Create BLAST database}
 \usage{
-createBLASTDb(blastdb, fasta,
-  makeblastdb = getOption("TAPseq.makeblastdb"),
-  compression = c("auto", "gzip", "none"), title = "None")
+createBLASTDb(genome, annot, blastdb, standard_chromosomes = TRUE,
+  tx_id = "transcript_id", tx_name = "transcript_name",
+  gene_name = "gene_name", gene_id = "gene_id",
+  title = "TAP-seq_GT_DB", verbose = FALSE,
+  makeblastdb = getOption("TAPseq.makeblastdb"))
 }
 \arguments{
-\item{blastdb}{A file path to the blastdb that should be created.}
+\item{genome}{The \code{\link[BSgenome]{BSgenome}} object of the genome to be used to obtain
+genome and / or transcript sequences.}
 
-\item{fasta}{A fasta file containing all sequences to be included in the database. Can be created
-with \code{\link[TAPseq]{createFasta}}.}
+\item{annot}{A \code{\link[GenomicRanges]{GRanges}} object containing all exons of transcripts to
+be considered. If not specified, no transcript sequences will be included in the output fasta
+file.}
 
-\item{makeblastdb}{Path (character) to the \code{makeblastdb} executable. Usually this is
-inferred when loading/attaching the package.}
+\item{blastdb}{Path to the directory where the database should be created. Will be created if not
+existing. If the directory already exist, the function will raise a warning, but overwrite any
+previous blast database files (other files stay untouched).}
 
-\item{compression}{What compression was used when generating the fasta file? Default is "auto",
-which tries to infer compression from fasta filename. Currently only allows for gzip
-compression (.gz file extension).}
+\item{standard_chromosomes}{(logical) Specifies whether only standard chromosomes should be
+included in output genome sequences (e.g. chr1-22, chrX, chrY, chrM for homo sapiens).}
+
+\item{tx_id, tx_name, gene_name, gene_id}{(character) Column names in annot metadata containing
+transcript id, transcript name, gene name and gene id information.}
 
 \item{title}{Optional title for BLAST database.}
+
+\item{verbose}{(logical) If \code{TRUE}, additional information from \code{makeblastdb} is
+printed to the console. Default: \code{FALSE}.}
+
+\item{makeblastdb}{Path to the \code{makeblastdb} executable. Usually this is inferred when
+loading/attaching the package.}
 }
 \description{
-Create a database which can be used to estimate potential off-target priming of TAP-seq primers.
+Create a BLAST database containing genome and transcriptome sequences. Used by
+\code{\link[TAPseq]{blastPrimers}} to estimate potential off-target priming of TAP-seq primers.
+The created database contains both sequence files for BLAST and annotations to process the
+results.
+}
+\examples{
+\dontrun{
+library(TAPseq)
+library(BSgenome)
+
+# human genome (hg38) BSgenome object
+hg38 <- getBSgenome("BSgenome.Hsapiens.UCSC.hg38")
+
+# get annotations for BLAST
+annot_url <- "ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_32/gencode.v32.annotation.gtf.gz"
+annot <- import(annot_url, format = "gtf")
+blast_exons <- annot[annot$type == "exon" & annot$gene_type == "protein_coding"]
+
+# build BLAST database
+blastdb <- file.path(tempdir(), "blastdb")
+createBLASTDb(genome = hg38, annot = blast_exons, blastdb = blastdb)
+}
 }

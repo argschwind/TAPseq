@@ -72,16 +72,16 @@ check_primers <- function(primers, primer_opt_tm, primer_min_tm, primer_max_tm,
 
   # create IO record for all primer pairs and catch any errors or warnings
   message("Creating input for Primer3...")
-  io <- lapply(pairs, FUN = function(pair){
+  io <- lapply(pairs, FUN = function(pair) {
     tryCatch({
        check_primers_io(pair, primer_opt_tm = primer_opt_tm, primer_min_tm = primer_min_tm,
                         primer_max_tm = primer_max_tm,
                         primer_thermodynamic_parameters_path = thermo_params_path)
-     }, error = function(e){
+     }, error = function(e) {
        message("Error in check_primers_io() for primer pair: ")
        message(e, "")
        return(NULL)
-     }, warning = function(w){
+     }, warning = function(w) {
        message("Warning in check_primers_io() for primer pair: ")
        message(e, "")
        return(NULL)
@@ -118,7 +118,7 @@ check_primers_io <- function(primer_pair, ...) {
   # create reverse complement of first primer
   primer2_revcomp <- as.character(Biostrings::reverseComplement(DNAString(primer_pair[1])))
 
-  # abort if primers are reverse complements, else create io record
+  # abort if primers are reverse complements
   if (primer_pair[2] == primer2_revcomp) {
     stop("Primers are reverse complements in pair: ", pair_id, call. = FALSE)
   }
@@ -171,4 +171,3 @@ process_output_record <- function(record) {
              stringsAsFactors = FALSE)
 
 }
-
