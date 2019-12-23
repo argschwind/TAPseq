@@ -95,7 +95,7 @@ blastdb <- file.path(tempdir(), "blastdb")
 createBLASTDb(genome = hg38, annot = blast_exons, blastdb = blastdb)
 
 # chr11 primers example data (already contains off-targets, but we can overwrite them)
-data(chr11_primers)
+data("chr11_primers")
 chr11_primers <- chr11_primers[1:3]  # only use a small subset for this example
 
 # run blast to identify potential off-targets
