@@ -8,18 +8,15 @@
 \title{Check primers for complementarity}
 \usage{
 checkPrimers(object, primer_opt_tm = NA, primer_min_tm = NA,
-  primer_max_tm = NA,
-  thermo_params_path = getOption("TAPseq.thermodynamic_params_path"),
+  primer_max_tm = NA, thermo_params_path = NA,
   primer3_core = getOption("TAPseq.primer3_core"))
 
 \S4method{checkPrimers}{TsIO}(object, primer_opt_tm = NA,
-  primer_min_tm = NA, primer_max_tm = NA,
-  thermo_params_path = getOption("TAPseq.thermodynamic_params_path"),
+  primer_min_tm = NA, primer_max_tm = NA, thermo_params_path = NA,
   primer3_core = getOption("TAPseq.primer3_core"))
 
 \S4method{checkPrimers}{TsIOList}(object, primer_opt_tm = NA,
-  primer_min_tm = NA, primer_max_tm = NA,
-  thermo_params_path = getOption("TAPseq.thermodynamic_params_path"),
+  primer_min_tm = NA, primer_max_tm = NA, thermo_params_path = NA,
   primer3_core = getOption("TAPseq.primer3_core"))
 }
 \arguments{
@@ -29,8 +26,8 @@ designed primers.}
 \item{primer_opt_tm, primer_min_tm, primer_max_tm}{Optimal, minumum and maximum primer melting
 temperature.}
 
-\item{thermo_params_path}{Path (character) to the \code{primer3_config} directory. Default set to
-the same directory where \code{primer3_core} executable is found.}
+\item{thermo_params_path}{Optional path (character) to the \code{primer3_config} directory. Only
+required when using Primer3 < 2.5.0.}
 
 \item{primer3_core}{Path (character) to the \code{primer3_core} executable. Usually this is
 inferred when loading/attaching the package.}

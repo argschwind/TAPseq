@@ -7,8 +7,8 @@
 #'   designed primers.
 #' @param primer_opt_tm,primer_min_tm,primer_max_tm Optimal, minumum and maximum primer melting
 #'   temperature.
-#' @param thermo_params_path Path (character) to the \code{primer3_config} directory. Default set to
-#'   the same directory where \code{primer3_core} executable is found.
+#' @param thermo_params_path Optional path (character) to the \code{primer3_config} directory. Only
+#'   required when using Primer3 < 2.5.0.
 #' @param primer3_core Path (character) to the \code{primer3_core} executable. Usually this is
 #'   inferred when loading/attaching the package.
 #' @return A \code{\link[base]{data.frame}} with \code{check_primers} results.
@@ -38,8 +38,7 @@
 #' @export
 setGeneric("checkPrimers",
            function(object, primer_opt_tm = NA, primer_min_tm = NA, primer_max_tm = NA,
-                    thermo_params_path = getOption("TAPseq.thermodynamic_params_path"),
-                    primer3_core = getOption("TAPseq.primer3_core"))
+                    thermo_params_path = NA, primer3_core = getOption("TAPseq.primer3_core"))
              standardGeneric("checkPrimers")
 )
 

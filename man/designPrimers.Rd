@@ -7,23 +7,20 @@
 \alias{designPrimers,TsIOList-method}
 \title{Design primers}
 \usage{
-designPrimers(object,
-  thermo_params_path = getOption("TAPseq.thermodynamic_params_path"),
+designPrimers(object, thermo_params_path = NA,
   primer3_core = getOption("TAPseq.primer3_core"))
 
-\S4method{designPrimers}{TsIO}(object,
-  thermo_params_path = getOption("TAPseq.thermodynamic_params_path"),
+\S4method{designPrimers}{TsIO}(object, thermo_params_path = NA,
   primer3_core = getOption("TAPseq.primer3_core"))
 
-\S4method{designPrimers}{TsIOList}(object,
-  thermo_params_path = getOption("TAPseq.thermodynamic_params_path"),
+\S4method{designPrimers}{TsIOList}(object, thermo_params_path = NA,
   primer3_core = getOption("TAPseq.primer3_core"))
 }
 \arguments{
 \item{object}{TsIO of TsIOList object for which primers should be designed.}
 
-\item{thermo_params_path}{Path (character) to the \code{primer3_config} directory. Default set to
-the same directory where \code{primer3_core} executable is found.}
+\item{thermo_params_path}{Optional path (character) to the \code{primer3_config} directory. Only
+required when using Primer3 < 2.5.0.}
 
 \item{primer3_core}{Path (character) to the \code{primer3_core} executable. Usually this is
 inferred when loading/attaching the package.}

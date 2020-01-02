@@ -4,8 +4,8 @@
 #' Creates boulder-IO records, passes input to Primer3 and parses the output.
 #'
 #' @param object TsIO of TsIOList object for which primers should be designed.
-#' @param thermo_params_path Path (character) to the \code{primer3_config} directory. Default set to
-#'   the same directory where \code{primer3_core} executable is found.
+#' @param thermo_params_path Optional path (character) to the \code{primer3_config} directory. Only
+#'   required when using Primer3 < 2.5.0.
 #' @param primer3_core Path (character) to the \code{primer3_core} executable. Usually this is
 #'   inferred when loading/attaching the package.
 #' @return A new \code{TsIO} or \code{TsIOList} object containing all Primer3 output.
@@ -31,7 +31,7 @@
 #' tapseq_primers(tapseq_io)
 #' @export
 setGeneric("designPrimers",
-           function(object, thermo_params_path = getOption("TAPseq.thermodynamic_params_path"),
+           function(object, thermo_params_path = NA,
                     primer3_core = getOption("TAPseq.primer3_core"))
              standardGeneric("designPrimers")
 )
@@ -104,9 +104,8 @@ setMethod("designPrimers", "TsIOList", function(object, thermo_params_path, prim
 #' tapseq_io <- TAPseqInput(chr11_sequence_templates[1:2], reverse_primer = reverse_primer,
 #'                          product_size_range = c(350, 500))
 #'
-#' # create boulder IO record(s)
-#' thermo_params_path <- getOption("TAPseq.thermodynamic_params_path")
-#' io_record <- createIORecord(tapseq_io, thermo_params_path = thermo_params_path)
+#' # create boulder IO records
+#' io_record <- createIORecord(tapseq_io)
 #'
 #' # design primers and store raw Primer3 output
 #' primer3_core <- getOption("TAPseq.primer3_core")
@@ -150,7 +149,7 @@ parsePrimer3Output <- function(object, primer3_output) {
 
 ## HELPER FUNCTIONS ================================================================================
 
-# Parse Primer3 output into list of named character vectors containing all output per entry
+# Parse Primer3 output into a list of lists with named character vectors containing output per entry
 parse_primer3_output <- function(x) {
 
   # get indices of final elements of each record (separators)

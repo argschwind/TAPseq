@@ -48,10 +48,7 @@ test_that("TAPseqInput() aborts with incorrect input format", {
 
 # test createIORecord() ----------------------------------------------------------------------------
 
-# mock thermo_params_path, as this will vary between systems
-thermo_path <- "/path/to/primer3_config"
-
-# expected boulder IO record for a TsIO object
+# expected boulder IO records for TsIO objects
 expect_out1 <- c(
   "SEQUENCE_ID=AKIP1",
   paste0("SEQUENCE_TEMPLATE=", as.character(seq_templ[[1]])),
@@ -63,12 +60,15 @@ expect_out1 <- c(
   "PRIMER_PICK_LEFT_PRIMER=1",
   "PRIMER_PICK_RIGHT_PRIMER=0",
   "SEQUENCE_EXCLUDED_REGION=0,499 650,356",
-  paste0("PRIMER_THERMODYNAMIC_PARAMETERS_PATH=", thermo_path),
   "="
 )
 
+expect_out2 <- c(expect_out1[1:7],
+                 "PRIMER_THERMODYNAMIC_PARAMETERS_PATH=/path/to/primer3_config",
+                 expect_out1[8:11])
+
 # expected boulder IO record for a TsIOList object
-expect_out2 <- c(
+expect_out3 <- c(
   expect_out1,
   "SEQUENCE_ID=ARFIP2",
   paste0("SEQUENCE_TEMPLATE=", as.character(seq_templ[[2]])),
@@ -80,20 +80,23 @@ expect_out2 <- c(
   "PRIMER_PICK_LEFT_PRIMER=1",
   "PRIMER_PICK_RIGHT_PRIMER=0",
   "SEQUENCE_EXCLUDED_REGION=0,1463 1614,356",
-  paste0("PRIMER_THERMODYNAMIC_PARAMETERS_PATH=", thermo_path),
   "="
 )
 
 test_that("createIORecord() creates correct output from TsIO object", {
-  output <- createIORecord(obj[[1]], thermo_params_path = thermo_path)
+  output <- createIORecord(obj[[1]])
   expect_equal(class(output), "character")
-  expect_length(output, 12)
   expect_identical(output, expect_out1)
 })
 
-test_that("createIORecord() creates correct output from TsIOList object", {
-  output <- createIORecord(obj, thermo_params_path = thermo_path)
+test_that("createIORecord() handles optional thermo_params_path parameter correctly", {
+  output <- createIORecord(obj[[1]], thermo_params_path = "/path/to/primer3_config")
   expect_equal(class(output), "character")
-  expect_length(output, 24)
   expect_identical(output, expect_out2)
+})
+
+test_that("createIORecord() creates correct output from TsIOList object", {
+  output <- createIORecord(obj)
+  expect_equal(class(output), "character")
+  expect_identical(output, expect_out3)
 })

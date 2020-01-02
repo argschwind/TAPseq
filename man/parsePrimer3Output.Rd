@@ -34,9 +34,8 @@ reverse_primer <- "AAGCAGTGGTATCAACGCAGAGT"
 tapseq_io <- TAPseqInput(chr11_sequence_templates[1:2], reverse_primer = reverse_primer,
                          product_size_range = c(350, 500))
 
-# create boulder IO record(s)
-thermo_params_path <- getOption("TAPseq.thermodynamic_params_path")
-io_record <- createIORecord(tapseq_io, thermo_params_path = thermo_params_path)
+# create boulder IO records
+io_record <- createIORecord(tapseq_io)
 
 # design primers and store raw Primer3 output
 primer3_core <- getOption("TAPseq.primer3_core")
