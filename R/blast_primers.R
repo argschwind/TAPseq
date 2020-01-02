@@ -5,11 +5,10 @@
 #' The created database contains both sequence files for BLAST and annotations to process the
 #' results.
 #'
-#' @param genome The \code{\link[BSgenome]{BSgenome}} object of the genome to be used to obtain
-#'   genome and / or transcript sequences.
+#' @param genome A \code{\link[BSgenome]{BSgenome}} (or \code{\link[Biostrings]{DNAStringSet}})
+#'   object containing the sequences of all chromosomes to obtain genome and transcript sequences.
 #' @param annot A \code{\link[GenomicRanges]{GRanges}} object containing all exons of transcripts to
-#'   be considered. If not specified, no transcript sequences will be included in the output fasta
-#'   file.
+#'   be considered.
 #' @param blastdb Path to the directory where the database should be created. Will be created if not
 #'   existing. If the directory already exist, the function will raise a warning, but overwrite any
 #'   previous blast database files (other files stay untouched).
@@ -44,6 +43,11 @@ createBLASTDb <- function(genome, annot, blastdb, standard_chromosomes = TRUE,
                           tx_id = "transcript_id", tx_name = "transcript_name",
                           gene_name = "gene_name", gene_id = "gene_id", title = "TAP-seq_GT_DB",
                           verbose = FALSE, makeblastdb = getOption("TAPseq.makeblastdb")) {
+
+  # make sure that genome is a BSgenome object or DNAStringSet object
+  if (!any(is(genome, "BSgenome"), is(genome, "DNAStringSet"))) {
+    stop("genome must be of class BSgenome or DNAStringSet!", call. = FALSE)
+  }
 
   # create blast database directory if required
   dir.create(blastdb, recursive = TRUE, showWarnings = TRUE)
@@ -263,8 +267,8 @@ setMethod("blastPrimers", "TsIOList", function(object, blastdb, max_mismatch, mi
 #' Get DNA sequences of all chromosomes and all annotated transcripts of a genome. This function is
 #' used to create the sequences in \code{\link[TAPseq]{createBLASTDb}}.
 #'
-#' @param genome The \code{\link[BSgenome]{BSgenome}} object of the genome to be used to obtain
-#'   genome and / or transcript sequences.
+#' @param genome A \code{\link[BSgenome]{BSgenome}} (or \code{\link[Biostrings]{DNAStringSet}})
+#'   object containing the chromosome sequences to obtain genome and / or transcript sequences.
 #' @param annot A \code{\link[GenomicRanges]{GRanges}} object containing all exons of transcripts to
 #'   be considered. If not specified, no transcript sequences will be included in the output fasta
 #'   file.
@@ -288,9 +292,6 @@ get_gt_sequences <- function(genome, annot = NULL, tx_id = "transcript_id",
 
   if (!is.null(annot)) {
     message("Obtaining transcript sequences...")
-
-    # make sure that annot is a GRanges object
-    if (!is(annot, "GRanges")) stop("annot needs to be a GRanges object!", call. = FALSE)
 
     # check if any specified identifiers are not found in annotation metadata
     metadat <- mcols(annot)

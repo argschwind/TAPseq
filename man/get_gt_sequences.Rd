@@ -10,8 +10,8 @@ get_gt_sequences(genome, annot = NULL, tx_id = "transcript_id",
   standard_chromosomes = TRUE)
 }
 \arguments{
-\item{genome}{The \code{\link[BSgenome]{BSgenome}} object of the genome to be used to obtain
-genome and / or transcript sequences.}
+\item{genome}{A \code{\link[BSgenome]{BSgenome}} (or \code{\link[Biostrings]{DNAStringSet}})
+object containing the chromosome sequences to obtain genome and / or transcript sequences.}
 
 \item{annot}{A \code{\link[GenomicRanges]{GRanges}} object containing all exons of transcripts to
 be considered. If not specified, no transcript sequences will be included in the output fasta

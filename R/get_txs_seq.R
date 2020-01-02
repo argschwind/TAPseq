@@ -52,6 +52,12 @@ setMethod("getTxsSeq", "GRangesList", function(transcripts, genome) {
     stop("genome must be of class BSgenome or DNAStringSet!", call. = FALSE)
   }
 
+  # make sure that all chromosomes in transcripts are found in genome
+  txs_chrs <- as.character(unique(seqnames(unlist(transcripts))))
+  if (length(setdiff(txs_chrs, names(genome))) > 0) {
+    stop("Not all chromosomes in transcripts found in genome object!", call. = FALSE)
+  }
+
   # get indices of transcripts on positive and negative strand
   txs_pos <- which(all(strand(transcripts) == "+"))
   txs_neg <- which(all(strand(transcripts) == "-"))

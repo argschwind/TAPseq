@@ -56,3 +56,10 @@ test_that("getTxsSeq aborts if transcripts have inconsistent strand information"
   expect_error(getTxsSeq(input[[1]], genome = chr11_seq),
                "Incorrect strand information in transcripts!")
 })
+
+test_that("getTxsSeq aborts if chromosomes of transcripts are not found in genome", {
+  faulty_genome <- chr11_seq
+  names(faulty_genome) <- "11"
+  expect_error(getTxsSeq(chr11_truncated_txs, genome = faulty_genome),
+               "Not all chromosomes in transcripts found in genome object!")
+})

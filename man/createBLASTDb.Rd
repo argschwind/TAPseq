@@ -11,12 +11,11 @@ createBLASTDb(genome, annot, blastdb, standard_chromosomes = TRUE,
   makeblastdb = getOption("TAPseq.makeblastdb"))
 }
 \arguments{
-\item{genome}{The \code{\link[BSgenome]{BSgenome}} object of the genome to be used to obtain
-genome and / or transcript sequences.}
+\item{genome}{A \code{\link[BSgenome]{BSgenome}} (or \code{\link[Biostrings]{DNAStringSet}})
+object containing the sequences of all chromosomes to obtain genome and transcript sequences.}
 
 \item{annot}{A \code{\link[GenomicRanges]{GRanges}} object containing all exons of transcripts to
-be considered. If not specified, no transcript sequences will be included in the output fasta
-file.}
+be considered.}
 
 \item{blastdb}{Path to the directory where the database should be created. Will be created if not
 existing. If the directory already exist, the function will raise a warning, but overwrite any
