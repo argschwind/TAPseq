@@ -54,13 +54,14 @@ library(GenomicRanges)
 data("chr11_genes")
 target_genes <- split(chr11_genes, f = chr11_genes$gene_name)
 
+# subset of target genes for quick example
+target_genes <- target_genes[18:27]
+
 # bam file containing aligned Drop-seq reads
 dropseq_bam <- system.file("extdata", "chr11_k562_dropseq.bam", package = "TAPseq")
 
 # infer polyA sites for all target genes with adjusted parameters. parameter values depend on the
 # input data and at this stage it's best to try different settings and check the results
-?inferPolyASites
 polyA_sites <- inferPolyASites(target_genes, bam = dropseq_bam, polyA_downstream = 50,
-                               wdsize = 100, min_cvrg = 1)
-
+                               wdsize = 100, min_cvrg = 1, parallel = TRUE)
 }

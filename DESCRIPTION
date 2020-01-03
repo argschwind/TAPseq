@@ -1,7 +1,7 @@
 Package: TAPseq
 Type: Package
 Title: TAP-seq primer design
-Version: 0.2.2.9010
+Version: 0.3.0
 Authors@R: person("Andreas", "Gschwind", email = "andreas.gschwind@stanford.edu",
                   role = c("aut", "cre"))
 Description: Design and assess TAP-seq primers using Primer3 and BLAST.
@@ -23,8 +23,12 @@ Imports:
     methods,
     Biostrings,
     dplyr,
-    tidyr
+    tidyr,
+    BiocParallel
 Suggests: 
-    BiocParallel,
     testthat,
-    BSgenome.Hsapiens.UCSC.hg38
+    BSgenome.Hsapiens.UCSC.hg38,
+    knitr,
+    rmarkdown,
+    ggplot2
+VignetteBuilder: knitr
