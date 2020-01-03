@@ -7,23 +7,20 @@
 \alias{createIORecord,TsIOList-method}
 \title{Create boulder IO record}
 \usage{
-createIORecord(object,
-  thermo_params_path = getOption("TAPseq.thermodynamic_params_path"))
+createIORecord(object, thermo_params_path = NA)
 
-\S4method{createIORecord}{TsIO}(object,
-  thermo_params_path = getOption("TAPseq.thermodynamic_params_path"))
+\S4method{createIORecord}{TsIO}(object, thermo_params_path = NA)
 
-\S4method{createIORecord}{TsIOList}(object,
-  thermo_params_path = getOption("TAPseq.thermodynamic_params_path"))
+\S4method{createIORecord}{TsIOList}(object, thermo_params_path = NA)
 }
 \arguments{
 \item{object}{TsIO of TsIOList object for which a Primer3 boulder IO record should be created.}
 
-\item{thermo_params_path}{Path (character) to the \code{primer3_config} directory. Default set to
-the same directory where \code{primer3_core} executable is found.}
+\item{thermo_params_path}{Optional path (character) to the \code{primer3_config} directory. Only
+required when using Primer3 < 2.5.0.}
 }
 \value{
-A character vectors containing the individual lines of the IO record.
+A character vector containing the lines of the IO record.
 }
 \description{
 Takes a \code{\link[TAPseq]{TsIO}} or \code{\link[TAPseq]{TsIOList}} object and converts it
@@ -44,6 +41,23 @@ conventional way.
 \item \code{TsIOList}: Create IO record from \code{TsIO} objects.
 }}
 
+\examples{
+library(TAPseq)
+
+# chromosome 11 region sequence templates
+data("chr11_sequence_templates")
+
+# reverse primer used in all PCR reactions
+reverse_primer <- "AAGCAGTGGTATCAACGCAGAGT"
+
+# create TsIOList object from sequence templates
+obj <- TAPseqInput(chr11_sequence_templates[1:2], reverse_primer = reverse_primer,
+                   product_size_range = c(350, 500))
+
+# create boulder IO record
+boulder_io <- createIORecord(obj)
+boulder_io
+}
 \seealso{
 \url{http://primer3.org/manual.html} for Primer3 manual.
 }

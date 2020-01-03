@@ -8,18 +8,15 @@
 \title{Check primers for complementarity}
 \usage{
 checkPrimers(object, primer_opt_tm = NA, primer_min_tm = NA,
-  primer_max_tm = NA,
-  thermo_params_path = getOption("TAPseq.thermodynamic_params_path"),
+  primer_max_tm = NA, thermo_params_path = NA,
   primer3_core = getOption("TAPseq.primer3_core"))
 
 \S4method{checkPrimers}{TsIO}(object, primer_opt_tm = NA,
-  primer_min_tm = NA, primer_max_tm = NA,
-  thermo_params_path = getOption("TAPseq.thermodynamic_params_path"),
+  primer_min_tm = NA, primer_max_tm = NA, thermo_params_path = NA,
   primer3_core = getOption("TAPseq.primer3_core"))
 
 \S4method{checkPrimers}{TsIOList}(object, primer_opt_tm = NA,
-  primer_min_tm = NA, primer_max_tm = NA,
-  thermo_params_path = getOption("TAPseq.thermodynamic_params_path"),
+  primer_min_tm = NA, primer_max_tm = NA, thermo_params_path = NA,
   primer3_core = getOption("TAPseq.primer3_core"))
 }
 \arguments{
@@ -29,8 +26,8 @@ designed primers.}
 \item{primer_opt_tm, primer_min_tm, primer_max_tm}{Optimal, minumum and maximum primer melting
 temperature.}
 
-\item{thermo_params_path}{Path (character) to the \code{primer3_config} directory. Default set to
-the same directory where \code{primer3_core} executable is found.}
+\item{thermo_params_path}{Optional path (character) to the \code{primer3_config} directory. Only
+required when using Primer3 < 2.5.0.}
 
 \item{primer3_core}{Path (character) to the \code{primer3_core} executable. Usually this is
 inferred when loading/attaching the package.}
@@ -49,6 +46,29 @@ complementarity issues when multiplexing. Uses Primer3's \code{check_primers} fu
 \item \code{TsIOList}: Check primers from \code{TsIOList} objects.
 }}
 
+\examples{
+\dontrun{
+library(TAPseq)
+library(ggplot2)
+
+# chr11 primers example data
+data("chr11_primers")
+
+# pick best primers based on predicted off-targets
+best_primers <- pickPrimers(chr11_primers, n = 1, by = "off_targets")
+
+# check for complementarity
+comp <- checkPrimers(best_primers)
+
+# plot complementarity scores for every pair. the lines indicate complementarity scores of 47,
+# the default value applied by Primer3 to identify high complementarity primer pairs
+ggplot(comp, aes(x = primer_pair_compl_any_th, y = primer_pair_compl_end_th)) +
+  geom_hline(aes(yintercept = 47), colour = "darkgray", linetype = "dashed") +
+  geom_vline(aes(xintercept = 47), colour = "darkgray", linetype = "dashed") +
+  geom_point(alpha = 0.25) +
+  theme_bw()
+}
+}
 \seealso{
 \url{http://primer3.org/manual.html} for Primer3 manual.
 }

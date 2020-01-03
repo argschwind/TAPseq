@@ -2,7 +2,7 @@
 
 #' TsIO class
 #'
-#' TsIO objects store TAP-seq input and output for Primer3.
+#' TsIO objects store TAP-seq Primer3 input and output.
 #'
 #' The TsIO class is based on the Boulder IO records used by Primer3
 #' (\href{http://primer3.sourceforge.net/primer3_manual.htm}{Primer3 manual}). These objects allow
@@ -29,7 +29,25 @@
 #' @param value A valid value to assign to the chosen slot.
 #' @return A \code{TsIO} object.
 #' @seealso \url{http://primer3.org/manual.html} for Primer3 manual.
+#' @examples
+#' library(TAPseq)
 #'
+#' # get example sequence templates
+#' data("chr11_sequence_templates")
+#' tx_seq <- chr11_sequence_templates[[1]]
+#' tx_id <- names(chr11_sequence_templates)[1]
+#'
+#' # reverse primer used in all PCR reactions
+#' reverse_primer <- "AAGCAGTGGTATCAACGCAGAGT"
+#'
+#' # create TsIO object
+#' obj <- TsIO(sequence_template = tx_seq, sequence_id = tx_id, reverse_primer = reverse_primer,
+#'             product_size_range = c(350, 500))
+#'
+#' # different slot values can be accessed using accessor functions
+#' sequence_template(obj)
+#' sequence_id(obj) <- "Gene1"
+#' sequence_id(obj)
 setClass("TsIO",
   slots = c(
     sequence_id = "character",
@@ -148,6 +166,33 @@ setValidity("TsIO", function(object) {
 #' @param x A \code{TsIOList} object.
 #' @return A \code{TsIOList} object.
 #' @seealso \link[TAPseq]{TsIO}
+#' @examples
+#' library(TAPseq)
+#'
+#' # get example sequence templates
+#' data("chr11_sequence_templates")
+#' txs_seqs <- chr11_sequence_templates[1:2]
+#' txs_ids  <- names(txs_seqs)
+#'
+#' # reverse primer used in all PCR reactions
+#' reverse_primer <- "AAGCAGTGGTATCAACGCAGAGT"
+#'
+#' # create TsIO objects
+#' tsio1 <- TsIO(sequence_template = txs_seqs[[1]], sequence_id = txs_ids[1],
+#'               reverse_primer = reverse_primer, product_size_range = c(350, 500))
+#'
+#' tsio2 <- TsIO(sequence_template = txs_seqs[[2]], sequence_id = txs_ids[2],
+#'               reverse_primer = reverse_primer, product_size_range = c(350, 500))
+#'
+#' # create TsIOList object
+#' obj <- TsIOList(tsio1, tsio2)
+#'
+#' # it's noteworthy that when creating a TsIOList from a DNAStringSet of sequence templates, it's
+#' # easier to use TAPseqInput()
+#' ?TAPseqInput
+#'
+#' # as with TsIO objects, some slot values can be accessed using accessor functions
+#' sequence_template(obj)
 setClass("TsIOList",
          contains = "SimpleList",
          prototype = prototype(elementType = "TsIO"))

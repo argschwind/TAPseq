@@ -7,33 +7,37 @@
 \alias{blastPrimers,TsIOList-method}
 \title{BLAST TAP-seq primers}
 \usage{
-blastPrimers(object, blastdb, annot, max_mismatch = 0,
-  min_aligned = 0.75, tmpdir = tempdir(),
+blastPrimers(object, blastdb, max_mismatch = 0, min_aligned = 0.75,
+  primer_targets = c("transcript_id", "transcript_name", "gene_id",
+  "gene_name"), tmpdir = tempdir(),
   blastn = getOption("TAPseq.blastn"))
 
-\S4method{blastPrimers}{TsIO}(object, blastdb, annot, max_mismatch = 0,
-  min_aligned = 0.75, tmpdir = tempdir(),
+\S4method{blastPrimers}{TsIO}(object, blastdb, max_mismatch = 0,
+  min_aligned = 0.75, primer_targets = c("transcript_id",
+  "transcript_name", "gene_id", "gene_name"), tmpdir = tempdir(),
   blastn = getOption("TAPseq.blastn"))
 
-\S4method{blastPrimers}{TsIOList}(object, blastdb, annot,
-  max_mismatch = 0, min_aligned = 0.75, tmpdir = tempdir(),
+\S4method{blastPrimers}{TsIOList}(object, blastdb, max_mismatch = 0,
+  min_aligned = 0.75, primer_targets = c("transcript_id",
+  "transcript_name", "gene_id", "gene_name"), tmpdir = tempdir(),
   blastn = getOption("TAPseq.blastn"))
 }
 \arguments{
 \item{object}{A \code{\link[TAPseq]{TsIO}} or \code{\link[TAPseq]{TsIOList}} object containing
 designed primers.}
 
-\item{blastdb}{BLAST database to which primers should be aligned. Can be created with
-\code{\link[TAPseq]{createBLASTDb}}.}
-
-\item{annot}{A \code{\link[GenomicRanges]{GRanges}} object containing exons of transcripts, which
-will be used to annotate blast hits on the genome sequence. The same object as used in
-\code{\link[TAPseq]{createFasta}}.}
+\item{blastdb}{TAP-seq BLAST database created with \code{\link[TAPseq]{createBLASTDb}}.}
 
 \item{max_mismatch}{Maximum number of mismatches allowed for off-target hits (default: 0).}
 
 \item{min_aligned}{Minimum portion of the primer sequence starting from the 3' end that must
 align for off-target hits (default: 0.75).}
+
+\item{primer_targets}{Specifies what should be used to identify primer targets for off-target
+identification. I.e. to what does the 'seqID' in TsIO objects refer? Can be a subset of
+\code{transcript_id}, \code{transcript_name}, \code{gene_id} or \code{gene_name}. By default
+all 4 are checked. Set to \code{NULL} to disable any off-target identification. See Details for
+more information.}
 
 \item{tmpdir}{Directory needed to store temporary files.}
 
@@ -50,10 +54,56 @@ estimate off-target priming potential. Only hits where at least a specified port
 sequence involving the 3' end of the primer aligns with not more than a certain number of
 mismatches are considered.
 }
+\details{
+\code{blastPrimers} counts the number of genes in which a primer has 1) exonic hits or 2)
+intronic hits, or 3) the number of hits in intergenic regions of the genome. The exonic and
+intronic counts should be interptreted as: "In how many genes does a primer have exonic
+(or intronic) hits?".
+
+If a BLAST hit falls in both intronic and exonic regions of a given gene (i.e. exonic for one
+transcript, intronic for another transcript), only the exonic hit is counted for that gene. If a
+primer has for instance 3 BLAST hits in one gene, 2 exonic and 1 intronic, then one exonic hit
+and one intronic hit is counted for that gene.
+
+If seqID of the designed primers (\code{\link[TAPseq]{sequence_id}}) refer to the target
+gene/transcripts and can be found in the BLAST database annotations via \code{primer_targets},
+then only off-target hits are counted. This is usually the case if input for primer design was
+produced from target gene annotations.
+}
 \section{Methods (by class)}{
 \itemize{
-\item \code{TsIO}: Blast primers in a \code{TsIO} object
+\item \code{TsIO}: BLAST primers in a \code{TsIO} object
 
-\item \code{TsIOList}: Blast primers in a \code{TsIOList} object
+\item \code{TsIOList}: BLAST primers in a \code{TsIOList} object
 }}
 
+\examples{
+\dontrun{
+library(TAPseq)
+library(BSgenome)
+
+# human genome (hg38) BSgenome object
+hg38 <- getBSgenome("BSgenome.Hsapiens.UCSC.hg38")
+
+# get annotations for BLAST
+annot_url <- "ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_32/gencode.v32.annotation.gtf.gz"
+annot <- import(annot_url, format = "gtf")
+blast_exons <- annot[annot$type == "exon" & annot$gene_type == "protein_coding"]
+
+# build BLAST database
+blastdb <- file.path(tempdir(), "blastdb")
+createBLASTDb(genome = hg38, annot = blast_exons, blastdb = blastdb)
+
+# chr11 primers example data (already contains off-targets, but we can overwrite them)
+data("chr11_primers")
+chr11_primers <- chr11_primers[1:3]  # only use a small subset for this example
+
+# run blast to identify potential off-targets
+chr11_primers <- blastPrimers(chr11_primers, blastdb = blastdb)
+tapseq_primers(chr11_primers)
+
+# allow 1 mismatch between primer and off-target
+chr11_primers <- blastPrimers(chr11_primers, blastdb = blastdb, max_mismatch = 1)
+tapseq_primers(chr11_primers)
+}
+}

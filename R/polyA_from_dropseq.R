@@ -26,9 +26,7 @@
 #' @param parallel (logical) Triggers parallel computing using the \code{BiocParallel} package.
 #'   This requires that a parallel back-end was registered prior to executing the function.
 #'   (default: FALSE).
-#'
 #' @return A \code{GRanges} object containing coordinates of estimated polyadenylation sites.
-#'
 #' @examples
 #' library(GenomicRanges)
 #'
@@ -36,15 +34,16 @@
 #' data("chr11_genes")
 #' target_genes <- split(chr11_genes, f = chr11_genes$gene_name)
 #'
+#' # subset of target genes for quick example
+#' target_genes <- target_genes[18:27]
+#'
 #' # bam file containing aligned Drop-seq reads
 #' dropseq_bam <- system.file("extdata", "chr11_k562_dropseq.bam", package = "TAPseq")
 #'
 #' # infer polyA sites for all target genes with adjusted parameters. parameter values depend on the
 #' # input data and at this stage it's best to try different settings and check the results
-#' ?inferPolyASites
 #' polyA_sites <- inferPolyASites(target_genes, bam = dropseq_bam, polyA_downstream = 50,
-#'                                wdsize = 100, min_cvrg = 1)
-#'
+#'                                wdsize = 100, min_cvrg = 1, parallel = TRUE)
 #' @export
 inferPolyASites <- function(genes, bam, polyA_downstream = 100, min_cvrg = 0, wdsize = 200,
                             by = 1, extend_downstream = 0, perc_threshold = 0.9, parallel = FALSE) {
@@ -100,7 +99,7 @@ inferPolyASites <- function(genes, bam, polyA_downstream = 100, min_cvrg = 0, wd
 polyA_site_gene <- function(gene, coverage, polyA_downstream, wdsize, by, extend_downstream,
                             perc_threshold) {
 
-  # process annotation and coverage data --------------------------------------
+  # process annotation and coverage data -----------------------------------------------------------
 
   # get chromosome and strand of gene
   chr <- as.character(unique(seqnames(gene)))
@@ -120,7 +119,7 @@ polyA_site_gene <- function(gene, coverage, polyA_downstream, wdsize, by, extend
     exon_starts <- c(1, exon_ends[-length(exon_ends)] + 1)
     tx_exons <- IRanges(exon_starts, exon_ends)
 
-    # calculate coverage in sliding windows along gene ------------------------
+    # calculate coverage in sliding windows along gene ---------------------------------------------
 
     # coverage of gene
     gene_cvrg <- Views(coverage[[chr]], ranges(exons))
@@ -137,14 +136,14 @@ polyA_site_gene <- function(gene, coverage, polyA_downstream, wdsize, by, extend
     # calculate coverage in each window
     wd_cvrg <- sum(Views(tx_cvrg, wds))
 
-    # define putative polyA site based on local maxima (peaks) ----------------
+    # define putative polyA site based on local maxima (peaks) -------------------------------------
 
     # calculate local maxima in smoothed coverage
     peaks <- local_maxima(wd_cvrg)
     peaks_cvrg <- wd_cvrg[peaks]
 
     # retain peaks which coverage is >= perc_threshold
-    min_cvrg <- as.numeric(quantile(wd_cvrg, probs = perc_threshold))
+    min_cvrg <- as.numeric(stats::quantile(wd_cvrg, probs = perc_threshold))
     peaks <- peaks[peaks_cvrg >= min_cvrg]
 
     # get windows for these peaks
@@ -165,7 +164,7 @@ polyA_site_gene <- function(gene, coverage, polyA_downstream, wdsize, by, extend
     exon_starts <- c(1, exon_ends[-length(exon_ends)] + 1)
     tx_exons <- IRanges(exon_starts, exon_ends)
 
-    # calculate coverage in sliding windows along gene ------------------------
+    # calculate coverage in sliding windows along gene ---------------------------------------------
 
     gene_cvrg <- Views(coverage[[chr]], ranges(exons))
 
@@ -177,12 +176,12 @@ polyA_site_gene <- function(gene, coverage, polyA_downstream, wdsize, by, extend
 
     wd_cvrg <- sum(Views(tx_cvrg, wds))
 
-    # define putative polyA site based on local maxima (peaks) ----------------
+    # define putative polyA site based on local maxima (peaks) -------------------------------------
 
     peaks <- local_maxima(wd_cvrg)
     peaks_cvrg <- wd_cvrg[peaks]
 
-    min_cvrg <- as.numeric(quantile(wd_cvrg, probs = perc_threshold))
+    min_cvrg <- as.numeric(stats::quantile(wd_cvrg, probs = perc_threshold))
     peaks <- peaks[peaks_cvrg >= min_cvrg]
 
     peak_wds <- wds[peaks]
@@ -193,7 +192,7 @@ polyA_site_gene <- function(gene, coverage, polyA_downstream, wdsize, by, extend
 
   }else{
 
-    stop("Gene strand not '+' or '-'!")
+    stop("Strand not '+' or '-' for at least 1 gene!", call. = FALSE)
 
   }
 
@@ -213,10 +212,10 @@ polyA_site_gene <- function(gene, coverage, polyA_downstream, wdsize, by, extend
 
     # get exon overlapping with polyA sites
     polyA_overlaps <- findOverlaps(query = tx_exons, subject = polyA_sites)
-    polyA_exons <- queryHits(polyA_overlaps)
+    polyA_exons <- S4Vectors::queryHits(polyA_overlaps)
 
     # only retain polyA sites that overlap any exons
-    polyA_sites <- polyA_sites[subjectHits(polyA_overlaps)]
+    polyA_sites <- polyA_sites[S4Vectors::subjectHits(polyA_overlaps)]
 
     # calculate distance of polyA site to the start of the overlapping exon
     pos_diff <- start(polyA_sites) - start(tx_exons[polyA_exons])

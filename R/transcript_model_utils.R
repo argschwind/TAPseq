@@ -1,46 +1,99 @@
 # --------------------------------------------------------------------------------------------------
 # This file contains various utility functions for truncating transcript models by
 # truncate_txs_polyA(). These functions are not exported to the NAMESPACE and are intended to be
-# used as internal functions.
+# used as internal functions. Serious errors can occur when these functions are used out of their
+# context. YOU HAVE BEEN WARNED!
 # --------------------------------------------------------------------------------------------------
 
-# Extend a provided transcript model at the 3' (downstream) or 5' (upstream)
-# by the specified number of base pairs. Only operates on the terminal exons of
-# the transcript.
-extend_tx <- function(tx, upstream = 0, downstream = 0){
+# truncate transcripts of a gene at an overlapping polyA site (if any are found). polyA_select is
+# used to control how the polyA site for truncation is selected if multiple polyA sites overlap with
+# the gene. if the selected polyA site overlaps with multiple annotated transcripts, truncation is
+# performed on a meta-transcript created by merging all transcripts overlapping with the site. if no
+# polyA site overlaps with the gene, a meta-transcript containing all merged transcripts is returned
+truncate_tx_polyA <- function(transcripts, polyA_sites, extend_3prime_end = 0,
+                              polyA_select = c("downstream", "upstream", "score"),
+                              transcript_id = "transcript_id", gene_id = "gene_id",
+                              exon_number = "exon_number", ignore_strand = FALSE) {
 
-  # make sure that all exons are on the same chromosome
-  if (length(unique(GenomeInfoDb::seqnames(tx))) > 1){
+  # get polyA_select argument
+  polyA_select <- match.arg(polyA_select)
 
-    stop("Transcript maps to multiple sequences, unable to extend correctly!")
+  # split transcripts by transcript id
+  txs <- split(transcripts, f = mcols(transcripts)[[transcript_id]])
 
+  # extend 3' ends of the terminal exons
+  txs_ext <- endoapply(txs, FUN = extend_tx, downstream = extend_3prime_end)
+
+  # find polyA sites overlapping transcripts
+  overlaps_sites <- findOverlaps(txs_ext, polyA_sites, ignore.strand = ignore_strand)
+
+  # extract overlaping sites
+  site_ids <- unique(subjectHits(overlaps_sites))
+  sites <- polyA_sites[site_ids]
+  sites$id <- site_ids
+
+  # truncate transcripts if at least one overlapping site is found
+  if (length(sites) > 0) {
+
+    # order sites according to strand of transcripts
+    if (all(strand(transcripts) == "-")) {
+      sites <- sort(sites, decreasing = TRUE)
+    }else{
+      sites <- sort(sites)
+    }
+
+    # select polyA site for truncation based on polyA_select
+    if (polyA_select == "downstream") {
+      site <- sites[length(sites)]
+    }else if (polyA_select == "upstream") {
+      site <- sites[1]
+    }else{
+      site <- sites[which.max(sites$score)]
+    }
+
+    # select transcripts overlapping with the selected site
+    overlapping_txs <- txs_ext[queryHits(overlaps_sites)[subjectHits(overlaps_sites) == site$id]]
+
+    # if more than 1 transcript overlap the site it can't be specified which transcript overlaps
+    # the site. therefore overlapping exons of all transcripts overlapping the site are merged to
+    # derive a consensus transcript model.
+    if (length(overlapping_txs) > 1) {
+      tx <- reduce_gene(unlist(overlapping_txs), transcript_id = transcript_id, gene_id = gene_id,
+                        exon_number = exon_number)
+    }else{
+      tx <- sort(overlapping_txs[[1]])
+    }
+
+    # truncate overlapping transcript at selected polyA site
+    if (all(strand(tx) == "-")) {
+      restrict(tx, start = end(site)[length(site)] + 1, end = end(tx)[length(tx)])
+    }else{
+      restrict(tx, start = start(tx)[1], end = start(site)[1] - 1)
+    }
+
+  # if no overlapping polyA sites are found, no statement about the expressed transcript can be made
+  # and therefore the consensus (merge) of all transcripts is returned
+  }else{
+    reduce_gene(transcripts, transcript_id = transcript_id, gene_id = gene_id,
+                exon_number = exon_number)
   }
 
-  # make sure that exons do not overlap
-  if (length(GenomicRanges::reduce(tx)) < length(tx)){
+}
 
-    stop("Overlaps between exons found! Verify transcript model.")
-
-  }
+# extend a provided transcript model at the 3' (downstream) or 5' (upstream) by the specified number
+# of base pairs. Only extends the terminal exons of the transcript
+extend_tx <- function(tx, upstream = 0, downstream = 0) {
 
   # make sure that tx is sorted correctly
   tx <- sort(tx)
 
   # extend terminal exons depending on the strand
-  if (all(BiocGenerics::strand(tx) == "+")){
-
-    BiocGenerics::end(tx[length(tx)]) <- BiocGenerics::end(tx[length(tx)]) + downstream
-    BiocGenerics::start(tx[1]) <- BiocGenerics::start(tx[1]) - upstream
-
-  }else if (all(BiocGenerics::strand(tx) == "-")){
-
-    BiocGenerics::start(tx[1]) <- BiocGenerics::start(tx[1]) - downstream
-    BiocGenerics::end(tx[length(tx)]) <- BiocGenerics::end(tx[length(tx)]) + upstream
-
+  if (all(strand(tx) == "-")) {
+    start(tx[1]) <- start(tx[1]) - downstream
+    end(tx[length(tx)]) <- end(tx[length(tx)]) + upstream
   }else{
-
-    stop("Incorrect strand information, cannot extend correctly!")
-
+    end(tx[length(tx)]) <- end(tx[length(tx)]) + downstream
+    start(tx[1]) <- start(tx[1]) - upstream
   }
 
   # return modifed tx
@@ -48,224 +101,46 @@ extend_tx <- function(tx, upstream = 0, downstream = 0){
 
 }
 
-# Overlap a transcript model with a genomic site (GRanges) and truncate it at
-# the site if it overlaps any of the exons.
-truncate_tx <- function(tx, site, ignore_strand = FALSE){
+# Merge overlapping exons of a gene in GRanges format. Basically calls GenomicRanges::reduce, but
+# keeps metadata (id unique for all exons). gene_id, transcript_id and exon_number are names of
+# expected columns in metadata for these features. If found in input gene's metadata, they will be
+# used to create a new transcript id and exon numbers. If not found in input gene's metadata, these
+# columns simply won't appear in the output metadata.
+reduce_gene <- function(gene, gene_id = "gene_id", transcript_id = "transcript_id",
+                        exon_number = "exon_number") {
 
-  # make sure that all exons are on the same chromosome
-  if (length(unique(GenomeInfoDb::seqnames(tx))) > 1){
+  # reduce ranges of gene to create merged annotations
+  gene_red <- reduce(gene)
 
-    stop("Transcript maps to multiple sequences, unable to extend correctly!")
+  # get DataFrame containing metadata columns for input gene annotations
+  metadat_df <- mcols(gene)
 
+  # get columns with unique values and transform to list
+  metadat <- lapply(X = metadat_df, FUN = unique)
+
+  # set columns with non-unique values to NA
+  metadat[vapply(metadat, FUN = length, FUN.VALUE = integer(1)) > 1] <- as.integer(NA)
+
+  # add new transcript_id (gene_id + "-MERGED") to identify merged transcripts
+  gid <- as.character(metadat[[gene_id]])
+  metadat[[transcript_id]] <- paste(c(gid, "MERGED"), collapse = "-")
+
+  # create exon number and add to metadata
+  exon_num <- seq_len(length(gene_red))
+  if (all(strand(gene_red) == "-")) {
+    exon_num <- sort(exon_num, decreasing = TRUE)
   }
-
-  # make sure that exons do not overlap
-  if (length(GenomicRanges::reduce(tx)) < length(tx)){
-
-    stop("Overlaps between exons found! Verify transcript model.")
-
-  }
-
-  # make sure that tx is sorted correctly
-  tx <- sort(tx)
-
-  # get overlap site with tx
-  overlaps <- as.matrix(
-    GenomicRanges::findOverlaps(tx, site, ignore.strand = ignore_strand)
-    )
-
-  # truncate transcript if an overlap is found
-  if (length(overlaps)){
-
-    # extract overlapping exon
-    exon <- tx[overlaps[1, 1]]
-
-    # calculate truncated part of cut_exon and add truncated part plus all
-    # upstream exons to output
-    if (all(BiocGenerics::strand(tx) == "+")){
-
-      # get all exons upstream of truncated exon (if any)
-      if (overlaps[1, 1] > 1){
-
-        # upstream exons
-        output <- tx[1:(overlaps[1, 1] - 1)]
-
-      }else{
-
-        # transcript truncated in first exon
-        output <- GenomicRanges::GRanges()
-
-      }
-
-      # get the fraction of the overlapping exon upstream of the site (if there
-      # is any upstream part), and add to output
-      if (BiocGenerics::start(site) > BiocGenerics::start(exon)){
-
-        # split exon at truncating site and get upstream fraction
-        split_exon <- GenomicRanges::setdiff(exon, site, ignore.strand = TRUE)
-        trunc_exon <- split_exon[1]
-
-        # add meta data and strand
-        S4Vectors::mcols(trunc_exon) <- S4Vectors::mcols(exon)
-        BiocGenerics::strand(trunc_exon) <- BiocGenerics::strand(exon)
-
-        # add truncated exon to output
-        output <- c(output, trunc_exon)
-
-      }
-
-    }else if (all(BiocGenerics::strand(tx) == "-")){
-
-      # get all exons upstream of truncated exon (if any)
-      if (length(tx) > overlaps[1, 1]){
-
-        # upstream exons
-        output <- tx[(overlaps[1, 1] + 1):length(tx)]
-
-      }else{
-
-        # transcript truncated in first exons
-        output <- GenomicRanges::GRanges()
-
-      }
-
-      # get the fraction of the overlapping exon upstream of the site (if there
-      # is any upstream part), and add to output
-      if (BiocGenerics::end(site) < BiocGenerics::end(exon)){
-
-        # split exon at truncating site and get upstream fraction
-        split_exon <- GenomicRanges::setdiff(exon, site, ignore.strand = TRUE)
-        trunc_exon <- split_exon[length(split_exon)]
-
-        # add meta data and strand
-        S4Vectors::mcols(trunc_exon) <- S4Vectors::mcols(exon)
-        BiocGenerics::strand(trunc_exon) <- BiocGenerics::strand(exon)
-
-        # add truncated exon to output
-        output <- c(trunc_exon, output)
-
-      }
-
-    }else{
-
-      stop("Incorrect strand information, cannot extend correctly!")
-
-    }
-
-  }else{
-
-    # don't alter transcript in case no overlaps were found
-    message("No overlaps found, returning non-truncated tx...")
-    output <- tx
-
-    }
-
-  # return truncated transcript
-  return(output)
-
-}
-
-# Merge overlapping exons of a gene in GRanges format. Currently only works
-# with genes formatted as loaded from GTF files. keep_source specifies whether
-# the GTF source field should be kept or replaced by "merged_gene" (default).
-reduce_gene <- function(gene, keep_source = FALSE){
-
-  # get gene metadata
-  metadat <- S4Vectors::mcols(gene)
-
-  # check for mandatory GTF fields in metadata
-  mandat <- c("source", "type", "score", "phase", "gene_id", "transcript_id")
-
-  if (!all(mandat %in% colnames(metadat))){
-
-    stop("Not all mandatory GTF fields found! Check gene input.")
-
-  }
-
-  # stop if gene contains multiple types (e.g. exons and cds)
-  if (length(unique(gene$type)) > 1){
-
-    stop("Gene contains multiple types! ",
-         "Cannot merge features of different types.")
-
-  }
-
-  # reduce ranges of gene
-  gene_red <- GenomicRanges::reduce(gene)
-
-  # if no exons can be merged, return the original gene, else merge exons
-  if (length(gene_red) == length(gene)){
-
-    return(gene)
-
-  }else{
-
-    # get columns with unique values and transform to list
-    metadat <- lapply(X = metadat, FUN = unique)
-
-    # set columns with non-unique values to NA
-    metadat[sapply(X = metadat, FUN = length) > 1] <- as.character(NA)
-
-    ##### mandatory fields in GTF files #####
-
-    # keep original source or replace by "merged_gene"
-    if (keep_source == TRUE){
-
-      metadat$source <- as.factor(metadat$source)
-
-    }else{
-
-      metadat$source <- as.factor("merged_gene")
-
-    }
-
-    # make sure that score is NA, because it cannot be merged
-    metadat$score <- as.numeric(NA)
-
-    # make sure that phase is integer
-    metadat$phase <- as.integer(metadat$phase)
-
-    # create new transcript id based on gene id
-    metadat$transcript_id <- paste0(metadat$gene_id, "-MERGED")
-
-    ##### common fields in GTF files #####
-
-    # transcript name
-    gene_name <- metadat$gene_name
-
-    if (!is.null(metadat$transcript_name) & !is.null(gene_name)){
-
-      # set new transcript name based on gene name
-      metadat$transcript_name <- paste0(gene_name, "-MERGED")
-
-    }
-
-    # exon number
-    if (!is.null(metadat$exon_number)){
-
-      # calculate new exon number based on strand
-      if (all(BiocGenerics::strand(gene_red) == "+")){
-
-        metadat$exon_number <- as.character(seq(from = 1,
-                                                to = length(gene_red), by = 1))
-
-      }else{
-
-        metadat$exon_number <- as.character(seq(from = length(gene_red),
-                                                to = 1,by = -1))
-
-      }
-
-    }
-
-    ##### finalize output #####
-
-    # create and add new metadata
-    S4Vectors::mcols(gene_red) <- metadat
-
-    # return output
-    return(gene_red)
-
-  }
+  metadat[[exon_number]] <- exon_num
+
+  # make sure that metadat only contains data found in input and as same classes (except for tx id)
+  metadat_df_classes <- vapply(metadat_df, FUN = class, FUN.VALUE = character(1))
+  metadat_df_classes[[transcript_id]] <- "character"
+  metadat_df_classes <- metadat_df_classes[names(metadat_df)]
+  metadat <- metadat[names(metadat_df)]
+  metadat <- mapply(FUN = as, metadat, metadat_df_classes, SIMPLIFY = FALSE)
+
+  # add metadat to gene_red and return output
+  mcols(gene_red) <- DataFrame(metadat)
+  return(gene_red)
 
 }

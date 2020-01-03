@@ -7,17 +7,38 @@
 #'   designed primers.
 #' @param primer_opt_tm,primer_min_tm,primer_max_tm Optimal, minumum and maximum primer melting
 #'   temperature.
-#' @param thermo_params_path Path (character) to the \code{primer3_config} directory. Default set to
-#'   the same directory where \code{primer3_core} executable is found.
+#' @param thermo_params_path Optional path (character) to the \code{primer3_config} directory. Only
+#'   required when using Primer3 < 2.5.0.
 #' @param primer3_core Path (character) to the \code{primer3_core} executable. Usually this is
 #'   inferred when loading/attaching the package.
 #' @return A \code{\link[base]{data.frame}} with \code{check_primers} results.
 #' @seealso \url{http://primer3.org/manual.html} for Primer3 manual.
+#' @examples
+#' \dontrun{
+#' library(TAPseq)
+#' library(ggplot2)
+#'
+#' # chr11 primers example data
+#' data("chr11_primers")
+#'
+#' # pick best primers based on predicted off-targets
+#' best_primers <- pickPrimers(chr11_primers, n = 1, by = "off_targets")
+#'
+#' # check for complementarity
+#' comp <- checkPrimers(best_primers)
+#'
+#' # plot complementarity scores for every pair. the lines indicate complementarity scores of 47,
+#' # the default value applied by Primer3 to identify high complementarity primer pairs
+#' ggplot(comp, aes(x = primer_pair_compl_any_th, y = primer_pair_compl_end_th)) +
+#'   geom_hline(aes(yintercept = 47), colour = "darkgray", linetype = "dashed") +
+#'   geom_vline(aes(xintercept = 47), colour = "darkgray", linetype = "dashed") +
+#'   geom_point(alpha = 0.25) +
+#'   theme_bw()
+#' }
 #' @export
 setGeneric("checkPrimers",
            function(object, primer_opt_tm = NA, primer_min_tm = NA, primer_max_tm = NA,
-                    thermo_params_path = getOption("TAPseq.thermodynamic_params_path"),
-                    primer3_core = getOption("TAPseq.primer3_core"))
+                    thermo_params_path = NA, primer3_core = getOption("TAPseq.primer3_core"))
              standardGeneric("checkPrimers")
 )
 
@@ -68,28 +89,13 @@ check_primers <- function(primers, primer_opt_tm, primer_min_tm, primer_max_tm,
   primer_seqs <- structure(mcols(primers)$sequence, names = names(primers))
 
   # create all possible primer pairs
-  pairs <- combn(primer_seqs, m = 2, simplify = FALSE)
+  pairs <- utils::combn(primer_seqs, m = 2, simplify = FALSE)
 
   # create IO record for all primer pairs and catch any errors or warnings
   message("Creating input for Primer3...")
-  io <- lapply(pairs, FUN = function(pair){
-    tryCatch({
-       check_primers_io(pair, primer_opt_tm = primer_opt_tm, primer_min_tm = primer_min_tm,
+  io <- primer_pairs_io(pairs, primer_opt_tm = primer_opt_tm, primer_min_tm = primer_min_tm,
                         primer_max_tm = primer_max_tm,
                         primer_thermodynamic_parameters_path = thermo_params_path)
-     }, error = function(e){
-       message("Error in check_primers_io() for primer pair: ")
-       message(e, "")
-       return(NULL)
-     }, warning = function(w){
-       message("Warning in check_primers_io() for primer pair: ")
-       message(e, "")
-       return(NULL)
-     })
-   })
-
-  # reduce to one vector and return
-  io <- unlist(io)
 
   # design primers
   message("Running Primer3...")
@@ -102,10 +108,34 @@ check_primers <- function(primers, primer_opt_tm, primer_min_tm, primer_max_tm,
   # process output for every pair
   output <- lapply(primer3_output, FUN = process_output_record)
   output <- do.call(rbind, output)
+  row.names(output) <- NULL
 
   # reurn output
   message("Done!")
   return(output)
+
+}
+
+# create boulder-io records for a list of primer pairs
+primer_pairs_io <- function(primer_pairs, ...) {
+
+  # create boulder io records for every pair and catch errors and warnings
+  io <- lapply(primer_pairs, FUN = function(pair) {
+    tryCatch({
+      check_primers_io(pair, ...)
+    }, error = function(e) {
+      message("Error in check_primers_io() for primer pair: ")
+      message(e, "")
+      return(NULL)
+    }, warning = function(w) {
+      message("Warning in check_primers_io() for primer pair: ")
+      message(w, "")
+      return(NULL)
+    })
+  })
+
+  # convert from list to vector
+  unlist(io)
 
 }
 
@@ -118,7 +148,7 @@ check_primers_io <- function(primer_pair, ...) {
   # create reverse complement of first primer
   primer2_revcomp <- as.character(Biostrings::reverseComplement(DNAString(primer_pair[1])))
 
-  # abort if primers are reverse complements, else create io record
+  # abort if primers are reverse complements
   if (primer_pair[2] == primer2_revcomp) {
     stop("Primers are reverse complements in pair: ", pair_id, call. = FALSE)
   }
@@ -171,4 +201,3 @@ process_output_record <- function(record) {
              stringsAsFactors = FALSE)
 
 }
-

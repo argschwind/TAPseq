@@ -59,12 +59,6 @@ check_tool_installation <- function() {
   tool_opts <- tools
   names(tool_opts) <- paste0("TAPseq.", names(tool_opts))
 
-  ### TO DO: implement better! ---------------------------------------------------------------------
-  # add default path to primer3 thermodynamic parameters
-  therm_params <- paste0(dirname(tools[["primer3_core"]]), "/primer3_config/")
-  tool_opts[["TAPseq.thermodynamic_params_path"]] <- therm_params
-  ### ----------------------------------------------------------------------------------------------
-
   # create package options
   op <- options()
   op.primer3 <- tool_opts

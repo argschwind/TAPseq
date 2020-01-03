@@ -38,6 +38,34 @@ storing of Primer3 input and output for multiple target genes.
 \item \code{pcr_products}: Get pcr_products
 }}
 
+\examples{
+library(TAPseq)
+
+# get example sequence templates
+data("chr11_sequence_templates")
+txs_seqs <- chr11_sequence_templates[1:2]
+txs_ids  <- names(txs_seqs)
+
+# reverse primer used in all PCR reactions
+reverse_primer <- "AAGCAGTGGTATCAACGCAGAGT"
+
+# create TsIO objects
+tsio1 <- TsIO(sequence_template = txs_seqs[[1]], sequence_id = txs_ids[1],
+              reverse_primer = reverse_primer, product_size_range = c(350, 500))
+
+tsio2 <- TsIO(sequence_template = txs_seqs[[2]], sequence_id = txs_ids[2],
+              reverse_primer = reverse_primer, product_size_range = c(350, 500))
+
+# create TsIOList object
+obj <- TsIOList(tsio1, tsio2)
+
+# it's noteworthy that when creating a TsIOList from a DNAStringSet of sequence templates, it's
+# easier to use TAPseqInput()
+?TAPseqInput
+
+# as with TsIO objects, some slot values can be accessed using accessor functions
+sequence_template(obj)
+}
 \seealso{
 \link[TAPseq]{TsIO}
 }

@@ -101,7 +101,7 @@ temperature.}
 A \code{TsIO} object.
 }
 \description{
-TsIO objects store TAP-seq input and output for Primer3.
+TsIO objects store TAP-seq Primer3 input and output.
 }
 \details{
 The TsIO class is based on the Boulder IO records used by Primer3
@@ -155,6 +155,26 @@ Use \code{TsIO()} to construct a new TsIO object from scratch.
 \item \code{pcr_products}: Get pcr_products
 }}
 
+\examples{
+library(TAPseq)
+
+# get example sequence templates
+data("chr11_sequence_templates")
+tx_seq <- chr11_sequence_templates[[1]]
+tx_id <- names(chr11_sequence_templates)[1]
+
+# reverse primer used in all PCR reactions
+reverse_primer <- "AAGCAGTGGTATCAACGCAGAGT"
+
+# create TsIO object
+obj <- TsIO(sequence_template = tx_seq, sequence_id = tx_id, reverse_primer = reverse_primer,
+            product_size_range = c(350, 500))
+
+# different slot values can be accessed using accessor functions
+sequence_template(obj)
+sequence_id(obj) <- "Gene1"
+sequence_id(obj)
+}
 \seealso{
 \url{http://primer3.org/manual.html} for Primer3 manual.
 }

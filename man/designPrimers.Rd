@@ -7,23 +7,20 @@
 \alias{designPrimers,TsIOList-method}
 \title{Design primers}
 \usage{
-designPrimers(object,
-  thermo_params_path = getOption("TAPseq.thermodynamic_params_path"),
+designPrimers(object, thermo_params_path = NA,
   primer3_core = getOption("TAPseq.primer3_core"))
 
-\S4method{designPrimers}{TsIO}(object,
-  thermo_params_path = getOption("TAPseq.thermodynamic_params_path"),
+\S4method{designPrimers}{TsIO}(object, thermo_params_path = NA,
   primer3_core = getOption("TAPseq.primer3_core"))
 
-\S4method{designPrimers}{TsIOList}(object,
-  thermo_params_path = getOption("TAPseq.thermodynamic_params_path"),
+\S4method{designPrimers}{TsIOList}(object, thermo_params_path = NA,
   primer3_core = getOption("TAPseq.primer3_core"))
 }
 \arguments{
 \item{object}{TsIO of TsIOList object for which primers should be designed.}
 
-\item{thermo_params_path}{Path (character) to the \code{primer3_config} directory. Default set to
-the same directory where \code{primer3_core} executable is found.}
+\item{thermo_params_path}{Optional path (character) to the \code{primer3_config} directory. Only
+required when using Primer3 < 2.5.0.}
 
 \item{primer3_core}{Path (character) to the \code{primer3_core} executable. Usually this is
 inferred when loading/attaching the package.}
@@ -42,6 +39,26 @@ Creates boulder-IO records, passes input to Primer3 and parses the output.
 \item \code{TsIOList}: Design primers using Primer3 from a \code{TsIOList} object
 }}
 
+\examples{
+library(TAPseq)
+
+# chromosome 11 region sequence templates
+data("chr11_sequence_templates")
+
+# reverse primer used in all PCR reactions
+reverse_primer <- "AAGCAGTGGTATCAACGCAGAGT"
+
+# create TsIOList object for the first two sequence templates
+tapseq_io <- TAPseqInput(chr11_sequence_templates[1:2], reverse_primer = reverse_primer,
+                         product_size_range = c(350, 500))
+
+# design primers
+tapseq_io <- designPrimers(tapseq_io)
+
+# tapseq_io now contains the designed primers in the tapseq_primers slot
+tapseq_primers(tapseq_io)
+}
 \seealso{
-\url{http://primer3.org/manual.html} for Primer3 manual.
+\url{http://primer3.org/manual.html} for Primer3 manual and \code{\link[TAPseq]{TsIO}}
+  for TsIO class objects.
 }

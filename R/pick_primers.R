@@ -55,7 +55,7 @@ setMethod("pickPrimers", "TsIO", function(object, n, by) {
     return(object)
 
   }else{
-    warning("No primers found in TsIO object!", call. = FALSE)
+    warning("No primers found for sequence id: ", sequence_id(object), call. = FALSE)
     return(object)
   }
 

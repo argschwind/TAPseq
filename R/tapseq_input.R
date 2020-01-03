@@ -3,7 +3,8 @@
 #' This function creates input for TAP-seq primer design from a DNAStringSet containing the
 #' sequence templates.
 #'
-#' @param sequence_templates A \code{\link[Biostrings]{DNAStringSet}} object containing all sequence templates.
+#' @param sequence_templates A \code{\link[Biostrings]{DNAStringSet}} object containing all sequence
+#'   templates.
 #' @param reverse_primer Reverse primer sequence used for all PCR reactions.
 #' @param product_size_range Numerical vector of length 2 specifying the desired length of the
 #'   resulting amplicons.
@@ -13,10 +14,23 @@
 #' @param primer_opt_tm,primer_min_tm,primer_max_tm Optimal, minumum and maximum primer melting
 #'   temperature.
 #' @return \code{\link[TAPseq]{TsIOList}} object.
+#' @examples
+#' library(TAPseq)
+#'
+#' # chromosome 11 region sequence templates
+#' data("chr11_sequence_templates")
+#'
+#' # reverse primer used in all PCR reactions
+#' reverse_primer <- "AAGCAGTGGTATCAACGCAGAGT"
+#'
+#' # create TsIOList object from sequence templates
+#' obj <- TAPseqInput(chr11_sequence_templates, reverse_primer = reverse_primer,
+#'                    product_size_range = c(350, 500))
+#' obj
 #' @export
 TAPseqInput <- function(sequence_templates, reverse_primer, product_size_range,
-                         primer_num_return = 5, min_primer_region = 100, primer_opt_tm = NA,
-                         primer_min_tm = NA, primer_max_tm = NA) {
+                        primer_num_return = 5, min_primer_region = 100, primer_opt_tm = NA,
+                        primer_min_tm = NA, primer_max_tm = NA) {
 
   # make sure that sequence template has the right format
   if (!is(sequence_templates, "DNAStringSet")) {
@@ -50,14 +64,29 @@ TAPseqInput <- function(sequence_templates, reverse_primer, product_size_range,
 #' conventional way.
 #'
 #' @param object TsIO of TsIOList object for which a Primer3 boulder IO record should be created.
-#' @param thermo_params_path Path (character) to the \code{primer3_config} directory. Default set to
-#'   the same directory where \code{primer3_core} executable is found.
-#' @return A character vectors containing the individual lines of the IO record.
+#' @param thermo_params_path Optional path (character) to the \code{primer3_config} directory. Only
+#'   required when using Primer3 < 2.5.0.
+#' @return A character vector containing the lines of the IO record.
 #' @seealso \url{http://primer3.org/manual.html} for Primer3 manual.
+#' @examples
+#' library(TAPseq)
+#'
+#' # chromosome 11 region sequence templates
+#' data("chr11_sequence_templates")
+#'
+#' # reverse primer used in all PCR reactions
+#' reverse_primer <- "AAGCAGTGGTATCAACGCAGAGT"
+#'
+#' # create TsIOList object from sequence templates
+#' obj <- TAPseqInput(chr11_sequence_templates[1:2], reverse_primer = reverse_primer,
+#'                    product_size_range = c(350, 500))
+#'
+#' # create boulder IO record
+#' boulder_io <- createIORecord(obj)
+#' boulder_io
 #' @export
 setGeneric("createIORecord",
-           function(object, thermo_params_path = getOption("TAPseq.thermodynamic_params_path"))
-             standardGeneric("createIORecord")
+           function(object, thermo_params_path = NA) standardGeneric("createIORecord")
 )
 
 #' @describeIn createIORecord Create IO record from \code{TsIO} objects.
@@ -68,16 +97,19 @@ setMethod("createIORecord", "TsIO", function(object, thermo_params_path) {
   slot_names <- slotNames(object)
 
   # exclude any slots intended for output
-  output_slots <- c("tapseq_primers", "pcr_products", "blast_off_targets")
+  output_slots <- c("tapseq_primers", "pcr_products")
   slot_names <- slot_names[!slot_names %in% output_slots]
 
-  # exclude min_primer_region and product_size_range, since it's are processed separately
+  # exclude min_primer_region and product_size_range, since they are processed separately
   slot_names <- slot_names[!slot_names %in% c("min_primer_region", "product_size_range")]
 
   # get data of all slots as one character vector
   io <- vapply(slot_names, FUN = function(s, x) {
     as.character(slot(x, s))
   }, x = object, FUN.VALUE = character(1))
+
+  # add thermodynamic parameters path to io
+  io <- c(io, "primer_thermodynamic_parameters_path" = thermo_params_path)
 
   # remove any NA elements, because they should not be part of the primer3 input
   io <- io[!is.na(io)]
@@ -97,10 +129,7 @@ setMethod("createIORecord", "TsIO", function(object, thermo_params_path) {
   # transform to vector where each element contains one input line ("tag=value" format)
   io <- paste0(toupper(names(io)), "=", io)
 
-  # add thermodynamic parameters path to record
-  io <- c(io, paste0("PRIMER_THERMODYNAMIC_PARAMETERS_PATH=", thermo_params_path))
-
-  # add "=" record separator at the end of the output list
+  # add "=" record separator at the end of the output vector
   c(io, "=")
 
 })
