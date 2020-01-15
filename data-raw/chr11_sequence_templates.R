@@ -3,17 +3,15 @@ library(Biostrings)
 
 ## create sequence templates for truncated transcripts of target genes within chr11 region
 
-# truncated transcript sequences
-data("chr11_truncated_txs_seq")
+# truncated transcripts for chr11
+data("chr11_truncated_txs")
 
-# create reverse complement of Drop-seq primer to add to 3' end of transcripts
-ds_primer <- "TTTTTTTAAGCAGTGGTATCAACGCAGAGTACJJJJJJJJJJJJNNNNNNNNTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT"
-ds_primer <- gsub(ds_primer, pattern = "J", replacement = "N")  # replace "J" by "N"
-ds_primer <- reverseComplement(DNAString(ds_primer))
+# chr11 sequence loaded from fasta file
+chr11_seq_fasta <- system.file("extdata", "chr11_sequence.fasta.gz", package = "TAPseq")
+chr11_seq <- readDNAStringSet(chr11_seq_fasta)
 
-# add bead_seq to transcript sequences to create sequence templates
-chr11_sequence_templates <- xscat(chr11_truncated_txs_seq, ds_primer)
-names(chr11_sequence_templates) <- names(chr11_truncated_txs_seq)
+# create sequence templates for truncated transcripts
+chr11_sequence_templates <- TAPseqSeqTemplates(chr11_truncated_txs, genome = chr11_seq)
 
 # save data as RData files in data directory
 usethis::use_data(chr11_sequence_templates, overwrite = TRUE)

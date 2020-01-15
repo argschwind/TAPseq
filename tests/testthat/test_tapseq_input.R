@@ -6,14 +6,10 @@ library(Biostrings)
 data("chr11_sequence_templates")
 seq_templ <- chr11_sequence_templates[1:2]
 
-# reverse primer used in all PCR reactions
-reverse_primer <- "AAGCAGTGGTATCAACGCAGAGT"
-
-# create TsIOList from sequence templates
-obj <- TAPseqInput(sequence_templates = seq_templ, reverse_primer = reverse_primer,
-                   product_size_range = c(350, 500), primer_num_return = 10,
-                   min_primer_region = 150, primer_opt_tm = 62, primer_min_tm = 57,
-                   primer_max_tm = 65)
+# create TsIOList from sequence templates with altered melting temperature
+obj <- TAPseqInput(sequence_templates = seq_templ, product_size_range = c(350, 500),
+                   primer_num_return = 10, min_primer_region = 150, primer_opt_tm = 62,
+                   primer_min_tm = 57, primer_max_tm = 65)
 
 # test TAPseqInput() -------------------------------------------------------------------------------
 
@@ -52,14 +48,14 @@ test_that("TAPseqInput() aborts with incorrect input format", {
 expect_out1 <- c(
   "SEQUENCE_ID=AKIP1",
   paste0("SEQUENCE_TEMPLATE=", as.character(seq_templ[[1]])),
-  "SEQUENCE_PRIMER_REVCOMP=AAGCAGTGGTATCAACGCAGAGT",
+  "SEQUENCE_PRIMER_REVCOMP=CTACACGACGCTCTTCCGATCT",
   "PRIMER_NUM_RETURN=10",
   "PRIMER_OPT_TM=62",
   "PRIMER_MIN_TM=57",
   "PRIMER_MAX_TM=65",
   "PRIMER_PICK_LEFT_PRIMER=1",
   "PRIMER_PICK_RIGHT_PRIMER=0",
-  "SEQUENCE_EXCLUDED_REGION=0,499 650,356",
+  "SEQUENCE_EXCLUDED_REGION=0,504 655,349",
   "="
 )
 
@@ -72,14 +68,14 @@ expect_out3 <- c(
   expect_out1,
   "SEQUENCE_ID=ARFIP2",
   paste0("SEQUENCE_TEMPLATE=", as.character(seq_templ[[2]])),
-  "SEQUENCE_PRIMER_REVCOMP=AAGCAGTGGTATCAACGCAGAGT",
+  "SEQUENCE_PRIMER_REVCOMP=CTACACGACGCTCTTCCGATCT",
   "PRIMER_NUM_RETURN=10",
   "PRIMER_OPT_TM=62",
   "PRIMER_MIN_TM=57",
   "PRIMER_MAX_TM=65",
   "PRIMER_PICK_LEFT_PRIMER=1",
   "PRIMER_PICK_RIGHT_PRIMER=0",
-  "SEQUENCE_EXCLUDED_REGION=0,1463 1614,356",
+  "SEQUENCE_EXCLUDED_REGION=0,1468 1619,349",
   "="
 )
 

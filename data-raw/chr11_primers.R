@@ -6,9 +6,7 @@ library(rtracklayer)
 
 # design primers for chr11 target genes
 data("chr11_sequence_templates")
-reverse_primer <- "AAGCAGTGGTATCAACGCAGAGT"
-chr11_primers <- TAPseqInput(chr11_sequence_templates, reverse_primer = reverse_primer,
-                         product_size_range = c(350, 500))
+chr11_primers <- TAPseqInput(chr11_sequence_templates, product_size_range = c(350, 500))
 chr11_primers <- designPrimers(chr11_primers)
 
 # human genome (hg38) BSgenome object

@@ -4,18 +4,20 @@
 \alias{TAPseqInput}
 \title{Create TAPseq input from sequence templates}
 \usage{
-TAPseqInput(sequence_templates, reverse_primer, product_size_range,
-  primer_num_return = 5, min_primer_region = 100, primer_opt_tm = NA,
-  primer_min_tm = NA, primer_max_tm = NA)
+TAPseqInput(sequence_templates, product_size_range,
+  reverse_primer = "CTACACGACGCTCTTCCGATCT", primer_num_return = 5,
+  min_primer_region = 100, primer_opt_tm = 63, primer_min_tm = 59,
+  primer_max_tm = 66)
 }
 \arguments{
 \item{sequence_templates}{A \code{\link[Biostrings]{DNAStringSet}} object containing all sequence
 templates.}
 
-\item{reverse_primer}{Reverse primer sequence used for all PCR reactions.}
-
 \item{product_size_range}{Numerical vector of length 2 specifying the desired length of the
 resulting amplicons.}
+
+\item{reverse_primer}{Reverse primer sequence used for all PCR reactions. Default is the 10x
+primer sequence: \code{CTACACGACGCTCTTCCGATCT}.}
 
 \item{primer_num_return}{How many forward primers should be designed? (default: 5)}
 
@@ -23,7 +25,7 @@ resulting amplicons.}
 a sequence template is too short to allow the specified \code{product_size_range}.}
 
 \item{primer_opt_tm, primer_min_tm, primer_max_tm}{Optimal, minumum and maximum primer melting
-temperature.}
+temperature. Set to NA to use Primer3s default values.}
 }
 \value{
 \code{\link[TAPseq]{TsIOList}} object.
@@ -38,11 +40,7 @@ library(TAPseq)
 # chromosome 11 region sequence templates
 data("chr11_sequence_templates")
 
-# reverse primer used in all PCR reactions
-reverse_primer <- "AAGCAGTGGTATCAACGCAGAGT"
-
-# create TsIOList object from sequence templates
-obj <- TAPseqInput(chr11_sequence_templates, reverse_primer = reverse_primer,
-                   product_size_range = c(350, 500))
+# create TsIOList object for primer desing from sequence templates
+obj <- TAPseqInput(chr11_sequence_templates, product_size_range = c(350, 500))
 obj
 }

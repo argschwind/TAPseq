@@ -7,12 +7,8 @@ library(GenomicRanges)
 data("chr11_sequence_templates")
 seq_templ <- chr11_sequence_templates[1:2]
 
-# reverse primer used in all PCR reactions
-reverse_primer <- "AAGCAGTGGTATCAACGCAGAGT"
-
 # create TsIOList from sequence templates
-tapseq_io <- TAPseqInput(sequence_templates = seq_templ, reverse_primer = reverse_primer,
-                         product_size_range = c(350, 500))
+tapseq_io <- TAPseqInput(sequence_templates = seq_templ, product_size_range = c(350, 500))
 
 # test parsePrimer3Output() ------------------------------------------------------------------------
 
@@ -20,7 +16,7 @@ tapseq_io <- TAPseqInput(sequence_templates = seq_templ, reverse_primer = revers
 primer3_output <- c(
   "SEQUENCE_ID=AKIP1",
   paste0("SEQUENCE_TEMPLATE=", seq_templ[[1]]),
-  "SEQUENCE_PRIMER_REVCOMP=AAGCAGTGGTATCAACGCAGAGT",
+  "SEQUENCE_PRIMER_REVCOMP=CTACACGACGCTCTTCCGATCT",
   "PRIMER_NUM_RETURN=2",
   "PRIMER_PICK_LEFT_PRIMER=1",
   "PRIMER_PICK_RIGHT_PRIMER=0",
@@ -51,7 +47,7 @@ primer3_output <- c(
   "=",
   "SEQUENCE_ID=ARFIP2",
   paste0("SEQUENCE_TEMPLATE=", seq_templ[[2]]),
-  "SEQUENCE_PRIMER_REVCOMP=AAGCAGTGGTATCAACGCAGAGT",
+  "SEQUENCE_PRIMER_REVCOMP=CTACACGACGCTCTTCCGATCT",
   "PRIMER_NUM_RETURN=2",
   "PRIMER_PICK_LEFT_PRIMER=1",
   "PRIMER_PICK_RIGHT_PRIMER=0",
@@ -85,7 +81,7 @@ primer3_output <- c(
 test_that("parsePrimer3Output() parses Primer3 output correctly", {
 
   # parse raw Primer3 output and add to TsIOList object
-  output <- TAPseq:::parsePrimer3Output(tapseq_io, primer3_output)
+  output <- parsePrimer3Output(tapseq_io, primer3_output)
 
   # expected parsed primers for the AKIP1
   expect_primers <- IRanges(start = c(622, 564), end = c(641, 583))
@@ -106,8 +102,8 @@ test_that("parsePrimer3Output() parses Primer3 output correctly", {
   expect_equal(primers, expect_primers)
 
   # expected pcr products
-  expect_pcr_prod <- c(DNAStringSet(subseq(seq_templ[[1]], 622, 999)),
-                       DNAStringSet(subseq(seq_templ[[1]], 564, 999)))
+  expect_pcr_prod <- c(DNAStringSet(subseq(seq_templ[[1]], 622, length(seq_templ[[1]]))),
+                       DNAStringSet(subseq(seq_templ[[1]], 564, length(seq_templ[[1]]))))
   names(expect_pcr_prod) <- paste0("AKIP1.primer_left_", 0:1)
 
   # test that inferred PCR products are correct
@@ -129,7 +125,7 @@ test_that("parsePrimer3Output() handles errors correctly", {
   primer3_output[54] <- "PRIMER_LEFT_1_SEQUENCE=ACCAG"
 
   # parse modified Primer3 output
-  msg <- capture_messages(output <- TAPseq:::parsePrimer3Output(tapseq_io, primer3_output))
+  msg <- capture_messages(output <- parsePrimer3Output(tapseq_io, primer3_output))
 
   # check that correct error messages are returned
   expect_match(msg, "Error in parse_primer\\(\\) for: AKIP1", all = FALSE)

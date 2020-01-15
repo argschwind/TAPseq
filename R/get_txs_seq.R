@@ -1,9 +1,9 @@
 #' Get transcript sequences
 #'
-#' Extract the DNA sequences of all exons of transcript models and concatenate
-#' to one sequence per transcript. This is basically a wrapper for
-#' \code{\link[GenomicFeatures]{extractTranscriptSeqs}}, which makes sure that the exons are
-#' correctly sorted according to their position in the transcript (3' to 5').
+#' Extract the DNA sequences of all exons of transcript models and concatenate to one sequence per
+#' transcript. This is basically a wrapper for \code{\link[GenomicFeatures]{extractTranscriptSeqs}},
+#' which makes sure that the exons are correctly sorted according to their position in the
+#' transcript (3' to 5').
 #'
 #' @param transcripts A \code{\link[GenomicRanges]{GRanges}} or
 #'   \code{\link[GenomicRanges]{GRangesList}} object containing exons of transcripts for which
@@ -15,6 +15,7 @@
 #' @return A \code{\link[Biostrings]{DNAString}} or \code{\link[Biostrings]{DNAStringSet}} object
 #'   containing the transcript sequence(s).
 #' @examples
+#' \dontrun{
 #' library(TAPseq)
 #' library(Biostrings)
 #'
@@ -29,7 +30,6 @@
 #' # get sequences for all target transcripts in chr11 region
 #' tx_seqs <- getTxsSeq(target_txs, genome = chr11_seq)
 #'
-#' \dontrun{
 #' # a probably more practical approach is to use Bioconductors BSgenome package to get the
 #' # genome sequence
 #' library(BSgenome)
@@ -40,11 +40,11 @@
 #' # get sequences for all target transcripts on chr11
 #' tx_seqs <- getTxsSeq(target_txs, genome = hg38)
 #'}
-#' @export
+#' @keywords internal
 setGeneric("getTxsSeq", function(transcripts, genome) standardGeneric("getTxsSeq") )
 
 #' @describeIn getTxsSeq Obtain transcript sequence from \code{GRangesList} input
-#' @export
+#' @keywords internal
 setMethod("getTxsSeq", "GRangesList", function(transcripts, genome) {
 
   # abort if genome is not a BSgenome or DNAStringSet object
@@ -90,7 +90,7 @@ setMethod("getTxsSeq", "GRangesList", function(transcripts, genome) {
 )
 
 #' @describeIn getTxsSeq Obtain transcript sequence from \code{GRanges} input
-#' @export
+#' @keywords internal
 setMethod("getTxsSeq", "GRanges", function(transcripts, genome) {
 
   # transform transcripts to GRangesList

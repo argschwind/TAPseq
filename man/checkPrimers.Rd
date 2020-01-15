@@ -7,16 +7,16 @@
 \alias{checkPrimers,TsIOList-method}
 \title{Check primers for complementarity}
 \usage{
-checkPrimers(object, primer_opt_tm = NA, primer_min_tm = NA,
-  primer_max_tm = NA, thermo_params_path = NA,
+checkPrimers(object, primer_opt_tm = 63, primer_min_tm = 59,
+  primer_max_tm = 66, thermo_params_path = NA,
   primer3_core = getOption("TAPseq.primer3_core"))
 
-\S4method{checkPrimers}{TsIO}(object, primer_opt_tm = NA,
-  primer_min_tm = NA, primer_max_tm = NA, thermo_params_path = NA,
+\S4method{checkPrimers}{TsIO}(object, primer_opt_tm = 63,
+  primer_min_tm = 59, primer_max_tm = 66, thermo_params_path = NA,
   primer3_core = getOption("TAPseq.primer3_core"))
 
-\S4method{checkPrimers}{TsIOList}(object, primer_opt_tm = NA,
-  primer_min_tm = NA, primer_max_tm = NA, thermo_params_path = NA,
+\S4method{checkPrimers}{TsIOList}(object, primer_opt_tm = 63,
+  primer_min_tm = 59, primer_max_tm = 66, thermo_params_path = NA,
   primer3_core = getOption("TAPseq.primer3_core"))
 }
 \arguments{
@@ -24,7 +24,7 @@ checkPrimers(object, primer_opt_tm = NA, primer_min_tm = NA,
 designed primers.}
 
 \item{primer_opt_tm, primer_min_tm, primer_max_tm}{Optimal, minumum and maximum primer melting
-temperature.}
+temperature. Should be the same values that were used when designing the primers.}
 
 \item{thermo_params_path}{Optional path (character) to the \code{primer3_config} directory. Only
 required when using Primer3 < 2.5.0.}

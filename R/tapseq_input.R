@@ -1,3 +1,91 @@
+#' Create TAPseq sequence templates
+#'
+#' Methods to create sequence templates for TAP-seq primer design. This extracts the transcript
+#' sequence from the provided genome and adds the reverse complement of the "Beads-oligo-dT"
+#' sequence to the 3' end.
+#'
+#' @param transcripts A \code{\link[GenomicRanges]{GRanges}} or
+#'   \code{\link[GenomicRanges]{GRangesList}} object containing exons of transcripts for which
+#'   sequence templates should be created. All exons in a \code{\link[GenomicRanges]{GRanges}}
+#'   object are assumed to belong to the same transcript. Multiple transcripts can be provided in a
+#'   \code{\link[GenomicRanges]{GRangesList}} object.
+#' @param  genome A \code{\link[BSgenome]{BSgenome}} or \code{\link[Biostrings]{DNAStringSet}}
+#'   object containing chromosome sequences which should be used to extract transcript sequences.
+#' @param beads_oligo The Beads-oligo-dT sequence used for Droplet sequencing. Default is the
+#'   10x V3 Beads-oligo-dT sequence. Can be changed if primers are for instance designed for
+#'   Drop-seq. Any barcode bases need to be replaced by \code{N}.
+#' @return A \code{\link[Biostrings]{DNAString}} or \code{\link[Biostrings]{DNAStringSet}} object
+#'   containing the sequence template(s).
+#' @examples
+#' library(TAPseq)
+#' library(Biostrings)
+#'
+#' # truncated transcripts for chr11 target genes
+#' data("chr11_truncated_txs")
+#'
+#' # load human chr11 sequence from fasta file
+#' chr11_seq_fasta <- system.file("extdata", "chr11_sequence.fasta.gz", package = "TAPseq")
+#' chr11_seq <- readDNAStringSet(chr11_seq_fasta)
+#'
+#' # create sequence templates for truncated transcripts
+#' seq_templates <- TAPseqSeqTemplates(chr11_truncated_txs, genome = chr11_seq)
+#'
+#' \dontrun{
+#' # a probably more practical approach is to use Bioconductors BSgenome package to get the
+#' # genome sequence
+#' library(BSgenome)
+#'
+#' # human genome (hg38) BSgenome object (needs to be istalled separately from Bioconductor)
+#' hg38 <- getBSgenome("BSgenome.Hsapiens.UCSC.hg38")
+#'
+#' # get sequences for all target transcripts on chr11
+#' seq_templates <- TAPseqSeqTemplates(chr11_truncated_txs, genome = hg38)
+#'}
+#' @export
+setGeneric("TAPseqSeqTemplates",
+  function(transcripts, genome,
+      beads_oligo = "CTACACGACGCTCTTCCGATCTNNNNNNNNNNNNNNNNNNNNNNNNNNNNTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT")
+    standardGeneric("TAPseqSeqTemplates")
+  )
+
+#' @describeIn TAPseqSeqTemplates Create sequence templates from \code{GRanges} input
+#' @export
+setMethod("TAPseqSeqTemplates", "GRanges", function(transcripts, genome, beads_oligo) {
+
+  # extract transcript sequences
+  tx_seqs <- getTxsSeq(transcripts, genome = genome)
+
+  # create reverse complement of Beads-oligo-dT to add to 3' end of transcripts
+  beads_oligo <- reverseComplement(DNAString(beads_oligo))
+
+  # add bead_seq to transcript sequences to create sequence templates
+  seq_templates <- Biostrings::xscat(tx_seqs, beads_oligo)
+  names(seq_templates) <- names(tx_seqs)
+
+  return(seq_templates)
+
+}
+)
+
+#' @describeIn TAPseqSeqTemplates Create sequence templates from \code{GRangesList} input
+#' @export
+setMethod("TAPseqSeqTemplates", "GRangesList", function(transcripts, genome, beads_oligo) {
+
+  # extract transcript sequences
+  tx_seqs <- getTxsSeq(transcripts, genome = genome)
+
+  # create reverse complement of Beads-oligo-dT to add to 3' end of transcripts
+  beads_oligo <- reverseComplement(DNAString(beads_oligo))
+
+  # add bead_seq to transcript sequences to create sequence templates
+  seq_templates <- Biostrings::xscat(tx_seqs, beads_oligo)
+  names(seq_templates) <- names(tx_seqs)
+
+  return(seq_templates)
+
+}
+)
+
 #' Create TAPseq input from sequence templates
 #'
 #' This function creates input for TAP-seq primer design from a DNAStringSet containing the
@@ -5,14 +93,15 @@
 #'
 #' @param sequence_templates A \code{\link[Biostrings]{DNAStringSet}} object containing all sequence
 #'   templates.
-#' @param reverse_primer Reverse primer sequence used for all PCR reactions.
+#' @param reverse_primer Reverse primer sequence used for all PCR reactions. Default is the 10x
+#'   primer sequence: \code{CTACACGACGCTCTTCCGATCT}.
 #' @param product_size_range Numerical vector of length 2 specifying the desired length of the
 #'   resulting amplicons.
 #' @param primer_num_return How many forward primers should be designed? (default: 5)
 #' @param min_primer_region Minimum sequence length required for primer design. Relevant in case the
 #'   a sequence template is too short to allow the specified \code{product_size_range}.
 #' @param primer_opt_tm,primer_min_tm,primer_max_tm Optimal, minumum and maximum primer melting
-#'   temperature.
+#'   temperature. Set to NA to use Primer3s default values.
 #' @return \code{\link[TAPseq]{TsIOList}} object.
 #' @examples
 #' library(TAPseq)
@@ -20,17 +109,14 @@
 #' # chromosome 11 region sequence templates
 #' data("chr11_sequence_templates")
 #'
-#' # reverse primer used in all PCR reactions
-#' reverse_primer <- "AAGCAGTGGTATCAACGCAGAGT"
-#'
-#' # create TsIOList object from sequence templates
-#' obj <- TAPseqInput(chr11_sequence_templates, reverse_primer = reverse_primer,
-#'                    product_size_range = c(350, 500))
+#' # create TsIOList object for primer desing from sequence templates
+#' obj <- TAPseqInput(chr11_sequence_templates, product_size_range = c(350, 500))
 #' obj
 #' @export
-TAPseqInput <- function(sequence_templates, reverse_primer, product_size_range,
-                        primer_num_return = 5, min_primer_region = 100, primer_opt_tm = NA,
-                        primer_min_tm = NA, primer_max_tm = NA) {
+TAPseqInput <- function(sequence_templates, product_size_range,
+                        reverse_primer = "CTACACGACGCTCTTCCGATCT",
+                        primer_num_return = 5, min_primer_region = 100, primer_opt_tm = 63,
+                        primer_min_tm = 59, primer_max_tm = 66) {
 
   # make sure that sequence template has the right format
   if (!is(sequence_templates, "DNAStringSet")) {
@@ -74,12 +160,8 @@ TAPseqInput <- function(sequence_templates, reverse_primer, product_size_range,
 #' # chromosome 11 region sequence templates
 #' data("chr11_sequence_templates")
 #'
-#' # reverse primer used in all PCR reactions
-#' reverse_primer <- "AAGCAGTGGTATCAACGCAGAGT"
-#'
 #' # create TsIOList object from sequence templates
-#' obj <- TAPseqInput(chr11_sequence_templates[1:2], reverse_primer = reverse_primer,
-#'                    product_size_range = c(350, 500))
+#' obj <- TAPseqInput(chr11_sequence_templates[1:2], product_size_range = c(350, 500))
 #'
 #' # create boulder IO record
 #' boulder_io <- createIORecord(obj)

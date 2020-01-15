@@ -40,9 +40,9 @@ functions (TAPseqInput(), designPrimers(), checkPrimers()).
 
 ## Sequence templates
 
-Let's first create sequence templates for primer design for a target gene panel. First we try to
-infer likely polyadenylation (polyA) sites for the selected target genes. We then truncate target
-gene transcripts at the polyA sites, as we assume that this is their 3' end.
+Let's start by creating sequence templates for primer design for a target gene panel. First we try
+to infer likely polyadenylation (polyA) sites for the selected target genes.
+
 ```{r message=FALSE}
 library(TAPseq)
 library(GenomicRanges)
@@ -65,34 +65,43 @@ register(MulticoreParam(workers = 5))
 # infer polyA sites from Drop-seq data
 polyA_sites <- inferPolyASites(target_genes, bam = dropseq_bam, polyA_downstream = 50,
                                wdsize = 100, min_cvrg = 1, parallel = TRUE)
+```
 
+Here we assume all inferred polyA sites to be correct. In a real-world application it's adviced to
+manually inspect the polyA site predictions and remove any obvious false positives. This is easiest
+done by exporting the polyA sites into a .bed. This file can then be loaded into a genome browser
+(e.g. IGV) together with the target gene annotations and the .bam file to visually inspect the polyA
+site predictions.
+```{r, eval=FALSE}
+library(rtracklayer)
+export(polyA_sites, con = "~/data/test.bed", format = "bed")
+export(unlist(target_genes), con = "~/data/test.gtf", format = "gtf")
+```
+
+Once we are happy with our polyA predictions, we then use them to truncate the target gene
+transcripts. All target gene transcripts overlapping any polyA sites are truncated at the polyA
+sites, as we assume that they mark the transcripts 3' ends. By default the most downstream polyA
+site is taken to truncate a transcript. If multiple transcripts per gene overlap polyA sites, a
+merged truncated transcript model is generated from all overlapping transcripts. If no transcript
+of a given gene overlap with any polyA sites a consensus transcript model is created from all
+transcripts for that gene.
+```{r message=FALSE}
 # truncate transcripts at inferred polyA sites
 truncated_txs <- truncateTxsPolyA(target_genes, polyA_sites = polyA_sites, parallel = TRUE)
 ```
 
 To create sequence templates for primer design, we extract the genome sequence for the truncated
-transcripts. Here we use Bioconductor's BSgenome, but the genome sequence could also be imported
-from a fasta file into a DNAStringSet object.
+transcripts and add the "Beads-oligo-Dt" sequence used in single-cell droplet sequencing. Here we
+use Bioconductor's BSgenome to export transcript sequences, but the genome sequence could also be
+imported from a fasta file into a DNAStringSet object.
 ```{r, message=FALSE}
 library(BSgenome)
 
 # human genome BSgenome object (needs to be istalled from Bioconductor)
 hg38 <- getBSgenome("BSgenome.Hsapiens.UCSC.hg38")
 
-# get sequences for all target transcripts on chr11
-tx_seqs <- getTxsSeq(truncated_txs, genome = hg38)
-
-# the last thing we need to do to create sequence templates for primer desing is to add the
-# Drop-seq primer at the 3' end
-
-# create reverse complement of Drop-seq primer to add to 3' end of transcripts 
-ds_primer <- "TTTTTTTAAGCAGTGGTATCAACGCAGAGTACJJJJJJJJJJJJNNNNNNNNTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT"
-ds_primer <- gsub(ds_primer, pattern = "J", replacement = "N")  # replace "J" by "N"
-ds_primer <- reverseComplement(DNAString(ds_primer))
-
-# add bead_seq to transcript sequences to create sequence templates
-seq_templates <- xscat(tx_seqs, ds_primer)
-names(seq_templates) <- names(tx_seqs)
+# create sequence templates for all truncated transcripts
+seq_templates <- TAPseqSeqTemplates(truncated_txs, genome = hg38)
 ```
  
 ## Design outer primers
@@ -102,17 +111,13 @@ implements TsIO and TsIOList objects, which store Primer3 input and output for T
 design in R's S4 class system. They serve as the users interface to Primer3 during primer design.
 
 First we create Primer3 input for outer forward primer design based on the generated sequence
-tamplates. We provide the reverse primer used in all PCR reactions, so that Primer3 can pick primers
-suitable to work with it.
+tamplates. The reverse primer used in all PCR reactions is used, so that Primer3 can pick primers
+suitable to work with it. By default this function uses the 10x primer and chooses optimal, minimum
+and maximum melting temperatures based on that. If another protocol (e.g. Drop-seq) is used, the
+reverse primer and melting temperatures can be adapted (\code{?TAPseqInput}).
 ```{r, message=FALSE, warning=FALSE, results="hide"}
-# reverse primer used in all PCR reactions
-reverse_primer <- "AAGCAGTGGTATCAACGCAGAGT"
-
-# create TAPseq IO for outer forward primers with similar melting temperatures like the
-# reverse primer
-outer_primers <- TAPseqInput(seq_templates, reverse_primer = reverse_primer,
-                             product_size_range = c(350, 500), primer_num_return = 5,
-                             primer_opt_tm = 62, primer_min_tm = 57, primer_max_tm = 65)
+# create TAPseq IO for outer forward primers from sequence templates
+outer_primers <- TAPseqInput(seq_templates, product_size_range = c(350, 500), primer_num_return = 5)
                               
 # design 5 outer primers for each target gene
 outer_primers <- designPrimers(outer_primers)
@@ -190,12 +195,11 @@ best_outer_primers <- pickPrimers(outer_primers, n = 1, by = "off_targets")
 
 ## Design inner primers
 
-Now we need to repeat the same procedure to design a set of inner nested primers.
+To design nested inner primers we simply need to repeat the same procedure with a smaller product
+size range.
 ```{r, message=FALSE, warning=FALSE, results="hide"}
 # create new TsIO objects for inner primers, note the different product size
-inner_primers <- TAPseqInput(seq_templates, reverse_primer = reverse_primer,
-                             product_size_range = c(150, 300), primer_num_return = 5,
-                             primer_opt_tm = 62, primer_min_tm = 57, primer_max_tm = 65)
+inner_primers <- TAPseqInput(seq_templates, product_size_range = c(150, 300), primer_num_return = 5)
                               
 # design inner primers
 inner_primers <- designPrimers(inner_primers)
@@ -219,12 +223,9 @@ mcols(tapseq_primers(best_inner_primers))
 As an additional last step, we can verify if the designed primer sets are compatible for PCR
 multiplexing. For that we use Primer3's "check_primers" functionality:
 ```{r, message=FALSE}
-# use checkPrimers to run Primer3's "check_primers"
-outer_comp <- checkPrimers(best_outer_primers, primer_opt_tm = 62, primer_min_tm = 57,
-                           primer_max_tm = 65)
-                           
-inner_comp <- checkPrimers(best_inner_primers, primer_opt_tm = 62, primer_min_tm = 57,
-                           primer_max_tm = 65)
+# use checkPrimers to run Primer3's "check_primers" functionality for every possible primer pair
+outer_comp <- checkPrimers(best_outer_primers)
+inner_comp <- checkPrimers(best_inner_primers)
 ```
 
 We can now for instance plot the estimated complementarity scores for every pair. We highlight

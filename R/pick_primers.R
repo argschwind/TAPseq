@@ -12,6 +12,16 @@
 #' @param by Attribute by which primers should be picked. Can be either \code{penalty} or
 #'  \code{off_targets}.
 #' @return A \code{TsIO} or \code{TsIOList} object containing the picked primers.
+#' @examples
+#' # chr11 primers examples
+#' data("chr11_primers")
+#'
+#' # pick the best primer per gene based on the fewest exonic, intronic and intergenic off-targets
+#' # (in that order)
+#' best_primers <- pickPrimers(chr11_primers, by = "off_targets")
+#'
+#' # pick the best two primers per gene based on the lowest penalty score computed by Primer3
+#' best_primers <- pickPrimers(chr11_primers, n = 2, by = "penalty")
 #' @export
 setGeneric("pickPrimers",
            function(object, n = 1, by = c("penalty", "off_targets"))

@@ -27,12 +27,8 @@ library(TAPseq)
 # chromosome 11 region sequence templates
 data("chr11_sequence_templates")
 
-# reverse primer used in all PCR reactions
-reverse_primer <- "AAGCAGTGGTATCAACGCAGAGT"
-
 # create TsIOList object for the first two sequence templates
-tapseq_io <- TAPseqInput(chr11_sequence_templates[1:2], reverse_primer = reverse_primer,
-                         product_size_range = c(350, 500))
+tapseq_io <- TAPseqInput(chr11_sequence_templates[1:2], product_size_range = c(350, 500))
 
 # create boulder IO records
 io_record <- createIORecord(tapseq_io)

@@ -6,7 +6,7 @@
 #' @param object A \code{\link[TAPseq]{TsIO}} or \code{\link[TAPseq]{TsIOList}} object containing
 #'   designed primers.
 #' @param primer_opt_tm,primer_min_tm,primer_max_tm Optimal, minumum and maximum primer melting
-#'   temperature.
+#'   temperature. Should be the same values that were used when designing the primers.
 #' @param thermo_params_path Optional path (character) to the \code{primer3_config} directory. Only
 #'   required when using Primer3 < 2.5.0.
 #' @param primer3_core Path (character) to the \code{primer3_core} executable. Usually this is
@@ -37,7 +37,7 @@
 #' }
 #' @export
 setGeneric("checkPrimers",
-           function(object, primer_opt_tm = NA, primer_min_tm = NA, primer_max_tm = NA,
+           function(object, primer_opt_tm = 63, primer_min_tm = 59, primer_max_tm = 66,
                     thermo_params_path = NA, primer3_core = getOption("TAPseq.primer3_core"))
              standardGeneric("checkPrimers")
 )
