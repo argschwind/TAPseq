@@ -29,9 +29,17 @@ Sys.setenv(PATH = paste(Sys.getenv("PATH"), "/full/path/to/blast+/ncbi-blast-x.x
 Alternatively you can specify the paths to 3rd party software as arguments when calling TAPseq
 functions (TAPseqInput(), designPrimers(), checkPrimers()).
 
-## Example
+## Examples
 An example of the TAPseq primer design workflow can be found in a vignette. To view the vignette,
 run the following command (assuming vignettes were built when the package was installed).
 ```
 vignette("tapseq_primer_design", package = "TAPseq")
+```
+
+Examples of how to select and evaluate target genes to identify cell populations can be found in
+the examples of following functions. This requires that the suggested dependencies are installed as
+well, which should be the case if vignettes were built when installing the package.
+```
+?selectTargetGenes()
+?plotTargetGenes()
 ```

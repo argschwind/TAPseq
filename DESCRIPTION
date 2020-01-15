@@ -1,7 +1,7 @@
 Package: TAPseq
 Type: Package
 Title: TAP-seq primer design
-Version: 0.3.9002
+Version: 0.4.0
 Authors@R: person("Andreas", "Gschwind", email = "andreas.gschwind@stanford.edu",
                   role = c("aut", "cre"))
 Description: Design and assess TAP-seq primers using Primer3 and BLAST.

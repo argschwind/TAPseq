@@ -38,3 +38,11 @@
 #'
 #' @format object of \code{TsIOList} class.
 "chr11_primers"
+
+#' Mouse bone marrow 10x data
+#'
+#' Subset of a 10x mouse bone marrow dataset taken from Baccin et al., 2019.
+#' (\url{https://www.nature.com/articles/s41556-019-0439-6}).
+#'
+#' @format object of \code{Seurat} class.
+"bone_marrow_genex"

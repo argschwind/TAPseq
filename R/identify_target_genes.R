@@ -12,6 +12,21 @@
 #'   If set to NULL, the optimal number of target genes will be estimated using a cross-valdation
 #'   approach. Warning: The number of target genes might end up being very large!
 #' @return A character vector containing selected target gene identifiers.
+#' @examples
+#' \dontrun{
+#' library(TAPseq)
+#' library(Seurat)
+#'
+#' # example of mouse bone marrow 10x gene expression data
+#' data("bone_marrow_genex")
+#'
+#' # identify at least 200 target genes that can be used to identify cell populations
+#' target_genes <- selectTargetGenes(bone_marrow_genex, targets = 200)
+#'
+#' # automatically identify the number of target genes to best identify cell populations. caution:
+#' # this can lead to very large target gene panels!
+#' target_genes <- selectTargetGenes(bone_marrow_genex)
+#' }
 #' @export
 selectTargetGenes <- function(object, targets = NULL, expr_percentile = c(0.6, 0.99)) {
 
@@ -85,6 +100,21 @@ selectTargetGenes <- function(object, targets = NULL, expr_percentile = c(0.6, 0
 #'   population identities for all cell.
 #' @param target_genes (character) Target gene names.
 #' @param npcs (integer) Number of principal components to use for UMAP.
+#' @examples
+#' \dontrun{
+#' library(TAPseq)
+#' library(Seurat)
+#'
+#' # example of mouse bone marrow 10x gene expression data
+#' data("bone_marrow_genex")
+#'
+#' # identify at least 200 target genes that can be used to identify cell populations
+#' target_genes <- bone_marrow_genex(bone_marrow_genex, targets = 200)
+#'
+#' # create UMAP plots to compare cell type identification based on full dataset and selected 200
+#' # target genes
+#' plotTargetGenes(bone_marrow_genex, target_genes = target_genes)
+#' }
 #' @export
 plotTargetGenes <- function(object, target_genes, npcs = 15) {
 

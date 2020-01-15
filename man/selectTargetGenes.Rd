@@ -26,3 +26,19 @@ A character vector containing selected target gene identifiers.
 Select target genes that serve as markers for cell populations using a linear model with lasso
 regularization.
 }
+\examples{
+\dontrun{
+library(TAPseq)
+library(Seurat)
+
+# example of mouse bone marrow 10x gene expression data
+data("bone_marrow_genex")
+
+# identify at least 200 target genes that can be used to identify cell populations
+target_genes <- selectTargetGenes(bone_marrow_genex, targets = 200)
+
+# automatically identify the number of target genes to best identify cell populations. caution:
+# this can lead to very large target gene panels!
+target_genes <- selectTargetGenes(bone_marrow_genex)
+}
+}

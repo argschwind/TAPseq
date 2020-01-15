@@ -18,3 +18,19 @@ population identities for all cell.}
 Plot how well a selected set of target genes discriminates between cell populations using UMAP
 visualization.
 }
+\examples{
+\dontrun{
+library(TAPseq)
+library(Seurat)
+
+# example of mouse bone marrow 10x gene expression data
+data("bone_marrow_genex")
+
+# identify at least 200 target genes that can be used to identify cell populations
+target_genes <- bone_marrow_genex(bone_marrow_genex, targets = 200)
+
+# create UMAP plots to compare cell type identification based on full dataset and selected 200
+# target genes
+plotTargetGenes(bone_marrow_genex, target_genes = target_genes)
+}
+}
