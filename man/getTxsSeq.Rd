@@ -28,10 +28,10 @@ A \code{\link[Biostrings]{DNAString}} or \code{\link[Biostrings]{DNAStringSet}} 
   containing the transcript sequence(s).
 }
 \description{
-Extract the DNA sequences of all exons of transcript models and concatenate
-to one sequence per transcript. This is basically a wrapper for
-\code{\link[GenomicFeatures]{extractTranscriptSeqs}}, which makes sure that the exons are
-correctly sorted according to their position in the transcript (3' to 5').
+Extract the DNA sequences of all exons of transcript models and concatenate to one sequence per
+transcript. This is basically a wrapper for \code{\link[GenomicFeatures]{extractTranscriptSeqs}},
+which makes sure that the exons are correctly sorted according to their position in the
+transcript (3' to 5').
 }
 \section{Methods (by class)}{
 \itemize{
@@ -41,6 +41,7 @@ correctly sorted according to their position in the transcript (3' to 5').
 }}
 
 \examples{
+\dontrun{
 library(TAPseq)
 library(Biostrings)
 
@@ -55,7 +56,6 @@ chr11_seq <- readDNAStringSet(chr11_seq_fasta)
 # get sequences for all target transcripts in chr11 region
 tx_seqs <- getTxsSeq(target_txs, genome = chr11_seq)
 
-\dontrun{
 # a probably more practical approach is to use Bioconductors BSgenome package to get the
 # genome sequence
 library(BSgenome)
@@ -67,3 +67,4 @@ hg38 <- getBSgenome("BSgenome.Hsapiens.UCSC.hg38")
 tx_seqs <- getTxsSeq(target_txs, genome = hg38)
 }
 }
+\keyword{internal}

@@ -23,14 +23,6 @@
 #' @format object of \code{GRangesList} class.
 "chr11_truncated_txs"
 
-#' Chromosome 11 truncated transcript sequences
-#'
-#' Sequences of truncated transcripts within human chromosome 11 region that were extracted using
-#' \code{\link[TAPseq]{getTxsSeq}}.
-#'
-#' @format object of \code{DNAStringSet} class.
-"chr11_truncated_txs_seq"
-
 #' Chromosome 11 sequence templates
 #'
 #' Sequence templates for primer design examples. The templates consist of chromosome 11 truncated

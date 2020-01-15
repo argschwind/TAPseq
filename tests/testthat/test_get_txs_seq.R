@@ -2,6 +2,7 @@ context("Get transcript sequences")
 
 library(Biostrings)
 library(GenomicRanges)
+library(GenomicFeatures)
 
 # truncated transcripts for chr11
 data("chr11_truncated_txs")
@@ -10,15 +11,27 @@ data("chr11_truncated_txs")
 chr11_seq_fasta <- system.file("extdata", "chr11_sequence.fasta.gz", package = "TAPseq")
 chr11_seq <- readDNAStringSet(chr11_seq_fasta)
 
-# expected output
-data("chr11_truncated_txs_seq")
-expect_out <- chr11_truncated_txs_seq
+# expected output for the first 2 truncated transcripts --------------------------------------------
 
-# run tests
+txs <- chr11_truncated_txs[1:2]
+
+# get indices of transcripts on positive and negative strand
+txs_pos <- which(all(strand(txs) == "+"))
+txs_neg <- which(all(strand(txs) == "-"))
+
+# order exons of each transcript according to order in transcript (5' -> 3')
+txs[txs_pos] <- sort(txs[txs_pos], decreasing = FALSE)
+txs[txs_neg] <- sort(txs[txs_neg], decreasing = TRUE)
+
+# get sequences of transcripts
+expect_out <- extractTranscriptSeqs(chr11_seq, transcripts = txs)
+
+# run tests ----------------------------------------------------------------------------------------
+
 test_that("getTxsSeq extracts correct sequence from DNAStringSet object", {
   outGR <- getTxsSeq(chr11_truncated_txs[[1]], genome = chr11_seq)
   expect_equivalent(outGR, expect_out[[1]])
-  outGRL <- getTxsSeq(chr11_truncated_txs, genome = chr11_seq)
+  outGRL <- getTxsSeq(chr11_truncated_txs[1:2], genome = chr11_seq)
   expect_equal(outGRL, expect_out)
 })
 

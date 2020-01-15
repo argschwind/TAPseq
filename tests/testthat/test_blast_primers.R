@@ -14,8 +14,8 @@ genome <- getSeq(hg38, c("chr11", "chrUn_KI270583v1"))
 data("chr11_truncated_txs")
 exons <- unlist(chr11_truncated_txs[1:2])
 
-# expected transcript sequences
-data("chr11_truncated_txs_seq")
+# expected transcript sequences for first 2 truncated transcripts
+truncated_txs_seq <- getTxsSeq(chr11_truncated_txs[1:2], genome = genome)
 
 # expected names of output DNAStringSet object
 expect_names <- c("lcl|chromosome;chr11",
@@ -28,8 +28,8 @@ test_that("get_gt_sequences() obtains correct genome and transcript sequences", 
   expect_length(gt_seqs, 3)
   expect_identical(names(gt_seqs), expect_names)
   expect_identical(as.character(gt_seqs[[1]]), as.character(getSeq(hg38, "chr11")))
-  expect_identical(as.character(gt_seqs[[2]]), as.character(chr11_truncated_txs_seq[["ARFIP2"]]))
-  expect_identical(as.character(gt_seqs[[3]]), as.character(chr11_truncated_txs_seq[["AKIP1"]]))
+  expect_identical(as.character(gt_seqs[[2]]), as.character(truncated_txs_seq[["ARFIP2"]]))
+  expect_identical(as.character(gt_seqs[[3]]), as.character(truncated_txs_seq[["AKIP1"]]))
 })
 
 test_that("get_gt_sequences() with option standard_chromosomes = FALSE", {
