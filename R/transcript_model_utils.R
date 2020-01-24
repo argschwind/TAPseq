@@ -73,11 +73,12 @@ truncate_tx_polyA <- function(transcripts, polyA_sites, extend_3prime_end = 0,
 
   # if no overlapping polyA sites are found, no statement about the expressed transcript can be made
   # and therefore the consensus (merge) of all transcripts is returned
+  }else if (length(unique(mcols(transcripts)[[transcript_id]])) == 1) {
+     return(transcripts)
   }else{
     reduce_gene(transcripts, transcript_id = transcript_id, gene_id = gene_id,
                 exon_number = exon_number)
   }
-
 }
 
 # extend a provided transcript model at the 3' (downstream) or 5' (upstream) by the specified number

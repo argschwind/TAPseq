@@ -8,26 +8,42 @@ target_genes <- split(chr11_genes, f = chr11_genes$gene_name)
 
 # example polyA sites for these genes
 data("chr11_polyA_sites")
+chr11_polyA_sites <- chr11_polyA_sites[names(chr11_polyA_sites) != "ARFIP2"]
 
 # get expected output
 data("chr11_truncated_txs")
 expect_out <- chr11_truncated_txs
+
+# adjust expected output of ARFIP2 to no overlapping polyA site
+expect_out[["ARFIP2"]] <- c(expect_out[["ARFIP2"]][1], expect_out[["ARFIP2"]])
+mcols(expect_out[["ARFIP2"]])[1, "exon_number"] <- "9"
+mcols(expect_out[["ARFIP2"]])[, "tag"] <- as.character(NA)
+ranges(expect_out[["ARFIP2"]]) <- IRanges(
+  start = c(6474683, 6477718, 6478041, 6478579, 6478738, 6479140, 6479972, 6480323, 6481231),
+  end = c(6477268, 6477892, 6478198, 6478652, 6478959, 6479357, 6480068, 6480463, 6481479)
+)
+
 
 ## test that correct output is returned ------------------------------------------------------------
 
 # run tests
 test_that("truncateTxsPolyA() returns correct output and format for GRanges", {
   output <- truncateTxsPolyA(target_genes[[1]], polyA_sites = chr11_polyA_sites)
-  expect_equal(class(output), class(expect_out[[1]]))
-  expect_length(output, length(expect_out[[1]]))
+  expect_true(is(output, "GRanges"))
   expect_equal(output, expect_out[[1]])
 })
 
 test_that("truncateTxsPolyA() returns correct output and format for GRangesList", {
-  output <- truncateTxsPolyA(target_genes, polyA_sites = chr11_polyA_sites)
-  expect_equal(class(output), class(expect_out))
-  expect_length(output, length(expect_out))
-  expect_equal(output, expect_out)
+  output <- truncateTxsPolyA(target_genes[2:4], polyA_sites = chr11_polyA_sites)
+  expect_true(is(output, "GRangesList"))
+  expect_equal(output, expect_out[2:4])
+})
+
+test_that("truncateTxsPolyA() returns correct output if no overlap is found (1 tx as input)", {
+  # input for one transcript that does not overlap with any polyA site
+  input <- target_genes[[2]][mcols(target_genes[[2]])[, "transcript_id"] == "ENST00000614314.4"]
+  output <- truncateTxsPolyA(input, polyA_sites = chr11_polyA_sites)
+  expect_equal(input, output)
 })
 
 test_that("transcript_id = NULL is handeled correctly", {
@@ -37,7 +53,7 @@ test_that("transcript_id = NULL is handeled correctly", {
     x[mcols(x)[, "transcript_id"] %in% tx_ids]
   })
 
-  # when truncating with transcript_id set to NULL, a message is rised
+  # when truncating with transcript_id set to NULL, a message is raised
   # GRanges input
   expect_message(
     outGR <- truncateTxsPolyA(input[[1]], polyA_sites = chr11_polyA_sites, transcript_id = NULL),
@@ -66,7 +82,7 @@ test_that("transcript_id = NULL is handeled correctly", {
     "Overlapping exons found for transcripts:"
   )
   expect_error(
-    truncateTxsPolyA(target_genes, polyA_sites = chr11_polyA_sites, transcript_id = NULL),
+    truncateTxsPolyA(target_genes[1:2], polyA_sites = chr11_polyA_sites, transcript_id = NULL),
     "Overlapping exons found for transcripts:"
   )
 

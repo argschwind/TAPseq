@@ -1,7 +1,6 @@
 context("Get transcript sequences")
 
 library(Biostrings)
-library(GenomicRanges)
 library(GenomicFeatures)
 
 # truncated transcripts for chr11

@@ -74,8 +74,8 @@ done by exporting the polyA sites into a .bed. This file can then be loaded into
 site predictions.
 ```{r, eval=FALSE}
 library(rtracklayer)
-export(polyA_sites, con = "~/data/test.bed", format = "bed")
-export(unlist(target_genes), con = "~/data/test.gtf", format = "gtf")
+export(polyA_sites, con = "path/to/test.bed", format = "bed")
+export(unlist(target_genes), con = "path/to/test.bed", format = "gtf")
 ```
 
 Once we are happy with our polyA predictions, we then use them to truncate the target gene
