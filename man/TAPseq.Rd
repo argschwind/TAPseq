@@ -3,7 +3,6 @@
 \docType{package}
 \name{TAPseq}
 \alias{TAPseq}
-\alias{TAPseq-package}
 \title{TAPseq: R-package to design primers for TAP-seq}
 \description{
 This package provides functions to select transcript isoforms and design PCR primers for

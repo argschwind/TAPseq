@@ -4,10 +4,16 @@
 \alias{TAPseqInput}
 \title{Create TAPseq input from sequence templates}
 \usage{
-TAPseqInput(sequence_templates, product_size_range,
-  reverse_primer = "CTACACGACGCTCTTCCGATCT", primer_num_return = 5,
-  min_primer_region = 100, primer_opt_tm = 63, primer_min_tm = 59,
-  primer_max_tm = 66)
+TAPseqInput(
+  sequence_templates,
+  product_size_range,
+  reverse_primer = "CTACACGACGCTCTTCCGATCT",
+  primer_num_return = 5,
+  min_primer_region = 100,
+  primer_opt_tm = 63,
+  primer_min_tm = 59,
+  primer_max_tm = 66
+)
 }
 \arguments{
 \item{sequence_templates}{A \code{\link[Biostrings]{DNAStringSet}} object containing all sequence

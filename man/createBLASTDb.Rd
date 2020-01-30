@@ -4,11 +4,19 @@
 \alias{createBLASTDb}
 \title{Create BLAST database}
 \usage{
-createBLASTDb(genome, annot, blastdb, standard_chromosomes = TRUE,
-  tx_id = "transcript_id", tx_name = "transcript_name",
-  gene_name = "gene_name", gene_id = "gene_id",
-  title = "TAP-seq_GT_DB", verbose = FALSE,
-  makeblastdb = getOption("TAPseq.makeblastdb"))
+createBLASTDb(
+  genome,
+  annot,
+  blastdb,
+  standard_chromosomes = TRUE,
+  tx_id = "transcript_id",
+  tx_name = "transcript_name",
+  gene_name = "gene_name",
+  gene_id = "gene_id",
+  title = "TAP-seq_GT_DB",
+  verbose = FALSE,
+  makeblastdb = getOption("TAPseq.makeblastdb")
+)
 }
 \arguments{
 \item{genome}{A \code{\link[BSgenome]{BSgenome}} (or \code{\link[Biostrings]{DNAStringSet}})
@@ -50,7 +58,8 @@ library(BSgenome)
 hg38 <- getBSgenome("BSgenome.Hsapiens.UCSC.hg38")
 
 # get annotations for BLAST
-annot_url <- "ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_32/gencode.v32.annotation.gtf.gz"
+annot_url <- paste0("ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_32/",
+                    "gencode.v32.annotation.gtf.gz")
 annot <- import(annot_url, format = "gtf")
 blast_exons <- annot[annot$type == "exon" & annot$gene_type == "protein_coding"]
 

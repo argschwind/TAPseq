@@ -4,8 +4,7 @@
 \alias{selectTargetGenes}
 \title{Select target genes}
 \usage{
-selectTargetGenes(object, targets = NULL, expr_percentile = c(0.6,
-  0.99))
+selectTargetGenes(object, targets = NULL, expr_percentile = c(0.6, 0.99))
 }
 \arguments{
 \item{object}{Seurat object containing single-cell RNA-seq data from which best marker genes for

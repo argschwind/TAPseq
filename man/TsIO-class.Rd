@@ -26,9 +26,17 @@
 \alias{pcr_products,TsIO-method}
 \title{TsIO class}
 \usage{
-TsIO(sequence_template, sequence_id = NA, reverse_primer,
-  product_size_range, primer_num_return = 5, min_primer_region = 100,
-  primer_opt_tm = NA, primer_min_tm = NA, primer_max_tm = NA)
+TsIO(
+  sequence_template,
+  sequence_id = NA,
+  reverse_primer,
+  product_size_range,
+  primer_num_return = 5,
+  min_primer_region = 100,
+  primer_opt_tm = NA,
+  primer_min_tm = NA,
+  primer_max_tm = NA
+)
 
 \S4method{sequence_id}{TsIO}(x)
 

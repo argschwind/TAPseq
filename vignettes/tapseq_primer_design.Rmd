@@ -187,7 +187,7 @@ tapseq_primers(outer_primers$HBE1)
 ```
 
 To finalize our set of outer primers, we want to choose the best primer per target gene, i.e. the
-one with the fewest exonic, intronic and intergeni off-target hits (in that order).
+one with the fewest exonic, intronic and intergenic off-target hits (in that order).
 ```{r}
 # select best primer per target gene
 best_outer_primers <- pickPrimers(outer_primers, n = 1, by = "off_targets")

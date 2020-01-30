@@ -30,7 +30,8 @@
 #' hg38 <- getBSgenome("BSgenome.Hsapiens.UCSC.hg38")
 #'
 #' # get annotations for BLAST
-#' annot_url <- "ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_32/gencode.v32.annotation.gtf.gz"
+#' annot_url <- paste0("ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_32/",
+#'                     "gencode.v32.annotation.gtf.gz")
 #' annot <- import(annot_url, format = "gtf")
 #' blast_exons <- annot[annot$type == "exon" & annot$gene_type == "protein_coding"]
 #'
@@ -161,7 +162,8 @@ createBLASTDb <- function(genome, annot, blastdb, standard_chromosomes = TRUE,
 #' hg38 <- getBSgenome("BSgenome.Hsapiens.UCSC.hg38")
 #'
 #' # get annotations for BLAST
-#' annot_url <- "ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_32/gencode.v32.annotation.gtf.gz"
+#' annot_url <- paste0("ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_32/",
+#'                     "gencode.v32.annotation.gtf.gz")
 #' annot <- import(annot_url, format = "gtf")
 #' blast_exons <- annot[annot$type == "exon" & annot$gene_type == "protein_coding"]
 #'

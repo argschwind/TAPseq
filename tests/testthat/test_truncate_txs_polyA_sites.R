@@ -36,7 +36,7 @@ test_that("truncateTxsPolyA() returns correct output and format for GRanges", {
 test_that("truncateTxsPolyA() returns correct output and format for GRangesList", {
   output <- truncateTxsPolyA(target_genes[2:4], polyA_sites = chr11_polyA_sites)
   expect_true(is(output, "GRangesList"))
-  expect_equal(output, expect_out[2:4])
+  expect_equal(output, expect_out[2:4], check.attributes = FALSE)
 })
 
 test_that("truncateTxsPolyA() returns correct output if no overlap is found (1 tx as input)", {
