@@ -2,7 +2,7 @@
 % Please edit documentation in R/onLoad.R
 \name{.onLoad}
 \alias{.onLoad}
-\title{Actions to perform when package is attached}
+\title{Actions to perform when package is LOADED}
 \usage{
 .onLoad(libname, pkgname)
 }

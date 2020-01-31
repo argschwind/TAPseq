@@ -10,6 +10,6 @@ check_tool_installation()
 A \code{list} containing paths to required tools, if found, else NA.
 }
 \description{
-Check if requried software is installed and return paths to executables (if found).
+Check if required software is installed and return paths to executables (if found).
 }
 \keyword{internal}

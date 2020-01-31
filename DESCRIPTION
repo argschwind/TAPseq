@@ -1,7 +1,7 @@
 Package: TAPseq
 Type: Package
 Title: TAP-seq primer design
-Version: 0.4.0.9001
+Version: 0.4.0.9002
 Authors@R: person("Andreas", "Gschwind", email = "andreas.gschwind@stanford.edu",
                   role = c("aut", "cre"), comment = c(ORCID = "0000-0002-0769-6907"))
 Description: Design primers for targeted single-cell RNA-seq. Create sequence templates for a
@@ -10,6 +10,7 @@ URL: https://github.com/argschwind/TAPseq
 biocViews: SingleCell, Sequencing, Technology, CRISPR, PooledScreens
 License: MIT + file LICENSE
 Encoding: UTF-8
+LazyData: true
 RoxygenNote: 7.0.2
 VignetteBuilder: knitr
 Depends: R (>= 3.5)

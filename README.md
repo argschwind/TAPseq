@@ -42,10 +42,9 @@ vignette("tapseq_primer_design", package = "TAPseq")
 ```
 
 Examples of how to select and evaluate target genes to identify cell populations can be found in
-the examples of following functions. This requires that the suggested dependencies are installed as
+the examples of relevant functions. This requires that the suggested dependencies are installed as
 well, which should be the case if the package was installed with building vignettes and suggested
 dependencies.
 ```
 ?selectTargetGenes()
-?plotTargetGenes()
 ```

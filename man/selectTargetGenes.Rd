@@ -2,28 +2,36 @@
 % Please edit documentation in R/identify_target_genes.R
 \name{selectTargetGenes}
 \alias{selectTargetGenes}
+\alias{plotTargetGenes}
 \title{Select target genes}
 \usage{
 selectTargetGenes(object, targets = NULL, expr_percentile = c(0.6, 0.99))
+
+plotTargetGenes(object, target_genes, npcs = 15)
 }
 \arguments{
 \item{object}{Seurat object containing single-cell RNA-seq data from which best marker genes for
 different cell populations should be learned. Needs to contain population identities for all
 cell.}
 
-\item{targets}{Desired number of target genes. At least this many target genes will be returned.
-If set to NULL, the optimal number of target genes will be estimated using a cross-valdation
-approach. Warning: The number of target genes might end up being very large!}
+\item{targets}{Desired number of target genes. Approximately this many target genes will be
+returned. If set to NULL, the optimal number of target genes will be estimated using a
+cross-valdation approach. Warning: The number of target genes might end up being very large!}
 
 \item{expr_percentile}{Expression percentiles that candidate target genes need to fall into.
 Default is 60\% to 99\%, which excludes bottom 60\% and top 1\% expressed genes from markers.}
+
+\item{target_genes}{(character) Target gene names.}
+
+\item{npcs}{(integer) Number of principal components to use for UMAP.}
 }
 \value{
 A character vector containing selected target gene identifiers.
 }
 \description{
 Select target genes that serve as markers for cell populations using a linear model with lasso
-regularization.
+regularization. How well a selected set of target genes discriminates between cell populations
+can be assessed in an intuitive way using UMAP visualization.
 }
 \examples{
 \dontrun{
@@ -33,11 +41,15 @@ library(Seurat)
 # example of mouse bone marrow 10x gene expression data
 data("bone_marrow_genex")
 
-# identify at least 200 target genes that can be used to identify cell populations
-target_genes <- selectTargetGenes(bone_marrow_genex, targets = 200)
+# identify at least 100 target genes that can be used to identify cell populations
+target_genes <- selectTargetGenes(bone_marrow_genex, targets = 100)
 
-# automatically identify the number of target genes to best identify cell populations. caution:
-# this can lead to very large target gene panels!
-target_genes <- selectTargetGenes(bone_marrow_genex)
+# automatically identify the number of target genes to best identify cell populations using
+# cross-validation. caution: this can lead to very large target gene panels!
+target_genes_cv <- selectTargetGenes(bone_marrow_genex)
+
+# create UMAP plots to compare cell type identification based on full dataset and selected 100
+# target genes
+plotTargetGenes(bone_marrow_genex, target_genes = target_genes)
 }
 }

@@ -2,7 +2,7 @@
 
 #' Check if required tools are installed
 #'
-#' Check if requried software is installed and return paths to executables (if found).
+#' Check if required software is installed and return paths to executables (if found).
 #'
 #' @return A \code{list} containing paths to required tools, if found, else NA.
 #' @keywords internal
@@ -23,7 +23,7 @@ check_tool_installation <- function() {
 
 }
 
-#' Actions to perform when package is attached
+#' Actions to perform when package is LOADED
 #'
 #' Check for required tools and set tool paths as package options.
 #'
@@ -33,25 +33,14 @@ check_tool_installation <- function() {
   # check for required tools
   tools <- check_tool_installation()
 
-  # raise warning if some tools are not found, else print message with paths to used tools
+  # raise warning if some tools are not found
   na_tools <- names(tools[is.na(tools)])
   if (length(na_tools) > 0) {
 
-    warning("Following required software is not installed or not in PATH:",
+    warning("Following software required by TAPseq is not installed or not in PATH:",
             "\n\n\t", paste0(na_tools, collapse = "\n\t"),
             "\n\nPlease install these tools before trying to use this package!",
             call. = FALSE)
-
-  }else{
-
-    # create printable string listing tool names and path to tools
-    tools_print <- lapply(1:length(tools), FUN = function(x) {
-      paste(names(tools)[x], tools[[x]] , sep = ": ")
-    })
-    tools_print <- paste(unlist(tools_print), collapse = "\n")
-
-    # print start up message providing name and paths of used tools
-    packageStartupMessage("\nUsing the following tools:\n", tools_print, "\n")
 
   }
 
@@ -61,12 +50,32 @@ check_tool_installation <- function() {
 
   # create package options
   op <- options()
-  op.primer3 <- tool_opts
+  op.tapseq <- tool_opts
 
   # set options
-  toset <- !(names(op.primer3) %in% names(op))
-  if(any(toset)) options(op.primer3[toset])
+  toset <- !(names(op.tapseq) %in% names(op))
+  if(any(toset)) options(op.tapseq[toset])
 
   invisible()
+
+}
+
+#' Print startup message if package is ATTACHED
+#'
+#' @keywords internal
+.onAttach <- function(libname, pkgname) {
+
+  # get all tools used by TAPseq
+  tool_ops <- c("TAPseq.primer3_core", "TAPseq.makeblastdb", "TAPseq.blastn")
+  tools <- unlist(lapply(tool_ops, FUN = getOption))
+
+  # create printable strings listing tool names and path to tools
+  tools_print <- lapply(seq_along(tools), FUN = function(x) {
+    paste(names(tools)[x], tools[[x]] , sep = ": ")
+  })
+  tools_print <- paste(unlist(tools_print), collapse = "\n")
+
+  # print start up message providing name and paths of used tools
+  packageStartupMessage("\nTAPseq is using the following tools:\n", tools_print, "\n")
 
 }

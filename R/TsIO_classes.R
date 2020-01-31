@@ -38,7 +38,7 @@
 #' tx_id <- names(chr11_sequence_templates)[1]
 #'
 #' # reverse primer used in all PCR reactions
-#' reverse_primer <- "AAGCAGTGGTATCAACGCAGAGT"
+#' reverse_primer <- "CTACACGACGCTCTTCCGATCT"
 #'
 #' # create TsIO object
 #' obj <- TsIO(sequence_template = tx_seq, sequence_id = tx_id, reverse_primer = reverse_primer,
@@ -175,7 +175,7 @@ setValidity("TsIO", function(object) {
 #' txs_ids  <- names(txs_seqs)
 #'
 #' # reverse primer used in all PCR reactions
-#' reverse_primer <- "AAGCAGTGGTATCAACGCAGAGT"
+#' reverse_primer <- "CTACACGACGCTCTTCCGATCT"
 #'
 #' # create TsIO objects
 #' tsio1 <- TsIO(sequence_template = txs_seqs[[1]], sequence_id = txs_ids[1],

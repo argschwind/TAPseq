@@ -2,13 +2,16 @@ context("Get transcript sequences")
 
 library(Biostrings)
 library(GenomicFeatures)
+library(BSgenome)
 
 # truncated transcripts for chr11
 data("chr11_truncated_txs")
 
-# chr11 sequence loaded from fasta file
-chr11_seq_fasta <- system.file("extdata", "chr11_sequence.fasta.gz", package = "TAPseq")
-chr11_seq <- readDNAStringSet(chr11_seq_fasta)
+# hg38 BSgenome object
+hg38 <- getBSgenome("BSgenome.Hsapiens.UCSC.hg38")
+
+# create DNAStringSet of containing the sequence of chromosome 11 region
+chr11_seq <- DNAStringSet(list("chr11" = getSeq(hg38, "chr11", end = 25000000)))
 
 # expected output for the first 2 truncated transcripts --------------------------------------------
 
@@ -29,9 +32,16 @@ expect_out <- extractTranscriptSeqs(chr11_seq, transcripts = txs)
 
 test_that("getTxsSeq extracts correct sequence from DNAStringSet object", {
   outGR <- getTxsSeq(chr11_truncated_txs[[1]], genome = chr11_seq)
-  expect_equivalent(outGR, expect_out[[1]])
+  expect_equal(as.character(outGR), as.character(expect_out[[1]]))
   outGRL <- getTxsSeq(chr11_truncated_txs[1:2], genome = chr11_seq)
-  expect_equal(outGRL, expect_out)
+  expect_equal(as.character(outGRL), as.character(expect_out))
+})
+
+test_that("getTxsSeq extracts correct sequence from BSgenome object", {
+  outGR <- getTxsSeq(chr11_truncated_txs[[1]], genome = hg38)
+  expect_equal(as.character(outGR), as.character(expect_out[[1]]))
+  outGRL <- getTxsSeq(chr11_truncated_txs[1:2], genome = hg38)
+  expect_equal(as.character(outGRL), as.character(expect_out))
 })
 
 test_that("getTxsSeq aborts if genome is incorrect class", {

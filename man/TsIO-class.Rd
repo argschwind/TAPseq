@@ -172,7 +172,7 @@ tx_seq <- chr11_sequence_templates[[1]]
 tx_id <- names(chr11_sequence_templates)[1]
 
 # reverse primer used in all PCR reactions
-reverse_primer <- "AAGCAGTGGTATCAACGCAGAGT"
+reverse_primer <- "CTACACGACGCTCTTCCGATCT"
 
 # create TsIO object
 obj <- TsIO(sequence_template = tx_seq, sequence_id = tx_id, reverse_primer = reverse_primer,
