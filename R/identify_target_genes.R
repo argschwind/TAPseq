@@ -23,7 +23,7 @@
 #' # example of mouse bone marrow 10x gene expression data
 #' data("bone_marrow_genex")
 #'
-#' # identify at least 100 target genes that can be used to identify cell populations
+#' # identify approximately 100 target genes that can be used to identify cell populations
 #' target_genes <- selectTargetGenes(bone_marrow_genex, targets = 100)
 #'
 #' # automatically identify the number of target genes to best identify cell populations using

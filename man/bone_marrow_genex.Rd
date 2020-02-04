@@ -9,7 +9,7 @@
 bone_marrow_genex
 }
 \description{
-Subset of a 10x mouse bone marrow dataset taken from Baccin et al., 2019.
+Subset of a 10x mouse bone marrow dataset taken from Baccin et al., 2019
 (\url{https://www.nature.com/articles/s41556-019-0439-6}). Contains gene expression and cell type
 data for 362 cells.
 }

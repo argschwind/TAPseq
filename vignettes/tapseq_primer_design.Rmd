@@ -43,7 +43,7 @@ functions (TAPseqInput(), designPrimers(), checkPrimers()).
 Let's start by creating sequence templates for primer design for a target gene panel. First we try
 to infer likely polyadenylation (polyA) sites for the selected target genes.
 
-```{r message=FALSE}
+```{r, message=FALSE}
 library(TAPseq)
 library(GenomicRanges)
 library(BiocParallel)
@@ -85,7 +85,7 @@ site is taken to truncate a transcript. If multiple transcripts per gene overlap
 merged truncated transcript model is generated from all overlapping transcripts. If no transcript
 of a given gene overlap with any polyA sites a consensus transcript model is created from all
 transcripts for that gene.
-```{r message=FALSE}
+```{r, message=FALSE}
 # truncate transcripts at inferred polyA sites
 truncated_txs <- truncateTxsPolyA(target_genes, polyA_sites = polyA_sites, parallel = TRUE)
 ```
