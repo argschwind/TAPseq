@@ -46,7 +46,9 @@ data("chr11_primers")
 # pick the best primer per gene based on the fewest exonic, intronic and intergenic off-targets
 # (in that order)
 best_primers <- pickPrimers(chr11_primers, by = "off_targets")
+tapseq_primers(best_primers)
 
 # pick the best two primers per gene based on the lowest penalty score computed by Primer3
 best_primers <- pickPrimers(chr11_primers, n = 2, by = "penalty")
+tapseq_primers(best_primers)
 }

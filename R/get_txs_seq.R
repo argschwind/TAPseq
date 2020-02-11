@@ -19,7 +19,6 @@
 #' @examples
 #' \dontrun{
 #' library(TAPseq)
-#' library(Biostrings)
 #' library(BSgenome)
 #'
 #' # protein-coding exons of transcripts within chr11 region
@@ -30,13 +29,13 @@
 #' hg38 <- getBSgenome("BSgenome.Hsapiens.UCSC.hg38")
 #'
 #' # get sequences for all target transcripts on chr11
-#' tx_seqs <- getTxsSeq(target_txs, genome = hg38)
+#' txs_seqs <- getTxsSeq(target_txs, genome = hg38)
 #'}
-#' @keywords internal
+#' @export
 setGeneric("getTxsSeq", function(transcripts, genome) standardGeneric("getTxsSeq") )
 
 #' @describeIn getTxsSeq Obtain transcript sequence from \code{GRangesList} input
-#' @keywords internal
+#' @export
 setMethod("getTxsSeq", "GRangesList", function(transcripts, genome) {
 
   # abort if genome is not a BSgenome or DNAStringSet object
@@ -82,7 +81,7 @@ setMethod("getTxsSeq", "GRangesList", function(transcripts, genome) {
 )
 
 #' @describeIn getTxsSeq Obtain transcript sequence from \code{GRanges} input
-#' @keywords internal
+#' @export
 setMethod("getTxsSeq", "GRanges", function(transcripts, genome) {
 
   # transform transcripts to GRangesList

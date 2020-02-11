@@ -4,14 +4,23 @@
 \name{TsIOList-class}
 \alias{TsIOList-class}
 \alias{TsIOList}
+\alias{sequence_id,TsIOList-method}
+\alias{target_sequence,TsIOList-method}
 \alias{sequence_template,TsIOList-method}
+\alias{target_annot,TsIOList-method}
 \alias{tapseq_primers,TsIOList-method}
 \alias{pcr_products,TsIOList-method}
 \title{TsIOList class}
 \usage{
 TsIOList(...)
 
+\S4method{sequence_id}{TsIOList}(x)
+
+\S4method{target_sequence}{TsIOList}(x)
+
 \S4method{sequence_template}{TsIOList}(x)
+
+\S4method{target_annot}{TsIOList}(x)
 
 \S4method{tapseq_primers}{TsIOList}(x)
 
@@ -31,7 +40,13 @@ storing of Primer3 input and output for multiple target genes.
 }
 \section{Methods (by generic)}{
 \itemize{
-\item \code{sequence_template}: Get sequence_templates
+\item \code{sequence_id}: Get sequence_id
+
+\item \code{target_sequence}: Get target_sequence
+
+\item \code{sequence_template}: Create sequence_template
+
+\item \code{target_annot}: Get target_annot
 
 \item \code{tapseq_primers}: Get tapseq_primers
 
@@ -41,29 +56,34 @@ storing of Primer3 input and output for multiple target genes.
 \examples{
 library(TAPseq)
 
-# get example sequence templates
-data("chr11_sequence_templates")
-txs_seqs <- chr11_sequence_templates[1:2]
-txs_ids  <- names(txs_seqs)
+# get example transcript sequences
+data("chr11_truncated_txs_seq")
+txs_seqs <- chr11_truncated_txs_seq[1:2]
+txs_ids <- names(txs_seqs)
+
+# 10x beads-oligo-dt sequence
+beads_oligo <- "CTACACGACGCTCTTCCGATCTNNNNNNNNNNNNNNNNNNNNNNNNNNNNTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT"
 
 # reverse primer used in all PCR reactions
 reverse_primer <- "CTACACGACGCTCTTCCGATCT"
 
 # create TsIO objects
-tsio1 <- TsIO(sequence_template = txs_seqs[[1]], sequence_id = txs_ids[1],
-              reverse_primer = reverse_primer, product_size_range = c(350, 500))
+tsio1 <- TsIO(target_sequence = txs_seqs[[1]], beads_oligo = beads_oligo,
+              reverse_primer = reverse_primer, product_size_range = c(350, 500),
+              sequence_id = txs_ids[1])
 
-tsio2 <- TsIO(sequence_template = txs_seqs[[2]], sequence_id = txs_ids[2],
-              reverse_primer = reverse_primer, product_size_range = c(350, 500))
+tsio2 <- TsIO(target_sequence = txs_seqs[[2]], beads_oligo = beads_oligo,
+              reverse_primer = reverse_primer, product_size_range = c(350, 500),
+              sequence_id = txs_ids[2])
 
 # create TsIOList object
-obj <- TsIOList(tsio1, tsio2)
+obj <- TsIOList(tsio1 = tsio1, tsio2 = tsio2)
 
-# it's noteworthy that when creating a TsIOList from a DNAStringSet of sequence templates, it's
-# easier to use TAPseqInput()
+# it's noteworthy to mention that when creating a TsIOList from a DNAStringSet of target
+# sequences, it's easier to use TAPseqInput()
 ?TAPseqInput
 
-# as with TsIO objects, some slot values can be accessed using accessor functions
+# as with TsIO objects, some values can be accessed using accessor functions
 sequence_template(obj)
 }
 \seealso{

@@ -3,19 +3,20 @@ context("Design primers using Primer3 and parse output")
 library(Biostrings)
 library(GenomicRanges)
 
-# sequence templates
-data("chr11_sequence_templates")
-seq_templ <- chr11_sequence_templates[1:2]
+# chr11 truncated transcript sequences
+data("chr11_truncated_txs_seq")
+txs_seqs <- chr11_truncated_txs_seq[1:2]
+txs_ids  <- names(txs_seqs)
 
 # create TsIOList from sequence templates
-tapseq_io <- TAPseqInput(sequence_templates = seq_templ, product_size_range = c(350, 500))
+tapseq_io <- TAPseqInput(target_sequences = txs_seqs, product_size_range = c(350, 500))
 
 # test parsePrimer3Output() ------------------------------------------------------------------------
 
 # raw Primer3 output
 primer3_output <- c(
   "SEQUENCE_ID=AKIP1",
-  paste0("SEQUENCE_TEMPLATE=", seq_templ[[1]]),
+  paste0("SEQUENCE_TEMPLATE=", sequence_template(tapseq_io[[1]])),
   "SEQUENCE_PRIMER_REVCOMP=CTACACGACGCTCTTCCGATCT",
   "PRIMER_NUM_RETURN=2",
   "PRIMER_PICK_LEFT_PRIMER=1",
@@ -46,7 +47,7 @@ primer3_output <- c(
   "PRIMER_LEFT_1_END_STABILITY=3.2100",
   "=",
   "SEQUENCE_ID=ARFIP2",
-  paste0("SEQUENCE_TEMPLATE=", seq_templ[[2]]),
+  paste0("SEQUENCE_TEMPLATE=", sequence_template(tapseq_io[[2]])),
   "SEQUENCE_PRIMER_REVCOMP=CTACACGACGCTCTTCCGATCT",
   "PRIMER_NUM_RETURN=2",
   "PRIMER_PICK_LEFT_PRIMER=1",
@@ -102,6 +103,7 @@ test_that("parsePrimer3Output() parses Primer3 output correctly", {
   expect_equal(primers, expect_primers)
 
   # expected pcr products
+  seq_templ <- sequence_template(tapseq_io)
   expect_pcr_prod <- c(DNAStringSet(subseq(seq_templ[[1]], 622, length(seq_templ[[1]]))),
                        DNAStringSet(subseq(seq_templ[[1]], 564, length(seq_templ[[1]]))))
   names(expect_pcr_prod) <- paste0("AKIP1.primer_left_", 0:1)

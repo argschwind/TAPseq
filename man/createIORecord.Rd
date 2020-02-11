@@ -43,15 +43,15 @@ conventional way.
 \examples{
 library(TAPseq)
 
-# chromosome 11 region sequence templates
-data("chr11_sequence_templates")
+# chromosome 11 truncated transcript sequences
+data("chr11_truncated_txs_seq")
 
-# create TsIOList object from sequence templates
-obj <- TAPseqInput(chr11_sequence_templates[1:2], product_size_range = c(350, 500))
+# create TsIOList object for primer desing from sequence templates
+obj <- TAPseqInput(chr11_truncated_txs_seq, product_size_range = c(350, 500))
 
 # create boulder IO record
 boulder_io <- createIORecord(obj)
-boulder_io
+head(boulder_io, 11)
 }
 \seealso{
 \url{http://primer3.org/manual.html} for Primer3 manual.

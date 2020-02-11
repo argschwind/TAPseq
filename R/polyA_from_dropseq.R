@@ -6,8 +6,8 @@
 #' chosen because they work reasonably well with the example data, but they should typically be
 #' empirically selected by verifying the output.
 #'
-#' @param genes GRangesList object containing annotations of genes for which polyA site are to be
-#'   extimated.
+#' @param genes \code{\link[GenomicRanges]{GRangesList}} object containing annotations of genes
+#'   for which polyA sites are to be estimated.
 #' @param bam Path to .bam file containing aligned reads used for polyA site estimation.
 #' @param polyA_downstream (numeric) How far downstream of a peak in coverage are polyA sites
 #'   expected? Somewhat depends on input DNA fragment size. (default: 100).

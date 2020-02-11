@@ -10,13 +10,15 @@
 #' sites are found for any transcripts of a gene. In that case a "metatranscript" consisting of
 #' the merged exons of that gene is generated and returned.
 #'
-#' @param transcripts A \code{GRanges} or \code{GRangesList} object containing  exons of the
-#'   transcripts to be truncated. Transcripts for multiple genes can be provided as \code{GRanges}
-#'   objects within a \code{GRangesList}.
-#' @param polyA_sites A \code{GRanges} object containing the polyA sites. This needs to contain a
-#'   metadata entry names "score" if the option \code{polyA_select = "score"} is used. PolyA sites
-#'   can be either obtained via running \code{\link[TAPseq]{inferPolyASites}} or imported from
-#'   an existing .bed file via \code{\link[rtracklayer]{import}}.
+#' @param transcripts A \code{\link[GenomicRanges]{GRanges}} or
+#'   \code{\link[GenomicRanges]{GRangesList}} object containing  exons of the transcripts to be
+#'   truncated. Transcripts for multiple genes can be provided as \code{GRanges} objects within
+#'   a \code{GRangesList}.
+#' @param polyA_sites A \code{\link[GenomicRanges]{GRanges}} object containing the polyA sites.
+#'   This needs to contain a metadata entry names "score" if the option
+#'   \code{polyA_select = "score"} is used. PolyA sites can be either obtained via running
+#'   \code{\link[TAPseq]{inferPolyASites}} or imported from an existing .bed file via
+#'   \code{\link[rtracklayer]{import}}.
 #' @param extend_3prime_end Specifies how far (bp) 3' ends of transcripts should be extended when
 #'   looking for overlapping polyA sites (default = 0). This enables capturing of polyA sites that
 #'   occur downstream of annotated 3' ends.

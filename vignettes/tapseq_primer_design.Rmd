@@ -1,10 +1,10 @@
 ---
-title: "TAP-seq primer design"
+title: "TAP-seq primer design workflow"
 author: "Andreas Gschwind"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{tapseq_primer_design}
+  %\VignetteIndexEntry{TAP-seq primer design workflow}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -38,11 +38,10 @@ Sys.setenv(PATH = paste(Sys.getenv("PATH"), "/full/path/to/blast+/ncbi-blast-x.x
 Alternatively you can specify the paths to 3rd party software as arguments when calling TAPseq
 functions (TAPseqInput(), designPrimers(), checkPrimers()).
 
-## Sequence templates
+## Transcript sequences
 
-Let's start by creating sequence templates for primer design for a target gene panel. First we try
+Let's start by creating transcript sequences for primer design for a target gene panel. First we try
 to infer likely polyadenylation (polyA) sites for the selected target genes.
-
 ```{r, message=FALSE}
 library(TAPseq)
 library(GenomicRanges)
@@ -90,9 +89,8 @@ transcripts for that gene.
 truncated_txs <- truncateTxsPolyA(target_genes, polyA_sites = polyA_sites, parallel = TRUE)
 ```
 
-To create sequence templates for primer design, we extract the genome sequence for the truncated
-transcripts and add the "Beads-oligo-Dt" sequence used in single-cell droplet sequencing. Here we
-use Bioconductor's BSgenome to export transcript sequences, but the genome sequence could also be
+To finalize this part, we need to extract the sequences of the truncated transcripts. Here we use
+Bioconductor's BSgenome to export transcript sequences, but the genome sequence could also be
 imported from a fasta file into a DNAStringSet object.
 ```{r, message=FALSE}
 library(BSgenome)
@@ -100,8 +98,8 @@ library(BSgenome)
 # human genome BSgenome object (needs to be istalled from Bioconductor)
 hg38 <- getBSgenome("BSgenome.Hsapiens.UCSC.hg38")
 
-# create sequence templates for all truncated transcripts
-seq_templates <- TAPseqSeqTemplates(truncated_txs, genome = hg38)
+# get sequence for all truncated transcripts
+txs_seqs <- getTxsSeq(truncated_txs, genome = hg38)
 ```
  
 ## Design outer primers
@@ -110,14 +108,14 @@ Primer3 uses boulder-IO records for input and output (see: http://primer3.org/ma
 implements TsIO and TsIOList objects, which store Primer3 input and output for TAP-seq primer
 design in R's S4 class system. They serve as the users interface to Primer3 during primer design.
 
-First we create Primer3 input for outer forward primer design based on the generated sequence
-tamplates. The reverse primer used in all PCR reactions is used, so that Primer3 can pick primers
-suitable to work with it. By default this function uses the 10x primer and chooses optimal, minimum
-and maximum melting temperatures based on that. If another protocol (e.g. Drop-seq) is used, the
-reverse primer and melting temperatures can be adapted (\code{?TAPseqInput}).
+First we create Primer3 input for outer forward primer design based on the obtained transcript
+sequences. The reverse primer used in all PCR reactions is used, so that Primer3 can pick forward
+primers suitable to work with it. By default this function uses the 10x Beads-oligo-dT and right
+primer, and chooses optimal, minimum and maximum melting temperatures based on that. If another
+protocol (e.g. Drop-seq) is used, these parameters can be adapted (\code{?TAPseqInput}).
 ```{r, message=FALSE, warning=FALSE, results="hide"}
-# create TAPseq IO for outer forward primers from sequence templates
-outer_primers <- TAPseqInput(seq_templates, product_size_range = c(350, 500), primer_num_return = 5)
+# create TAPseq IO for outer forward primers from truncated transcript sequences
+outer_primers <- TAPseqInput(txs_seqs, product_size_range = c(350, 500), primer_num_return = 5)
                               
 # design 5 outer primers for each target gene
 outer_primers <- designPrimers(outer_primers)
@@ -183,14 +181,17 @@ outer_primers <- blastPrimers(outer_primers, blastdb = blastdb, max_mismatch = 0
                               min_aligned = 0.75)
                               
 # the primers now contain the number of estimated off-targets
-tapseq_primers(outer_primers$HBE1)
+tapseq_primers(outer_primers$IFITM1)
 ```
 
 To finalize our set of outer primers, we want to choose the best primer per target gene, i.e. the
 one with the fewest exonic, intronic and intergenic off-target hits (in that order).
-```{r}
-# select best primer per target gene
+```{r, results="hide"}
+# select best primer per target gene based on the number of potential off-targets
 best_outer_primers <- pickPrimers(outer_primers, n = 1, by = "off_targets")
+
+# each object now only contains the best primer
+tapseq_primers(best_outer_primers$IFITM1)
 ```
 
 ## Design inner primers
@@ -199,7 +200,7 @@ To design nested inner primers we simply need to repeat the same procedure with 
 size range.
 ```{r, message=FALSE, warning=FALSE, results="hide"}
 # create new TsIO objects for inner primers, note the different product size
-inner_primers <- TAPseqInput(seq_templates, product_size_range = c(150, 300), primer_num_return = 5)
+inner_primers <- TAPseqInput(txs_seqs, product_size_range = c(150, 300), primer_num_return = 5)
                               
 # design inner primers
 inner_primers <- designPrimers(inner_primers)

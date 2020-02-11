@@ -50,11 +50,11 @@ Creates boulder-IO records, passes input to Primer3 and parses the output.
 \examples{
 library(TAPseq)
 
-# chromosome 11 region sequence templates
-data("chr11_sequence_templates")
+# chromosome 11 truncated transcript sequences and annotations
+data("chr11_truncated_txs_seq")
 
 # create TsIOList object for the first two sequence templates
-tapseq_io <- TAPseqInput(chr11_sequence_templates[1:2], product_size_range = c(350, 500))
+tapseq_io <- TAPseqInput(chr11_truncated_txs_seq[1:2], product_size_range = c(350, 500))
 
 # design primers
 tapseq_io <- designPrimers(tapseq_io)

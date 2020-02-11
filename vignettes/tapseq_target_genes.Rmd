@@ -4,7 +4,7 @@ author: "Andreas Gschwind"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{tapseq_target_genes}
+  %\VignetteIndexEntry{Select target genes for TAP-seq}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

@@ -17,8 +17,8 @@ inferPolyASites(
 )
 }
 \arguments{
-\item{genes}{GRangesList object containing annotations of genes for which polyA site are to be
-extimated.}
+\item{genes}{\code{\link[GenomicRanges]{GRangesList}} object containing annotations of genes
+for which polyA sites are to be estimated.}
 
 \item{bam}{Path to .bam file containing aligned reads used for polyA site estimation.}
 

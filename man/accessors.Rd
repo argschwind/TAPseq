@@ -4,10 +4,14 @@
 \alias{accessors}
 \alias{sequence_id}
 \alias{sequence_id<-}
-\alias{sequence_template}
-\alias{sequence_template<-}
+\alias{target_sequence}
+\alias{target_sequence<-}
+\alias{beads_oligo}
+\alias{beads_oligo<-}
 \alias{reverse_primer}
 \alias{reverse_primer<-}
+\alias{target_annot}
+\alias{target_annot<-}
 \alias{product_size_range}
 \alias{product_size_range<-}
 \alias{primer_num_return}
@@ -20,6 +24,7 @@
 \alias{primer_min_tm<-}
 \alias{primer_max_tm}
 \alias{primer_max_tm<-}
+\alias{sequence_template}
 \alias{tapseq_primers}
 \alias{pcr_products}
 \title{Accessors for TsIO objects}
@@ -28,13 +33,21 @@ sequence_id(x)
 
 sequence_id(x) <- value
 
-sequence_template(x)
+target_sequence(x)
 
-sequence_template(x) <- value
+target_sequence(x) <- value
+
+beads_oligo(x)
+
+beads_oligo(x) <- value
 
 reverse_primer(x)
 
 reverse_primer(x) <- value
+
+target_annot(x)
+
+target_annot(x) <- value
 
 product_size_range(x)
 
@@ -59,6 +72,8 @@ primer_min_tm(x) <- value
 primer_max_tm(x)
 
 primer_max_tm(x) <- value
+
+sequence_template(x)
 
 tapseq_primers(x)
 

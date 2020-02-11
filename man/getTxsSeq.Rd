@@ -44,7 +44,6 @@ transcript (3' to 5').
 \examples{
 \dontrun{
 library(TAPseq)
-library(Biostrings)
 library(BSgenome)
 
 # protein-coding exons of transcripts within chr11 region
@@ -55,7 +54,6 @@ target_txs <- split(chr11_genes, f = chr11_genes$transcript_id)
 hg38 <- getBSgenome("BSgenome.Hsapiens.UCSC.hg38")
 
 # get sequences for all target transcripts on chr11
-tx_seqs <- getTxsSeq(target_txs, genome = hg38)
+txs_seqs <- getTxsSeq(target_txs, genome = hg38)
 }
 }
-\keyword{internal}
