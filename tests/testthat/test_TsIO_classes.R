@@ -136,7 +136,12 @@ test_that("TsIO() raises errors/warnings with wrong input formats", {
   expect_error(TsIO(target_sequence = txs_seqs[[1]], beads_oligo = beads_oligo,
                     reverse_primer = reverse_primer, sequence_id = txs_ids[1],
                     target_annot = txs_annot[[2]], product_size_range = c(350, 500)),
-               "target_annot exon lengths are incompatible with target_sequence")
+               "exons in target_annot are incompatible with target_sequence")
+  expect_error(TsIO(target_sequence = txs_seqs[[1]], beads_oligo = beads_oligo,
+                    reverse_primer = reverse_primer, sequence_id = txs_ids[1],
+                    target_annot = c(txs_annot[[2]], txs_annot[[2]][8]),
+                    product_size_range = c(350, 500)),
+               "overlapping exons found in target_annot")
   expect_error(TsIO(target_sequence = txs_seqs[[1]], beads_oligo = beads_oligo,
                     reverse_primer = reverse_primer, sequence_id = txs_ids[1],
                     min_primer_region = 500, product_size_range = c(350, 500)),

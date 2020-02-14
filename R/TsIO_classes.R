@@ -139,7 +139,17 @@ TsIO <- function(target_sequence, beads_oligo, reverse_primer, product_size_rang
 #'
 #' @noRd
 setValidity("TsIO", function(object) {
-  if (length(object@sequence_id) != 1) {
+
+  # get target annot and merge any overlapping exons
+  annot <- target_annot(object)
+  annot_merge <- reduce(annot)
+
+  # check object slots
+  if (length(annot) != length(annot_merge)) {
+    stop("overlapping exons found in target_annot")
+  }else if (!sum(width(annot_merge)) %in% c(0, length(object@target_sequence))) {
+    "exons in target_annot are incompatible with target_sequence"
+  }else if (length(object@sequence_id) != 1) {
     "sequence_id needs to be of length 1"
   }else if (length(object@product_size_range) != 2) {
     "product_size_range needs to be an integer vector of length 2"
@@ -153,8 +163,6 @@ setValidity("TsIO", function(object) {
     "primer_min_tm needs to be of length 1"
   }else if (length(object@primer_max_tm) != 1) {
     "primer_max_tm needs to be of length 1"
-  }else if (!sum(width(object@target_annot)) %in% c(0, length(object@target_sequence))) {
-    "target_annot exon lengths are incompatible with target_sequence."
   }else if (!any(is.na(c(object@product_size_range, object@min_primer_region)))) {
     if (diff(object@product_size_range) < object@min_primer_region) {
       "product_size_range too narrow to allow min_primer_range"
