@@ -32,11 +32,11 @@
 \title{TsIO class}
 \usage{
 TsIO(
+  sequence_id,
   target_sequence,
   beads_oligo,
   reverse_primer,
   product_size_range,
-  sequence_id = NA,
   target_annot = NULL,
   primer_num_return = 5,
   min_primer_region = 100,
@@ -96,6 +96,9 @@ TsIO(
 \S4method{pcr_products}{TsIO}(x)
 }
 \arguments{
+\item{sequence_id}{Name (\code{character}) of the target sequence, e.g. the gene name. It's
+adviced to use meaningful sequence ids to savely assign designed primers to their targets.}
+
 \item{target_sequence}{A \code{\link[Biostrings]{DNAString}} or \code{character} object
 containing the target sequence for which primers should be designed. Usually a transcript
 sequence.}
@@ -107,9 +110,6 @@ Drop-seq).}
 
 \item{product_size_range}{Numerical vector of length 2 specifying the desired length of the
 resulting amplicons.}
-
-\item{sequence_id}{Name (\code{character}) of the target sequence, e.g. the gene name. It's
-strongly adviced to use a sequence id to savely assign designed primers to their targets.}
 
 \item{target_annot}{(optional) A \code{\link[GenomicRanges]{GRanges}} object with transcript
 annotation in case the target is a transcript of a gene locus. If provided, it should contain
@@ -213,8 +213,8 @@ beads_oligo <- "CTACACGACGCTCTTCCGATCTNNNNNNNNNNNNNNNNNNNNNNNNNNNNTTTTTTTTTTTTTT
 reverse_primer <- "CTACACGACGCTCTTCCGATCT"
 
 # create TsIO object
-obj <- TsIO(target_sequence = tx_seq, beads_oligo = beads_oligo, reverse_primer = reverse_primer,
-            product_size_range = c(350, 500), sequence_id = tx_id)
+obj <- TsIO(sequence_id = tx_id, target_sequence = tx_seq, beads_oligo = beads_oligo,
+            reverse_primer = reverse_primer, product_size_range = c(350, 500))
 
 # slot values can be accessed using accessor functions
 sequence_id(obj)

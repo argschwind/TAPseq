@@ -43,7 +43,7 @@ test_that("get_gt_sequences() with option standard_chromosomes = FALSE", {
 # test blastPrimers helper functions ---------------------------------------------------------------
 
 # input BLAST hits
-input <- data.frame(qaccver = "AKIP1.primer_left_0", qlen = 20,
+input <- data.frame(qaccver = "1-AKIP1.primer_left_0", qlen = 20,
            saccver = c("lcl|transcript;ENST00000534506.5;AKIP1-211;ENSG00000166452.12;AKIP1",
                        "lcl|chromosome;chr11", "lcl|chromosome;chr6", "lcl|chromosome;chr6",
                        "lcl|chromosome;chr16", "lcl|chromosome;chr16"),
@@ -80,7 +80,7 @@ input_annot <- GRanges(seqnames = c(rep("chr6", 9), rep("chr11", 5), rep("chr16"
                  gene_name = c(rep("BACH2", 9), rep("AKIP1", 5), rep("WDR90", 41)))
 
 # expected output
-expect_out <- data.frame(qaccver = "AKIP1.primer_left_0", qlen = 20,
+expect_out <- data.frame(qaccver = "1-AKIP1.primer_left_0", qlen = 20,
                 subject_type = c(rep("chromosome", 5), "transcript"),
                 id = c("chr11", "chr6", "chr6", "chr16", "chr16", "ENST00000534506.5"),
                 name = c(rep(as.character(NA), 5), "AKIP1-211"), length = c(20, 20, 15, 17, 15, 20),
@@ -114,7 +114,16 @@ test_that("get_primer_target_genes() correctly identifies primer targets", {
   expect_identical(out$target_gene_id, rep("ENSG00000166452.12", 6))
 })
 
-test_that("get_primer_target_genes() behaves correctly if primer targets are not found", {
+test_that("get_primer_target_genes() warns if primer targets can't be inferred from primer_id", {
+  expect_out2 <- expect_out
+  expect_out2$qaccver <- sub("AKIP1.", "", expect_out2$qaccver)
+  expect_warning(out <- get_primer_target_genes(expect_out2, annot = input_annot,
+                                                primer_targets = "gene_name"),
+                 "Can't infer targets from primer IDs for \\(some\\) primers.")
+  expect_identical(out$target_gene_id, rep(as.character(NA), 6))
+})
+
+test_that("get_primer_target_genes() warns if primer targets are not found in primer_targets", {
   expect_warning(out <- get_primer_target_genes(expect_out, annot = input_annot,
                                                 primer_targets = "transcript_id"),
                  "Can't find primer targets for all primers with primer_targets set to")
@@ -124,6 +133,6 @@ test_that("get_primer_target_genes() behaves correctly if primer targets are not
 test_that("count_primer_hits() counts primer (off-) targets correctly", {
  out <- count_primer_hits(expect_out)
  expect_out2 <- data.frame(intergenic_off_targets = 2, intronic_off_targets = 1,
-                          exonic_off_targets = 2, row.names = "AKIP1.primer_left_0")
+                          exonic_off_targets = 2, row.names = "1-AKIP1.primer_left_0")
  expect_equal(out, expect_out2)
 })

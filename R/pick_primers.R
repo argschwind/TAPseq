@@ -61,7 +61,7 @@ setMethod("pickPrimers", "TsIO", function(object, n, by) {
     # were reordered for some reason...)
     picked_pcr_prods <- pcr_prods[names(picked_primers)]
 
-    # replace primersand pcr products in object by picked primers and return object
+    # replace primers and pcr products in object by picked primers and return object
     tapseq_primers(object) <- picked_primers
     pcr_products(object) <- picked_pcr_prods
     return(object)

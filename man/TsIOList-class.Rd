@@ -68,13 +68,13 @@ beads_oligo <- "CTACACGACGCTCTTCCGATCTNNNNNNNNNNNNNNNNNNNNNNNNNNNNTTTTTTTTTTTTTT
 reverse_primer <- "CTACACGACGCTCTTCCGATCT"
 
 # create TsIO objects
-tsio1 <- TsIO(target_sequence = txs_seqs[[1]], beads_oligo = beads_oligo,
-              reverse_primer = reverse_primer, product_size_range = c(350, 500),
-              sequence_id = txs_ids[1])
+tsio1 <- TsIO(sequence_id = txs_ids[1], target_sequence = txs_seqs[[1]],
+              beads_oligo = beads_oligo, reverse_primer = reverse_primer,
+              product_size_range = c(350, 500))
 
-tsio2 <- TsIO(target_sequence = txs_seqs[[2]], beads_oligo = beads_oligo,
-              reverse_primer = reverse_primer, product_size_range = c(350, 500),
-              sequence_id = txs_ids[2])
+tsio2 <- TsIO(sequence_id = txs_ids[2], target_sequence = txs_seqs[[2]],
+              beads_oligo = beads_oligo, reverse_primer = reverse_primer,
+              product_size_range = c(350, 500))
 
 # create TsIOList object
 obj <- TsIOList(tsio1 = tsio1, tsio2 = tsio2)

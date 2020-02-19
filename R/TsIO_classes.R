@@ -20,7 +20,7 @@
 #' @param product_size_range Numerical vector of length 2 specifying the desired length of the
 #'   resulting amplicons.
 #' @param sequence_id Name (\code{character}) of the target sequence, e.g. the gene name. It's
-#'   strongly adviced to use a sequence id to savely assign designed primers to their targets.
+#'  adviced to use meaningful sequence ids to savely assign designed primers to their targets.
 #' @param target_annot (optional) A \code{\link[GenomicRanges]{GRanges}} object with transcript
 #'   annotation in case the target is a transcript of a gene locus. If provided, it should contain
 #'   all exons of the targeted transcript.
@@ -50,8 +50,8 @@
 #' reverse_primer <- "CTACACGACGCTCTTCCGATCT"
 #'
 #' # create TsIO object
-#' obj <- TsIO(target_sequence = tx_seq, beads_oligo = beads_oligo, reverse_primer = reverse_primer,
-#'             product_size_range = c(350, 500), sequence_id = tx_id)
+#' obj <- TsIO(sequence_id = tx_id, target_sequence = tx_seq, beads_oligo = beads_oligo,
+#'             reverse_primer = reverse_primer, product_size_range = c(350, 500))
 #'
 #' # slot values can be accessed using accessor functions
 #' sequence_id(obj)
@@ -96,7 +96,7 @@ setClass("TsIO",
 
 #' @rdname TsIO-class
 #' @export
-TsIO <- function(target_sequence, beads_oligo, reverse_primer, product_size_range, sequence_id = NA,
+TsIO <- function(sequence_id, target_sequence, beads_oligo, reverse_primer, product_size_range,
                  target_annot = NULL, primer_num_return = 5, min_primer_region = 100,
                  primer_opt_tm = NA, primer_min_tm = NA, primer_max_tm = NA) {
 
@@ -140,13 +140,19 @@ TsIO <- function(target_sequence, beads_oligo, reverse_primer, product_size_rang
 #' @noRd
 setValidity("TsIO", function(object) {
 
-  # get target annot and merge any overlapping exons
+  # get target annot strand and chromosome, and merge any overlapping exons
   annot <- target_annot(object)
+  seqname <- unique(seqnames(annot))
+  strand <- unique(strand(annot))
   annot_merge <- reduce(annot)
 
   # check object slots
-  if (length(annot) != length(annot_merge)) {
-    stop("overlapping exons found in target_annot")
+  if (length(seqname) > 1) {
+    "multiple seqnames in target_annot"
+  }else if (length(strand) > 1) {
+    "conflicting strand information in target_annot"
+  }else if (length(annot) != length(annot_merge)) {
+    "overlapping exons found in target_annot"
   }else if (!sum(width(annot_merge)) %in% c(0, length(object@target_sequence))) {
     "exons in target_annot are incompatible with target_sequence"
   }else if (length(object@sequence_id) != 1) {
@@ -197,13 +203,13 @@ setValidity("TsIO", function(object) {
 #' reverse_primer <- "CTACACGACGCTCTTCCGATCT"
 #'
 #' # create TsIO objects
-#' tsio1 <- TsIO(target_sequence = txs_seqs[[1]], beads_oligo = beads_oligo,
-#'               reverse_primer = reverse_primer, product_size_range = c(350, 500),
-#'               sequence_id = txs_ids[1])
+#' tsio1 <- TsIO(sequence_id = txs_ids[1], target_sequence = txs_seqs[[1]],
+#'               beads_oligo = beads_oligo, reverse_primer = reverse_primer,
+#'               product_size_range = c(350, 500))
 #'
-#' tsio2 <- TsIO(target_sequence = txs_seqs[[2]], beads_oligo = beads_oligo,
-#'               reverse_primer = reverse_primer, product_size_range = c(350, 500),
-#'               sequence_id = txs_ids[2])
+#' tsio2 <- TsIO(sequence_id = txs_ids[2], target_sequence = txs_seqs[[2]],
+#'               beads_oligo = beads_oligo, reverse_primer = reverse_primer,
+#'               product_size_range = c(350, 500))
 #'
 #' # create TsIOList object
 #' obj <- TsIOList(tsio1 = tsio1, tsio2 = tsio2)
@@ -595,10 +601,10 @@ setMethod("show", "TsIO", function(object) {
 
   cat(is(object)[[1]], " instance", "\n",
       "  ", length(sequence_template(object)), " bp sequence template", "\n",
-      "  seqID: ", sequence_id(object), "\n",
-      "  beads oligo: ", as.character(beads_oligo), "\n",
-      "  right primer: ", as.character(reverse_primer), "\n",
-      "  specified product size range: ", prod_size[1], "-",
+      "  Sequence ID: ", sequence_id(object), "\n",
+      "  Beads oligo: ", as.character(beads_oligo), "\n",
+      "  Right primer: ", as.character(reverse_primer), "\n",
+      "  Specified product size range: ", prod_size[1], "-",
       prod_size[2], " basepairs",
       sep = "")
 })

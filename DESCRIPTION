@@ -1,7 +1,7 @@
 Package: TAPseq
 Type: Package
 Title: TAP-seq primer design
-Version: 0.4.0.9005
+Version: 0.4.0.9006
 Authors@R: person("Andreas", "Gschwind", email = "andreas.gschwind@stanford.edu",
                   role = c("aut", "cre"), comment = c(ORCID = "0000-0002-0769-6907"))
 Description: Design primers for targeted single-cell RNA-seq. Create sequence templates for a
