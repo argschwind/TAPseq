@@ -2,7 +2,7 @@
 % Please edit documentation in R/onLoad.R
 \name{check_tool_installation}
 \alias{check_tool_installation}
-\title{Check if required tools are installed}
+\title{Check required tools}
 \usage{
 check_tool_installation()
 }
@@ -10,6 +10,6 @@ check_tool_installation()
 A \code{list} containing paths to required tools, if found, else NA.
 }
 \description{
-Check if requried software is installed and return paths to executables (if found).
+Check if required software is installed and return paths to executables (if found).
 }
 \keyword{internal}

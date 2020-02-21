@@ -1,0 +1,81 @@
+---
+title: "Select target genes for TAP-seq"
+author: "Andreas Gschwind"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Select target genes for TAP-seq}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+One application of TAP-seq is to measure the expression of genes that enable assigning cells to
+different cell types. The TAPseq package offers a simple approach to identify a desired number of
+cell type markers based on differentially expressed genes between cell types.
+
+This optional functionality requires additional R-packages such as Seurat. Please install the TAPseq
+package with all suggested dependencies.
+
+## Data
+The TAPseq package contains a small subset of the mouse bone marrow data from Baccin et al., 2019
+(https://www.nature.com/articles/s41556-019-0439-6). The full dataset can be downloaded
+[here](https://static-content.springer.com/esm/art%3A10.1038%2Fs41556-019-0439-6/MediaObjects/41556_2019_439_MOESM4_ESM.zip).
+This dataset is stored in a Seurat object which contains both gene expression and cell type data for
+every cell.
+```{r, message=FALSE, results="hide"}
+library(TAPseq)
+library(Seurat)
+
+# example of mouse bone marrow 10x gene expression data
+data("bone_marrow_genex")
+
+# transcript counts
+GetAssayData(bone_marrow_genex)[1:10, 1:10]
+
+# number of cells per cell type
+table(Idents(bone_marrow_genex))
+```
+
+## Select target genes
+A linear model with lasso regularization is used to select target genes that best identify cell
+types. By default 10-fold cross-validation is used to select the number of target genes based on the
+largest value of lambda within 1 standard error of the minimum. See `?glmnet::cv.glmnet` for more
+details.
+```{r, message=FALSE, results="hide"}
+# automatically select a number of target genes using 10-fold cross-validation
+target_genes_cv <- selectTargetGenes(bone_marrow_genex)
+head(target_genes_cv)
+length(target_genes_cv)
+```
+
+This example results in a reasonable target gene panel, but in cases with many different cell types
+the resulting panels might be very large.
+
+To avoid this, we can specify a desired number of targets. This selects a value for lamda in the
+lasso model that results in approximately this number of non-zero coefficients, i.e. marker genes.
+```{r, message=FALSE, results="hide"}
+# identify approximately 100 target genes that can be used to identify cell populations
+target_genes_100 <- selectTargetGenes(bone_marrow_genex, targets = 100)
+length(target_genes_100)
+```
+
+## Assess target gene panels
+To intuitively assess how well a chosen set of target genes distinguishes cell types, we can use
+UMAP plots based on the full gene expression data and on target genes only.
+```{r, message=FALSE, warning=FALSE, fig.height=3, fig.width=7.15}
+plotTargetGenes(bone_marrow_genex, target_genes = target_genes_cv)
+```
+
+We can see that the expression of  the `r length(target_genes_cv)` automatically selected target
+genes groups cells of different populations together.
+
+A good follow up would be to cluster the cells based on only the target genes following the same
+workflow used to define the cell identities in the original object. This could then be used to
+verify that the selected target genes reliably identify the correct cell types.

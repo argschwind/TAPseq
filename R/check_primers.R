@@ -14,15 +14,13 @@
 #' @return A \code{\link[base]{data.frame}} with \code{check_primers} results.
 #' @seealso \url{http://primer3.org/manual.html} for Primer3 manual.
 #' @examples
-#' \dontrun{
-#' library(TAPseq)
 #' library(ggplot2)
 #'
 #' # chr11 primers example data
 #' data("chr11_primers")
 #'
-#' # pick best primers based on predicted off-targets
-#' best_primers <- pickPrimers(chr11_primers, n = 1, by = "off_targets")
+#' # pick best primers based on predicted off-targets for subset of all primers
+#' best_primers <- pickPrimers(chr11_primers[1:15], n = 1, by = "off_targets")
 #'
 #' # check for complementarity
 #' comp <- checkPrimers(best_primers)
@@ -34,7 +32,6 @@
 #'   geom_vline(aes(xintercept = 47), colour = "darkgray", linetype = "dashed") +
 #'   geom_point(alpha = 0.25) +
 #'   theme_bw()
-#' }
 #' @export
 setGeneric("checkPrimers",
            function(object, primer_opt_tm = 63, primer_min_tm = 59, primer_max_tm = 66,

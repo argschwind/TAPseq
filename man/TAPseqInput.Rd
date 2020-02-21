@@ -2,27 +2,45 @@
 % Please edit documentation in R/tapseq_input.R
 \name{TAPseqInput}
 \alias{TAPseqInput}
-\title{Create TAPseq input from sequence templates}
+\title{Create TAPseq input from target sequences}
 \usage{
-TAPseqInput(sequence_templates, product_size_range,
-  reverse_primer = "CTACACGACGCTCTTCCGATCT", primer_num_return = 5,
-  min_primer_region = 100, primer_opt_tm = 63, primer_min_tm = 59,
-  primer_max_tm = 66)
+TAPseqInput(
+  target_sequences,
+  product_size_range,
+  beads_oligo = NA,
+  reverse_primer = "CTACACGACGCTCTTCCGATCT",
+  target_annot = NULL,
+  primer_num_return = 5,
+  min_primer_region = 100,
+  primer_opt_tm = 63,
+  primer_min_tm = 59,
+  primer_max_tm = 66
+)
 }
 \arguments{
-\item{sequence_templates}{A \code{\link[Biostrings]{DNAStringSet}} object containing all sequence
-templates.}
+\item{target_sequences}{A named \code{\link[Biostrings]{DNAStringSet}} object containing all
+target sequences.}
 
 \item{product_size_range}{Numerical vector of length 2 specifying the desired length of the
 resulting amplicons.}
 
+\item{beads_oligo}{Beads-oligo-dT sequence for the used droplet sequencing protocol (10x,
+Drop-seq). If nothing is specified (\code{beads_oligo = NA}), the 10x V3 Beads-oligo-dT
+sequence is used. Can be changed if primers are for instance designed for Drop-seq. Any barcode
+bases need to be replaced by \code{N}.}
+
 \item{reverse_primer}{Reverse primer sequence used for all PCR reactions. Default is the 10x
 primer sequence: \code{CTACACGACGCTCTTCCGATCT}.}
 
+\item{target_annot}{(optional) A named \code{\link[GenomicRanges]{GRangesList}} object with
+transcript annotations in case the targets are transcripts of gene loci. If provided, each
+\code{\link[GenomicRanges]{GRanges}} within the list should contain all exons of one
+targeted transcripts. Names need to be the same as for \code{target_sequences}.}
+
 \item{primer_num_return}{How many forward primers should be designed? (default: 5)}
 
-\item{min_primer_region}{Minimum sequence length required for primer design. Relevant in case the
-a sequence template is too short to allow the specified \code{product_size_range}.}
+\item{min_primer_region}{Minimum sequence length required for primer design. Mostly relevant in
+case a sequence template is too short to allow the specified \code{product_size_range}.}
 
 \item{primer_opt_tm, primer_min_tm, primer_max_tm}{Optimal, minumum and maximum primer melting
 temperature. Set to NA to use Primer3s default values.}
@@ -32,15 +50,25 @@ temperature. Set to NA to use Primer3s default values.}
 }
 \description{
 This function creates input for TAP-seq primer design from a DNAStringSet containing the
-sequence templates.
+target sequences (typically transcript sequences).
 }
 \examples{
-library(TAPseq)
+# chromosome 11 truncated transcript sequences and annotations
+data("chr11_truncated_txs_seq")
 
-# chromosome 11 region sequence templates
-data("chr11_sequence_templates")
-
-# create TsIOList object for primer desing from sequence templates
-obj <- TAPseqInput(chr11_sequence_templates, product_size_range = c(350, 500))
+# create TsIOList object for primer design from target sequences
+obj <- TAPseqInput(chr11_truncated_txs_seq, product_size_range = c(350, 500))
 obj
+
+# transcript annotations can be added for optional genome browser tracks of designed primers
+data("chr11_truncated_txs")
+obj <- TAPseqInput(chr11_truncated_txs_seq, product_size_range = c(350, 500),
+                   target_annot = chr11_truncated_txs)
+
+# create input for primer design with Drop-seq instead of default 10x
+ds_oligo <- "TTTTTTTAAGCAGTGGTATCAACGCAGAGTACNNNNNNNNNNNNNNNNNNNNTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT"
+ds_rev_primer <- "AAGCAGTGGTATCAACGCAGAGT"
+ds_obj <- TAPseqInput(chr11_truncated_txs_seq, beads_oligo = ds_oligo,
+                      reverse_primer = ds_rev_primer, product_size_range = c(350, 500),
+                      primer_opt_tm = 62, primer_min_tm = 57, primer_max_tm = 65)
 }

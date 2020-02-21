@@ -1,26 +1,34 @@
 Package: TAPseq
 Type: Package
 Title: TAP-seq primer design
-Version: 0.4.0
-Authors@R: person("Andreas", "Gschwind", email = "andreas.gschwind@stanford.edu",
-                  role = c("aut", "cre"))
-Description: Design and assess TAP-seq primers using Primer3 and BLAST.
+Version: 0.5.0
+Authors@R: c(
+  person("Andreas", "Gschwind", email = "andreas.gschwind@stanford.edu",
+         role = c("aut", "cre"), comment = c(ORCID = "0000-0002-0769-6907")),
+  person("Lars", "Velten", email = "lars.velten@crg.eu", role = "aut",
+         comment = c(ORCID = "0000-0002-1233-5874")),
+  person("Lars", "Steinmetz", role = "aut"))
+Description: Design primers for targeted single-cell RNA-seq used by TAP-seq. Create sequence
+  templates for target gene panels and design gene-specific primers using Primer3. Potenial
+  off-targets can be estimated with BLAST. Requires working installations of Primer3 and BLASTn.
+URL: https://github.com/argschwind/TAPseq
+BugRepots: https://github.com/argschwind/TAPseq/issues
+biocViews: SingleCell, Sequencing, Technology, CRISPR, PooledScreens
 License: MIT + file LICENSE
 Encoding: UTF-8
-LazyData: true
-RoxygenNote: 6.1.1
+RoxygenNote: 7.0.2
+VignetteBuilder: knitr
 Depends: R (>= 3.5)
-Imports: 
+Imports:
+    methods,
     GenomicAlignments,
     GenomicRanges,
     IRanges,
     BiocGenerics,
-    S4Vectors,
+    S4Vectors (>= 0.20.1),
     GenomeInfoDb,
-    rtracklayer,
     BSgenome,
     GenomicFeatures,
-    methods,
     Biostrings,
     dplyr,
     tidyr,
@@ -34,5 +42,8 @@ Suggests:
     Seurat,
     glmnet,
     cowplot,
-    Matrix
-VignetteBuilder: knitr
+    Matrix,
+    rtracklayer
+SystemRequirements:
+    Primer3 (>= 2.5.0),
+    BLAST+ (>=2.6.0)

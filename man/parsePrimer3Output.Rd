@@ -8,7 +8,8 @@ parsePrimer3Output(object, primer3_output)
 }
 \arguments{
 \item{object}{The \code{\link[TAPseq]{TsIO}} or \code{\link[TAPseq]{TsIOList}} object used to
-design primers. No errors or warnings if this is another \code{TsIO} or \code{TsIOList} object!}
+design primers. No errors or warnings if this is a different \code{TsIO} or \code{TsIOList}
+object!}
 
 \item{primer3_output}{Character vector containing raw Primer3 output.}
 }
@@ -18,17 +19,15 @@ design primers. No errors or warnings if this is another \code{TsIO} or \code{Ts
 \description{
 Parse Primer3 output and add to input \code{\link[TAPseq]{TsIO}} or
 \code{\link[TAPseq]{TsIOList}} object. This function is usually not used by the user, as
-\code{\link[TAPseq]{designPrimers}} handels Primer3 output parsing.
+\code{\link[TAPseq]{designPrimers}} handles Primer3 output parsing.
 }
 \examples{
 \dontrun{
-library(TAPseq)
-
-# chromosome 11 region sequence templates
-data("chr11_sequence_templates")
+# chromosome 11 truncated transcript sequences
+data("chr11_truncated_txs_seq")
 
 # create TsIOList object for the first two sequence templates
-tapseq_io <- TAPseqInput(chr11_sequence_templates[1:2], product_size_range = c(350, 500))
+tapseq_io <- TAPseqInput(chr11_truncated_txs_seq[1:2], product_size_range = c(350, 500))
 
 # create boulder IO records
 io_record <- createIORecord(tapseq_io)

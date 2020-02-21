@@ -12,13 +12,11 @@
 #' @seealso \url{http://primer3.org/manual.html} for Primer3 manual and \code{\link[TAPseq]{TsIO}}
 #'   for TsIO class objects.
 #' @examples
-#' library(TAPseq)
-#'
-#' # chromosome 11 region sequence templates
-#' data("chr11_sequence_templates")
+#' # chromosome 11 truncated transcript sequences and annotations
+#' data("chr11_truncated_txs_seq")
 #'
 #' # create TsIOList object for the first two sequence templates
-#' tapseq_io <- TAPseqInput(chr11_sequence_templates[1:2], product_size_range = c(350, 500))
+#' tapseq_io <- TAPseqInput(chr11_truncated_txs_seq[1:2], product_size_range = c(350, 500))
 #'
 #' # design primers
 #' tapseq_io <- designPrimers(tapseq_io)
@@ -80,21 +78,20 @@ setMethod("designPrimers", "TsIOList", function(object, thermo_params_path, prim
 #'
 #' Parse Primer3 output and add to input \code{\link[TAPseq]{TsIO}} or
 #' \code{\link[TAPseq]{TsIOList}} object. This function is usually not used by the user, as
-#' \code{\link[TAPseq]{designPrimers}} handels Primer3 output parsing.
+#' \code{\link[TAPseq]{designPrimers}} handles Primer3 output parsing.
 #'
 #' @param object The \code{\link[TAPseq]{TsIO}} or \code{\link[TAPseq]{TsIOList}} object used to
-#'   design primers. No errors or warnings if this is another \code{TsIO} or \code{TsIOList} object!
+#'   design primers. No errors or warnings if this is a different \code{TsIO} or \code{TsIOList}
+#'   object!
 #' @param primer3_output Character vector containing raw Primer3 output.
 #' @return \code{TsIO} or \code{TsIOList} object with added Primer3 output
 #' @examples
 #' \dontrun{
-#' library(TAPseq)
-#'
-#' # chromosome 11 region sequence templates
-#' data("chr11_sequence_templates")
+#' # chromosome 11 truncated transcript sequences
+#' data("chr11_truncated_txs_seq")
 #'
 #' # create TsIOList object for the first two sequence templates
-#' tapseq_io <- TAPseqInput(chr11_sequence_templates[1:2], product_size_range = c(350, 500))
+#' tapseq_io <- TAPseqInput(chr11_truncated_txs_seq[1:2], product_size_range = c(350, 500))
 #'
 #' # create boulder IO records
 #' io_record <- createIORecord(tapseq_io)
@@ -114,7 +111,7 @@ parsePrimer3Output <- function(object, primer3_output) {
   if (is(object, "TsIO")) {
     TsIO_input <- TRUE
     object <- TsIOList(object)
-  }else{
+  } else {
     TsIO_input <- FALSE
   }
 
@@ -133,7 +130,7 @@ parsePrimer3Output <- function(object, primer3_output) {
   # return output
   if (TsIO_input == TRUE) {
     output[[1]]
-  }else{
+  } else {
     output
   }
 
@@ -241,12 +238,13 @@ parse_primer <- function(primer, seq_template, seq_id){
     mcols(primer_range) <- primer_meta
 
     # set name and return parsed primer
-    names(primer_range) <- paste(seq_id, primer_id, sep=".")
+    id_parts <- c(seq_id, primer_id)
+    names(primer_range) <- paste(id_parts[!is.na(id_parts)], collapse = ".")
     return(primer_range)
 
-  }else if (length(primer_site) < 1) {
+  } else if (length(primer_site) < 1) {
     stop("No matching sequence found for primer '", primer_id, "' in template!", call. = FALSE)
-  }else{
+  } else {
     stop("More than 1 matching sequence found for primer '", primer_id, "' in template!",
          call. = FALSE)
   }

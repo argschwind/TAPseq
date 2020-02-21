@@ -1,9 +1,31 @@
-#' Create BLAST database
+#' Estimate primer off-targets using BLAST
 #'
-#' Create a BLAST database containing genome and transcriptome sequences. Used by
-#' \code{\link[TAPseq]{blastPrimers}} to estimate potential off-target priming of TAP-seq primers.
-#' The created database contains both sequence files for BLAST and annotations to process the
-#' results.
+#' Functions to use BLAST to align TAP-seq primers against a genome and chromosome reference to
+#' estimate potential off-target binding sites.
+#'
+#' \code{createBLASTDb} creates a BLAST database containing genome and transcriptome sequences,
+#' which is required by \code{blastPrimers}. The created database contains both sequence files for
+#' BLAST and annotations to process the results.
+#'
+#' Use \code{blastPrimers} to align designed TAP-seq primers against the created database to
+#' estimate off-target priming potential. Only hits where at least a specified portion of the
+#' sequence involving the 3' end of the primer aligns with not more than a certain number of
+#' mismatches are considered.
+#'
+#' \code{blastPrimers} counts the number of genes in which a primer has 1) exonic hits or 2)
+#' intronic hits, or 3) the number of hits in intergenic regions of the genome. The exonic and
+#' intronic counts should be interptreted as: "In how many genes does a primer have exonic
+#' (or intronic) hits?".
+#'
+#' If a BLAST hit falls in both intronic and exonic regions of a given gene (i.e. exonic for one
+#' transcript, intronic for another transcript), only the exonic hit is counted for that gene. If a
+#' primer has for instance 3 BLAST hits in one gene, 2 exonic and 1 intronic, then one exonic hit
+#' and one intronic hit is counted for that gene.
+#'
+#' If sequence IDs of the designed primers (\code{\link[TAPseq]{sequence_id}}) refer to the target
+#' gene/transcripts and can be found in the BLAST database annotations via \code{primer_targets},
+#' then only off-target hits are counted. This is usually the case if input for primer design was
+#' produced from target gene annotations.
 #'
 #' @param genome A \code{\link[BSgenome]{BSgenome}} (or \code{\link[Biostrings]{DNAStringSet}})
 #'   object containing the sequences of all chromosomes to obtain genome and transcript sequences.
@@ -21,23 +43,56 @@
 #' @param makeblastdb Path to the \code{makeblastdb} executable. Usually this is inferred when
 #'   loading/attaching the package.
 #' @param title Optional title for BLAST database.
+#' @param object A \code{\link[TAPseq]{TsIO}} or \code{\link[TAPseq]{TsIOList}} object containing
+#'   designed primers.
+#' @param blastdb TAP-seq BLAST database created with \code{\link[TAPseq]{createBLASTDb}}.
+#' @param max_mismatch Maximum number of mismatches allowed for off-target hits (default: 0).
+#' @param min_aligned Minimum portion of the primer sequence starting from the 3' end that must
+#'   align for off-target hits (default: 0.75).
+#' @param primer_targets Specifies what should be used to identify primer targets for off-target
+#'   identification. I.e. to what does the \code{\link[TAPseq]{sequence_id}} in TsIO objects refer?
+#'   Can be a subset of \code{transcript_id}, \code{transcript_name}, \code{gene_id} or
+#'   \code{gene_name}. By default all 4 are checked. Set to \code{NULL} to disable any off-target
+#'   identification. See Details for more information.
+#' @param tmpdir Directory needed to store temporary files.
+#' @param blastn Path (character) to the \code{blastn} executable. Usually this is inferred when
+#'   loading/attaching the package.
+#' @return For \code{createBLASTDb} a directory containing the BLAST database. For
+#'   \code{blastPrimers} a \code{\link[TAPseq]{TsIO}} or \code{\link[TAPseq]{TsIOList}} object with
+#'   the number of potential off-targets added to the TAP-seq primer metadata.
 #' @examples
 #' \dontrun{
-#' library(TAPseq)
 #' library(BSgenome)
 #'
 #' # human genome (hg38) BSgenome object
 #' hg38 <- getBSgenome("BSgenome.Hsapiens.UCSC.hg38")
 #'
 #' # get annotations for BLAST
-#' annot_url <- "ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_32/gencode.v32.annotation.gtf.gz"
+#' annot_url <- paste0("ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_32/",
+#'                     "gencode.v32.annotation.gtf.gz")
 #' annot <- import(annot_url, format = "gtf")
 #' blast_exons <- annot[annot$type == "exon" & annot$gene_type == "protein_coding"]
 #'
 #' # build BLAST database
 #' blastdb <- file.path(tempdir(), "blastdb")
 #' createBLASTDb(genome = hg38, annot = blast_exons, blastdb = blastdb)
+#'
+#' # chr11 primers example data (already contains off-targets, but we can overwrite them)
+#' data("chr11_primers")
+#' chr11_primers <- chr11_primers[1:3]  # only use a small subset for this example
+#'
+#' # run blast to identify potential off-targets
+#' chr11_primers <- blastPrimers(chr11_primers, blastdb = blastdb)
+#' tapseq_primers(chr11_primers)
+#'
+#' # allow 1 mismatch between primer and off-target
+#' chr11_primers <- blastPrimers(chr11_primers, blastdb = blastdb, max_mismatch = 1)
+#' tapseq_primers(chr11_primers)
 #' }
+#' @name estimateOffTargets
+NULL
+
+#' @describeIn estimateOffTargets Create a genome and transcriptome TAP-seq BLAST database
 #' @export
 createBLASTDb <- function(genome, annot, blastdb, standard_chromosomes = TRUE,
                           tx_id = "transcript_id", tx_name = "transcript_name",
@@ -114,73 +169,7 @@ createBLASTDb <- function(genome, annot, blastdb, standard_chromosomes = TRUE,
 
 }
 
-#' BLAST TAP-seq primers
-#'
-#' Use BLAST to align designed TAP-seq primers against a genome and transcriptome database to
-#' estimate off-target priming potential. Only hits where at least a specified portion of the
-#' sequence involving the 3' end of the primer aligns with not more than a certain number of
-#' mismatches are considered.
-#'
-#' \code{blastPrimers} counts the number of genes in which a primer has 1) exonic hits or 2)
-#' intronic hits, or 3) the number of hits in intergenic regions of the genome. The exonic and
-#' intronic counts should be interptreted as: "In how many genes does a primer have exonic
-#' (or intronic) hits?".
-#'
-#' If a BLAST hit falls in both intronic and exonic regions of a given gene (i.e. exonic for one
-#' transcript, intronic for another transcript), only the exonic hit is counted for that gene. If a
-#' primer has for instance 3 BLAST hits in one gene, 2 exonic and 1 intronic, then one exonic hit
-#' and one intronic hit is counted for that gene.
-#'
-#' If seqID of the designed primers (\code{\link[TAPseq]{sequence_id}}) refer to the target
-#' gene/transcripts and can be found in the BLAST database annotations via \code{primer_targets},
-#' then only off-target hits are counted. This is usually the case if input for primer design was
-#' produced from target gene annotations.
-#'
-#' @param object A \code{\link[TAPseq]{TsIO}} or \code{\link[TAPseq]{TsIOList}} object containing
-#'   designed primers.
-#' @param blastdb TAP-seq BLAST database created with \code{\link[TAPseq]{createBLASTDb}}.
-#' @param max_mismatch Maximum number of mismatches allowed for off-target hits (default: 0).
-#' @param min_aligned Minimum portion of the primer sequence starting from the 3' end that must
-#'   align for off-target hits (default: 0.75).
-#' @param primer_targets Specifies what should be used to identify primer targets for off-target
-#'   identification. I.e. to what does the 'seqID' in TsIO objects refer? Can be a subset of
-#'   \code{transcript_id}, \code{transcript_name}, \code{gene_id} or \code{gene_name}. By default
-#'   all 4 are checked. Set to \code{NULL} to disable any off-target identification. See Details for
-#'   more information.
-#' @param tmpdir Directory needed to store temporary files.
-#' @param blastn Path (character) to the \code{blastn} executable. Usually this is inferred when
-#'   loading/attaching the package.
-#' @return A \code{\link[TAPseq]{TsIO}} or \code{\link[TAPseq]{TsIOList}} object with the number
-#'   of potential off-target priming hits added to the TAP-seq primer metadata.
-#' @examples
-#' \dontrun{
-#' library(TAPseq)
-#' library(BSgenome)
-#'
-#' # human genome (hg38) BSgenome object
-#' hg38 <- getBSgenome("BSgenome.Hsapiens.UCSC.hg38")
-#'
-#' # get annotations for BLAST
-#' annot_url <- "ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_32/gencode.v32.annotation.gtf.gz"
-#' annot <- import(annot_url, format = "gtf")
-#' blast_exons <- annot[annot$type == "exon" & annot$gene_type == "protein_coding"]
-#'
-#' # build BLAST database
-#' blastdb <- file.path(tempdir(), "blastdb")
-#' createBLASTDb(genome = hg38, annot = blast_exons, blastdb = blastdb)
-#'
-#' # chr11 primers example data (already contains off-targets, but we can overwrite them)
-#' data("chr11_primers")
-#' chr11_primers <- chr11_primers[1:3]  # only use a small subset for this example
-#'
-#' # run blast to identify potential off-targets
-#' chr11_primers <- blastPrimers(chr11_primers, blastdb = blastdb)
-#' tapseq_primers(chr11_primers)
-#'
-#' # allow 1 mismatch between primer and off-target
-#' chr11_primers <- blastPrimers(chr11_primers, blastdb = blastdb, max_mismatch = 1)
-#' tapseq_primers(chr11_primers)
-#' }
+#' @rdname estimateOffTargets
 #' @export
 setGeneric("blastPrimers",
            function(object, blastdb, max_mismatch = 0, min_aligned = 0.75,
@@ -189,7 +178,7 @@ setGeneric("blastPrimers",
              standardGeneric("blastPrimers")
 )
 
-#' @describeIn blastPrimers BLAST primers in a \code{TsIO} object
+#' @describeIn estimateOffTargets BLAST primers in a \code{TsIO} object
 #' @export
 setMethod("blastPrimers", "TsIO", function(object, blastdb, max_mismatch, min_aligned,
                                            primer_targets, tmpdir, blastn) {
@@ -204,23 +193,27 @@ setMethod("blastPrimers", "TsIO", function(object, blastdb, max_mismatch, min_al
 
   if (length(primers) > 0) {
 
+    # add dummy unique identifier to primer ids (see method for TsIOList objects)
+    names(primers) <- paste0("1-", names(primers))
+
     # blast primers and process hits to count potential off-target primer binding
     primers <- blast_primers(primers, blastdb = blastdb, max_mismatch = max_mismatch,
                              min_aligned = min_aligned, primer_targets = primer_targets,
                              tmpdir = tmpdir, blastn = blastn)
 
     # add annotated primers back to input object
+    primers <- undo_unique_primer_ids(primers)  # remove dummy unique identifier
     tapseq_primers(object) <- primers
     return(object)
 
-  }else{
+  } else {
     message("No primers found in TsIO object!")
     return(object)
   }
 
 })
 
-#' @describeIn blastPrimers BLAST primers in a \code{TsIOList} object
+#' @describeIn estimateOffTargets BLAST primers in a \code{TsIOList} object
 #' @export
 setMethod("blastPrimers", "TsIOList", function(object, blastdb, max_mismatch, min_aligned,
                                                primer_targets, tmpdir, blastn) {
@@ -230,8 +223,8 @@ setMethod("blastPrimers", "TsIOList", function(object, blastdb, max_mismatch, mi
     primer_targets <- match.arg(primer_targets, several.ok = TRUE)
   }
 
-  # extract designed tap-seq primers
-  primers <- tapseq_primers(object)
+  # extract designed tap-seq primers and make sure that they have unique primer ids
+  primers <- get_primers_unique_id(object)
 
   if (length(primers) > 0) {
 
@@ -240,20 +233,24 @@ setMethod("blastPrimers", "TsIOList", function(object, blastdb, max_mismatch, mi
                              min_aligned = min_aligned, primer_targets = primer_targets,
                              tmpdir = tmpdir, blastn = blastn)
 
-    # split primers by target
-    targets <- sub("\\.primer_left_\\d+$", "", names(primers))
-    primers_split <- S4Vectors::split(primers, f = targets)
+    # split primers by index in object
+    primer_indices <- sub("^(\\d+)-.+$", "\\1", names(primers))
+    primers_split <- S4Vectors::split(primers, f = primer_indices)
+
+    # remove index added to primer id
+    primers_split <- endoapply(primers_split, FUN = undo_unique_primer_ids)
 
     # add empty IRanges objects for TsIO objects without any primers
-    missing <- setdiff(names(object), names(primers_split))
+    object_indices <- as.character(seq_along(object))
+    missing <- setdiff(seq_along(object), names(primers_split))
     missing_ranges <- IRangesList(lapply(missing, FUN = function(x) IRanges() ))
-    names(missing_ranges) <- missing
-    primers_split <- c(primers_split, missing_ranges)[names(object)]
+    names(missing_ranges) <- as.character(missing)
+    primers_split <- c(primers_split, missing_ranges)[object_indices]
 
-    # add primers to every TsIO object
+    # add processed primers to every TsIO object
     mendoapply(FUN = `tapseq_primers<-`, object, primers_split)
 
-  }else{
+  } else {
     message("No primers found in TsIOList object!")
     return(object)
   }
@@ -315,7 +312,7 @@ get_gt_sequences <- function(genome, annot = NULL, tx_id = "transcript_id",
     # get sequences of all transcripts
     txs_seqs <- getTxsSeq(txs, genome = genome)
 
-  }else{
+  } else {
     txs_seqs <- DNAStringSet()
   }
 
@@ -327,7 +324,7 @@ get_gt_sequences <- function(genome, annot = NULL, tx_id = "transcript_id",
     # get chromosome names for which sequences should be extracted
     if (standard_chromosomes ==  TRUE) {
       chroms <- GenomeInfoDb::standardChromosomes(genome)
-    }else{
+    } else {
       chroms <- names(genome)
     }
 
@@ -337,13 +334,34 @@ get_gt_sequences <- function(genome, annot = NULL, tx_id = "transcript_id",
     # add "sequence type" to names
     names(genome_seq) <- paste("lcl|chromosome", names(genome_seq), sep = ";")
 
-  }else{
+  } else {
     genome_seq <- DNAStringSet()
   }
 
   # combine and return genome and transcriptome sequences
   c(genome_seq, txs_seqs)
 
+}
+
+
+# extract primers from a TsIOList object and make sure they have a unique primer_id by adding the
+# index of each TsIO object to the primer_id
+get_primers_unique_id <- function(object) {
+  primers <- mapply(FUN = function(x, index) {
+    primers <- tapseq_primers(x)
+    if (length(primers) > 0) {
+      names(primers) <- paste(index, names(primers), sep = "-")
+    }
+    return(primers)
+  }, x = object, index = seq_along(object), SIMPLIFY = FALSE)
+  names(primers) <- NULL
+  unlist(IRangesList(primers))
+}
+
+# remove unique identifier from primer ids added by get_primers_unique_id()
+undo_unique_primer_ids <- function(primers) {
+  names(primers) <- sub("^\\d+-", "", names(primers))
+  return(primers)
 }
 
 # blast primers in IRanges format, process hits and add off-target hits to metadata
@@ -371,8 +389,7 @@ blast_primers <- function(primers, blastdb, max_mismatch, min_aligned, primer_ta
   # find primer target genes and filter for off-target hits
   if (!is.null(primer_targets)) {
     hits <- get_primer_target_genes(hits, annot = annot, primer_targets = primer_targets)
-    off_target_filter <- hits$gene_id != hits$target_gene_id | is.na(hits$gene_id)
-    hits <- hits[off_target_filter, ]
+    hits <- filter_off_targets(hits)
   }
 
   # count the number of hits per primer
@@ -521,9 +538,17 @@ filter_3p_hits <- function(hits, max_mismatch, min_aligned) {
 # used in annotate_blast_hits.
 get_primer_target_genes <- function(hits, annot, primer_targets) {
 
-  # get sequence id from primer id
-  primers_ids <- unique(hits$qaccver)
-  primer_seq_ids <- structure(sub(".primer_left_\\d+", "", primers_ids), names = primers_ids)
+  # get sequence ids from primer ids
+  primer_ids <- unique(hits$qaccver)
+  primer_seq_ids <- structure(sub("\\.{0,1}primer_left_\\d+", "", sub("^\\d+-", "", primer_ids)),
+                              names = primer_ids)
+
+  # raise warning if primer targets can't be inferred from primer_ids and remove missing targets
+  if (any(primer_seq_ids == "")) {
+    warning("Can't infer targets from primer IDs for (some) primers. Any sequence_id \"\" or <NA>?",
+            "\nAll hits will be considered off-targets for affected primers.", call. = FALSE)
+    primer_seq_ids <- primer_seq_ids[primer_seq_ids != ""]
+  }
 
   # create data.frame containing transcript_ids, transcript_names, gene_ids and gene_names
   gene_names <- distinct(as.data.frame(mcols(annot)))
@@ -535,18 +560,18 @@ get_primer_target_genes <- function(hits, annot, primer_targets) {
   # find primer targets in data provided in annot
   target_genes <- lapply(primer_seq_ids, FUN = find_primer_target_genes, gene_names = gene_names)
 
-  # count number of inferred target_genes per primer
-  n_match <- unlist(lapply(target_genes, FUN = length))
-  if (!all(n_match == 1)) {
+  # raise warning if target gene id could not be found for some primers
+  n_match <- vapply(target_genes, FUN = length, FUN.VALUE = numeric(1))
+  if (any(n_match != 1)) {
     warning("Can't find primer targets for all primers with primer_targets set to '",
-            paste(primer_targets, collapse= ", "), "'!", call. = FALSE)
+            paste(primer_targets, collapse= ", "), "'!",
+            "\nAll hits will be considered off-targets for affected primers.", call. = FALSE)
   }
 
   # create data.frame with target gene for every primer
-  target_gene_ids <- lapply(target_genes[n_match == 1], FUN = function(x) {
-    data.frame(target_gene_id = x, stringsAsFactors = FALSE)
-  })
-  target_gene_ids <- bind_rows(target_gene_ids, .id = "qaccver")
+  target_genes <- unlist(target_genes)
+  target_gene_ids <- data.frame(qaccver = names(target_genes), target_gene_id = target_genes,
+                                stringsAsFactors = FALSE)
 
   # add primer target genes to hits
   if (nrow(target_gene_ids) > 0) {
@@ -565,6 +590,13 @@ find_primer_target_genes <- function(primer_seq_id, gene_names) {
   primer_match <- gene_names[, -5] == primer_seq_id
   gene_names_primer <- gene_names[rowSums(primer_match) > 0, ]
   unique(gene_names_primer$target_gene)
+}
+
+# filter hits for off-target hits (target genes must have been added via find_primer_target_genes())
+filter_off_targets <- function(hits) {
+  off_target_filter <- hits$gene_id != hits$target_gene_id
+  off_target_filter[is.na(off_target_filter)] <- TRUE  # NAs are considered off-targets
+  hits <- hits[off_target_filter, ]
 }
 
 # count the number of blast hits

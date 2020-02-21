@@ -15,9 +15,9 @@ expect_out <- chr11_polyA_sites
 test_that("inferPolyASites() returns correct output and format", {
   output <- inferPolyASites(target_genes, bam = dropseq_bam, polyA_downstream = 50,
                            wdsize = 100, min_cvrg = 1)
-  expect_equal(class(output), class(expect_out))
+  expect_true(is(output, "GRanges"))
   expect_length(output, length(expect_out))
-  expect_equal(output, expect_out)
+  expect_equal(output, expect_out, check.attributes = FALSE)
 
 })
 

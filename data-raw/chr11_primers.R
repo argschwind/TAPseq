@@ -5,8 +5,10 @@ library(rtracklayer)
 ## create TsIOList example data containing designed primers and blast hits
 
 # design primers for chr11 target genes
-data("chr11_sequence_templates")
-chr11_primers <- TAPseqInput(chr11_sequence_templates, product_size_range = c(350, 500))
+data("chr11_truncated_txs_seq")
+data("chr11_truncated_txs")
+chr11_primers <- TAPseqInput(chr11_truncated_txs_seq, product_size_range = c(350, 500),
+                             target_annot = chr11_truncated_txs)
 chr11_primers <- designPrimers(chr11_primers)
 
 # human genome (hg38) BSgenome object

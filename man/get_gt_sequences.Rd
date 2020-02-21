@@ -4,10 +4,16 @@
 \alias{get_gt_sequences}
 \title{Get genome and transcriptome sequences}
 \usage{
-get_gt_sequences(genome, annot = NULL, tx_id = "transcript_id",
-  tx_name = "transcript_name", gene_name = "gene_name",
-  gene_id = "gene_id", include_genome = TRUE,
-  standard_chromosomes = TRUE)
+get_gt_sequences(
+  genome,
+  annot = NULL,
+  tx_id = "transcript_id",
+  tx_name = "transcript_name",
+  gene_name = "gene_name",
+  gene_id = "gene_id",
+  include_genome = TRUE,
+  standard_chromosomes = TRUE
+)
 }
 \arguments{
 \item{genome}{A \code{\link[BSgenome]{BSgenome}} (or \code{\link[Biostrings]{DNAStringSet}})

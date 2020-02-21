@@ -4,13 +4,21 @@
 \alias{inferPolyASites}
 \title{Infer polyA sites from droplet sequencing data}
 \usage{
-inferPolyASites(genes, bam, polyA_downstream = 100, min_cvrg = 0,
-  wdsize = 200, by = 1, extend_downstream = 0,
-  perc_threshold = 0.9, parallel = FALSE)
+inferPolyASites(
+  genes,
+  bam,
+  polyA_downstream = 100,
+  min_cvrg = 0,
+  wdsize = 200,
+  by = 1,
+  extend_downstream = 0,
+  perc_threshold = 0.9,
+  parallel = FALSE
+)
 }
 \arguments{
-\item{genes}{GRangesList object containing annotations of genes for which polyA site are to be
-extimated.}
+\item{genes}{\code{\link[GenomicRanges]{GRangesList}} object containing annotations of genes
+for which polyA sites are to be estimated.}
 
 \item{bam}{Path to .bam file containing aligned reads used for polyA site estimation.}
 

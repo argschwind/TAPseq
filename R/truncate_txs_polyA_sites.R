@@ -7,16 +7,18 @@
 #' truncated and returned. In case a polyA site overlaps multiple transcripts of the same gene, a
 #' "metatranscript" consisting of all annotated exons of the overlapping transcripts is generated
 #' and truncated. No statements about expressed transcripts can be made if no overlapping polyA
-#' sites are found for any transcripts of a gene. In that case a "metatranscript" consisting of
+#' sites are found for any transcripts of a gene. In that case a "meta transcript" consisting of
 #' the merged exons of that gene is generated and returned.
 #'
-#' @param transcripts A \code{GRanges} or \code{GRangesList} object containing  exons of the
-#'   transcripts to be truncated. Transcripts for multiple genes can be provided as \code{GRanges}
-#'   objects within a \code{GRangesList}.
-#' @param polyA_sites A \code{GRanges} object containing the polyA sites. This needs to contain a
-#'   metadata entry names "score" if the option \code{polyA_select = "score"} is used. PolyA sites
-#'   can be either obtained via running \code{\link[TAPseq]{inferPolyASites}} or imported from
-#'   an existing .bed file via \code{\link[rtracklayer]{import}}.
+#' @param transcripts A \code{\link[GenomicRanges]{GRanges}} or
+#'   \code{\link[GenomicRanges]{GRangesList}} object containing  exons of the transcripts to be
+#'   truncated. Transcripts for multiple genes can be provided as \code{GRanges} objects within
+#'   a \code{GRangesList}.
+#' @param polyA_sites A \code{\link[GenomicRanges]{GRanges}} object containing the polyA sites.
+#'   This needs to contain a metadata entry names "score" if the option
+#'   \code{polyA_select = "score"} is used. PolyA sites can be either obtained via running
+#'   \code{\link[TAPseq]{inferPolyASites}} or imported from an existing .bed file via
+#'   \code{\link[rtracklayer]{import}}.
 #' @param extend_3prime_end Specifies how far (bp) 3' ends of transcripts should be extended when
 #'   looking for overlapping polyA sites (default = 0). This enables capturing of polyA sites that
 #'   occur downstream of annotated 3' ends.
@@ -41,7 +43,6 @@
 #' @return Either a \code{GRanges} or \code{GRangesList} object containing the
 #'   truncated transcripts.
 #' @examples
-#' library(TAPseq)
 #' library(GenomicRanges)
 #'
 #' # protein-coding exons of genes within chr11 region
@@ -82,7 +83,7 @@ setMethod("truncateTxsPolyA", "GRanges",
     message("Verifying input...")
 
     # abort if polyA_sites has wrong format
-    if (class(polyA_sites) != "GRanges") {
+    if (!is(polyA_sites, "GRanges")) {
       stop("polyA_sites needs to be of class GRanges!", call. = FALSE)
     }
 
@@ -91,11 +92,11 @@ setMethod("truncateTxsPolyA", "GRanges",
       message("transcript_id = NULL, assuming all exons to be from same transcript.")
       tx_id_col <- paste0("dummy_tx_id_", floor(stats::runif(1, 1000000, 9999999)))
       mcols(transcripts)[[tx_id_col]] <- "transcript1"
-    }else{
+    } else {
       missing_tx_ids <- check_missing_tx_id(transcripts, transcript_id = transcript_id)
       if (missing_tx_ids) {
         stop("transcript_id column '", transcript_id, "' not found!", call. = FALSE)
-      }else{
+      } else {
         tx_id_col <- transcript_id
       }
     }
@@ -155,7 +156,7 @@ setMethod("truncateTxsPolyA", "GRangesList",
     message("Verifying input...")
 
     # abort if polyA_sites has wrong format
-    if (class(polyA_sites) != "GRanges") {
+    if (!is(polyA_sites, "GRanges")) {
       stop("polyA_sites needs to be of class GRanges!", call. = FALSE)
     }
 
@@ -167,12 +168,12 @@ setMethod("truncateTxsPolyA", "GRangesList",
         mcols(x)[[tx_id_col]] <- "transcript1"
         return(x)
       })
-    }else{
+    } else {
       missing_tx_ids <- vapply(transcripts, FUN = check_missing_tx_id, FUN.VALUE = logical(1),
                                transcript_id = transcript_id)
       if (any(missing_tx_ids)) {
         stop("transcript_id column '", transcript_id, "' not found!", call. = FALSE)
-      }else{
+      } else {
         tx_id_col <- transcript_id
       }
     }
@@ -205,7 +206,7 @@ setMethod("truncateTxsPolyA", "GRangesList",
     if (parallel == TRUE) {
       overlapping_exons <- BiocParallel::bplapply(transcripts, FUN = check_overlap_exons,
                                                   transcript_id = tx_id_col)
-    }else{
+    } else {
       overlapping_exons <- lapply(transcripts, FUN = check_overlap_exons,
                                   transcript_id = tx_id_col)
     }
@@ -225,7 +226,7 @@ setMethod("truncateTxsPolyA", "GRangesList",
                                        transcript_id = tx_id_col, gene_id = gene_id,
                                        exon_number = exon_number, ignore_strand = ignore_strand)
 
-    }else{
+    } else {
       output <- lapply(X = transcripts, FUN = truncate_tx_polyA, polyA_sites = polyA_sites,
                        polyA_select = polyA_select, extend_3prime_end = extend_3prime_end,
                        transcript_id = tx_id_col, gene_id = gene_id, exon_number = exon_number,
@@ -253,7 +254,7 @@ setMethod("truncateTxsPolyA", "GRangesList",
 check_missing_tx_id <- function(txs, transcript_id) {
   if (is.null(mcols(txs)[[transcript_id]])) {
     TRUE
-  }else{
+  } else {
     FALSE
   }
 }
@@ -262,7 +263,7 @@ check_missing_tx_id <- function(txs, transcript_id) {
 check_na_tx_id <- function(txs, transcript_id) {
   if (any(is.na(mcols(txs)[[transcript_id]]))) {
     TRUE
-  }else{
+  } else {
     FALSE
   }
 }
@@ -272,7 +273,7 @@ check_conflict_strand <- function(txs) {
   tx_strand <- unique(strand(txs))
   if (length(tx_strand) > 1) {
     TRUE
-  }else{
+  } else {
     FALSE
   }
 }
@@ -282,7 +283,7 @@ check_conflict_chr <- function(txs) {
   tx_chrs <- unique(seqnames(txs))
   if (length(tx_chrs) > 1) {
     TRUE
-  }else{
+  } else {
     FALSE
   }
 }

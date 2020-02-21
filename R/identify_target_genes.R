@@ -1,32 +1,42 @@
 #' Select target genes
 #'
 #' Select target genes that serve as markers for cell populations using a linear model with lasso
-#' regularization.
+#' regularization. How well a selected set of target genes discriminates between cell populations
+#' can be assessed in an intuitive way using UMAP visualization.
 #'
 #' @param object Seurat object containing single-cell RNA-seq data from which best marker genes for
 #'   different cell populations should be learned. Needs to contain population identities for all
 #'   cell.
 #' @param expr_percentile Expression percentiles that candidate target genes need to fall into.
 #'   Default is 60\% to 99\%, which excludes bottom 60\% and top 1\% expressed genes from markers.
-#' @param targets Desired number of target genes. At least this many target genes will be returned.
-#'   If set to NULL, the optimal number of target genes will be estimated using a cross-valdation
-#'   approach. Warning: The number of target genes might end up being very large!
+#' @param targets Desired number of target genes. Approximately this many target genes will be
+#'   returned. If set to NULL, the optimal number of target genes will be estimated using a
+#'   cross-valdation approach. Warning: The number of target genes might end up being very large!
+#' @param target_genes (character) Target gene names.
+#' @param npcs (integer) Number of principal components to use for UMAP.
 #' @return A character vector containing selected target gene identifiers.
 #' @examples
 #' \dontrun{
-#' library(TAPseq)
 #' library(Seurat)
 #'
 #' # example of mouse bone marrow 10x gene expression data
 #' data("bone_marrow_genex")
 #'
-#' # identify at least 200 target genes that can be used to identify cell populations
-#' target_genes <- selectTargetGenes(bone_marrow_genex, targets = 200)
+#' # identify approximately 100 target genes that can be used to identify cell populations
+#' target_genes <- selectTargetGenes(bone_marrow_genex, targets = 100)
 #'
-#' # automatically identify the number of target genes to best identify cell populations. caution:
-#' # this can lead to very large target gene panels!
-#' target_genes <- selectTargetGenes(bone_marrow_genex)
+#' # automatically identify the number of target genes to best identify cell populations using
+#' # cross-validation. caution: this can lead to very large target gene panels!
+#' target_genes_cv <- selectTargetGenes(bone_marrow_genex)
+#'
+#' # create UMAP plots to compare cell type identification based on full dataset and selected 100
+#' # target genes
+#' plotTargetGenes(bone_marrow_genex, target_genes = target_genes)
 #' }
+#' @name selectTargetGenes
+NULL
+
+#' @rdname selectTargetGenes
 #' @export
 selectTargetGenes <- function(object, targets = NULL, expr_percentile = c(0.6, 0.99)) {
 
@@ -71,14 +81,14 @@ selectTargetGenes <- function(object, targets = NULL, expr_percentile = c(0.6, 0
     target_lambda <- cv_model$lambda.1se
     model <- cv_model$glmnet.fit
 
-  }else{
+  } else {
 
     message("Fitting model")
     model <- glmnet::glmnet(x = Matrix::t(gene_expr), y = cell_pops, family = "multinomial",
                             alpha = 1)
 
     # define lambda that results in at least the requested number of targets
-    target_df <- which(model$df >= targets)[1]
+    target_df <- which.min(abs(targets - model$df))
     target_lambda <- model$lambda[target_df]
   }
 
@@ -91,30 +101,7 @@ selectTargetGenes <- function(object, targets = NULL, expr_percentile = c(0.6, 0
 
 }
 
-#' Plot target genes set
-#'
-#' Plot how well a selected set of target genes discriminates between cell populations using UMAP
-#' visualization.
-#'
-#' @param object Seurat object containing single-cell RNA-seq data for all genes. Needs to contain
-#'   population identities for all cell.
-#' @param target_genes (character) Target gene names.
-#' @param npcs (integer) Number of principal components to use for UMAP.
-#' @examples
-#' \dontrun{
-#' library(TAPseq)
-#' library(Seurat)
-#'
-#' # example of mouse bone marrow 10x gene expression data
-#' data("bone_marrow_genex")
-#'
-#' # identify at least 200 target genes that can be used to identify cell populations
-#' target_genes <- bone_marrow_genex(bone_marrow_genex, targets = 200)
-#'
-#' # create UMAP plots to compare cell type identification based on full dataset and selected 200
-#' # target genes
-#' plotTargetGenes(bone_marrow_genex, target_genes = target_genes)
-#' }
+#' @rdname selectTargetGenes
 #' @export
 plotTargetGenes <- function(object, target_genes, npcs = 15) {
 

@@ -6,8 +6,8 @@
 #' chosen because they work reasonably well with the example data, but they should typically be
 #' empirically selected by verifying the output.
 #'
-#' @param genes GRangesList object containing annotations of genes for which polyA site are to be
-#'   extimated.
+#' @param genes \code{\link[GenomicRanges]{GRangesList}} object containing annotations of genes
+#'   for which polyA sites are to be estimated.
 #' @param bam Path to .bam file containing aligned reads used for polyA site estimation.
 #' @param polyA_downstream (numeric) How far downstream of a peak in coverage are polyA sites
 #'   expected? Somewhat depends on input DNA fragment size. (default: 100).
@@ -71,7 +71,7 @@ inferPolyASites <- function(genes, bam, polyA_downstream = 100, min_cvrg = 0, wd
     polyA_sites <- BiocParallel::bplapply(X = genes, FUN = polyA_site_gene, coverage = read_cvrg,
                           polyA_downstream = polyA_downstream, wdsize = wdsize, by = by,
                           extend_downstream = extend_downstream, perc_threshold = perc_threshold)
-  }else{
+  } else {
 
     polyA_sites <- lapply(X = genes, FUN = polyA_site_gene, coverage = read_cvrg,
                           polyA_downstream = polyA_downstream, wdsize = wdsize, by = by,
@@ -156,7 +156,7 @@ polyA_site_gene <- function(gene, coverage, polyA_downstream, wdsize, by, extend
     polyA_sites <- peak_centers + polyA_downstream
 
     # if gene is on '-' strand
-  }else if (strand == "-") {
+  } else if (strand == "-") {
 
     start(exons[1]) <- start(exons[1]) - extend_downstream
 
@@ -190,7 +190,7 @@ polyA_site_gene <- function(gene, coverage, polyA_downstream, wdsize, by, extend
 
     polyA_sites <- peak_centers - polyA_downstream + 1
 
-  }else{
+  } else {
 
     stop("Strand not '+' or '-' for at least 1 gene!", call. = FALSE)
 
@@ -228,7 +228,7 @@ polyA_site_gene <- function(gene, coverage, polyA_downstream, wdsize, by, extend
                             ranges = IRanges(polyA_start, polyA_start),
                             mcols(polyA_sites))
 
-  }else{
+  } else {
 
     # if no polyA sites are found, return empty GRanges object
     polyA_coords <- GRanges()

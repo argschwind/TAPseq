@@ -6,10 +6,14 @@
 \alias{TsIO}
 \alias{sequence_id,TsIO-method}
 \alias{sequence_id<-,TsIO-method}
-\alias{sequence_template,TsIO-method}
-\alias{sequence_template<-,TsIO-method}
+\alias{target_sequence,TsIO-method}
+\alias{target_sequence<-,TsIO-method}
+\alias{beads_oligo,TsIO-method}
+\alias{beads_oligo<-,TsIO-method}
 \alias{reverse_primer,TsIO-method}
 \alias{reverse_primer<-,TsIO-method}
+\alias{target_annot,TsIO-method}
+\alias{target_annot<-,TsIO-method}
 \alias{product_size_range,TsIO-method}
 \alias{product_size_range<-,TsIO-method}
 \alias{primer_num_return,TsIO-method}
@@ -22,25 +26,44 @@
 \alias{primer_min_tm<-,TsIO-method}
 \alias{primer_max_tm,TsIO-method}
 \alias{primer_max_tm<-,TsIO-method}
+\alias{sequence_template,TsIO-method}
 \alias{tapseq_primers,TsIO-method}
 \alias{pcr_products,TsIO-method}
 \title{TsIO class}
 \usage{
-TsIO(sequence_template, sequence_id = NA, reverse_primer,
-  product_size_range, primer_num_return = 5, min_primer_region = 100,
-  primer_opt_tm = NA, primer_min_tm = NA, primer_max_tm = NA)
+TsIO(
+  sequence_id,
+  target_sequence,
+  beads_oligo,
+  reverse_primer,
+  product_size_range,
+  target_annot = NULL,
+  primer_num_return = 5,
+  min_primer_region = 100,
+  primer_opt_tm = NA,
+  primer_min_tm = NA,
+  primer_max_tm = NA
+)
 
 \S4method{sequence_id}{TsIO}(x)
 
 \S4method{sequence_id}{TsIO}(x) <- value
 
-\S4method{sequence_template}{TsIO}(x)
+\S4method{target_sequence}{TsIO}(x)
 
-\S4method{sequence_template}{TsIO}(x) <- value
+\S4method{target_sequence}{TsIO}(x) <- value
+
+\S4method{beads_oligo}{TsIO}(x)
+
+\S4method{beads_oligo}{TsIO}(x) <- value
 
 \S4method{reverse_primer}{TsIO}(x)
 
 \S4method{reverse_primer}{TsIO}(x) <- value
+
+\S4method{target_annot}{TsIO}(x)
+
+\S4method{target_annot}{TsIO}(x) <- value
 
 \S4method{product_size_range}{TsIO}(x)
 
@@ -66,25 +89,36 @@ TsIO(sequence_template, sequence_id = NA, reverse_primer,
 
 \S4method{primer_max_tm}{TsIO}(x) <- value
 
+\S4method{sequence_template}{TsIO}(x)
+
 \S4method{tapseq_primers}{TsIO}(x)
 
 \S4method{pcr_products}{TsIO}(x)
 }
 \arguments{
-\item{sequence_template}{A \code{\link[Biostrings]{DNAString}} object containing the sequence
-template for which primers should be designed.}
+\item{sequence_id}{Name (\code{character}) of the target sequence, e.g. the gene name. It's
+adviced to use meaningful sequence ids to savely assign designed primers to their targets.}
 
-\item{sequence_id}{Name (\code{character}) of the sequence template e.g. gene name.}
+\item{target_sequence}{A \code{\link[Biostrings]{DNAString}} or \code{character} object
+containing the target sequence for which primers should be designed. Usually a transcript
+sequence.}
+
+\item{beads_oligo}{Beads-oligo-dT sequence for the used droplet sequencing protocol (10x,
+Drop-seq).}
 
 \item{reverse_primer}{Reverse primer sequence used for all PCR reactions.}
 
 \item{product_size_range}{Numerical vector of length 2 specifying the desired length of the
 resulting amplicons.}
 
+\item{target_annot}{(optional) A \code{\link[GenomicRanges]{GRanges}} object with transcript
+annotation in case the target is a transcript of a gene locus. If provided, it should contain
+all exons of the targeted transcript.}
+
 \item{primer_num_return}{How many forward primers should be designed? (default: 5)}
 
-\item{min_primer_region}{Minimum sequence length required for primer design. Relevant in case the
-a sequence template is too short to allow the specified \code{product_size_range}.}
+\item{min_primer_region}{Minimum sequence length required for primer design. Mostly relevant in
+case the sequence template is too short to allow the specified \code{product_size_range}.}
 
 \item{primer_opt_tm, primer_min_tm, primer_max_tm}{Optimal, minumum and maximum primer melting
 temperature.}
@@ -105,26 +139,33 @@ TsIO objects store TAP-seq Primer3 input and output.
 }
 \details{
 The TsIO class is based on the Boulder IO records used by Primer3
-(\href{http://primer3.sourceforge.net/primer3_manual.htm}{Primer3 manual}). These objects allow
-storing of required input such as the sequence template and additional Primer3 arguments
-relevant for TAP-seq primer design. Once Primer3 is used to design TAP-seq primers based on
-a TsIO object, the output is added to the TsIO object.
+(\href{http://primer3.sourceforge.net/primer3_manual.htm}{Primer3 manual}). These objects are
+used to store the sequence templates and parameters needed for TAP-seq primer design. Primers
+designed  with Primer3 are also stored in the same TsIO objects.
 
 Use \code{TsIO()} to construct a new TsIO object from scratch.
 }
 \section{Methods (by generic)}{
 \itemize{
-\item \code{sequence_id}: Get sequence id
+\item \code{sequence_id}: Get sequence_id
 
 \item \code{sequence_id<-}: Set sequence_id
 
-\item \code{sequence_template}: Get sequence_template
+\item \code{target_sequence}: Get target_sequence
 
-\item \code{sequence_template<-}: Set sequence_template
+\item \code{target_sequence<-}: Set target_sequence
+
+\item \code{beads_oligo}: Get beads_oligo
+
+\item \code{beads_oligo<-}: Set beads_oligo
 
 \item \code{reverse_primer}: Get reverse_primer
 
 \item \code{reverse_primer<-}: Set reverse_primer
+
+\item \code{target_annot}: Get target_annot
+
+\item \code{target_annot<-}: Set target_annot
 
 \item \code{product_size_range}: Get product_size_range
 
@@ -132,23 +173,25 @@ Use \code{TsIO()} to construct a new TsIO object from scratch.
 
 \item \code{primer_num_return}: Get primer_num_return
 
-\item \code{primer_num_return<-}: Set product_size_range
+\item \code{primer_num_return<-}: Set primer_num_return
 
 \item \code{min_primer_region}: Get min_primer_region
 
-\item \code{min_primer_region<-}: Set product_size_range
+\item \code{min_primer_region<-}: Set min_primer_region
 
 \item \code{primer_opt_tm}: Get primer_opt_tm
 
-\item \code{primer_opt_tm<-}: Set product_size_range
+\item \code{primer_opt_tm<-}: Set primer_opt_tm
 
 \item \code{primer_min_tm}: Get primer_min_tm
 
-\item \code{primer_min_tm<-}: Set product_size_range
+\item \code{primer_min_tm<-}: Set primer_min_tm
 
 \item \code{primer_max_tm}: Get primer_max_tm
 
-\item \code{primer_max_tm<-}: Set product_size_range
+\item \code{primer_max_tm<-}: Set primer_max_tm
+
+\item \code{sequence_template}: Create sequence_template
 
 \item \code{tapseq_primers}: Get tapseq_primers
 
@@ -156,24 +199,29 @@ Use \code{TsIO()} to construct a new TsIO object from scratch.
 }}
 
 \examples{
-library(TAPseq)
+# get example transcript sequence
+data("chr11_truncated_txs_seq")
+tx_seq <- chr11_truncated_txs_seq[[1]]
+tx_id <- names(chr11_truncated_txs_seq)[1]
 
-# get example sequence templates
-data("chr11_sequence_templates")
-tx_seq <- chr11_sequence_templates[[1]]
-tx_id <- names(chr11_sequence_templates)[1]
+# 10x beads-oligo-dt sequence
+beads_oligo <- "CTACACGACGCTCTTCCGATCTNNNNNNNNNNNNNNNNNNNNNNNNNNNNTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT"
 
 # reverse primer used in all PCR reactions
-reverse_primer <- "AAGCAGTGGTATCAACGCAGAGT"
+reverse_primer <- "CTACACGACGCTCTTCCGATCT"
 
 # create TsIO object
-obj <- TsIO(sequence_template = tx_seq, sequence_id = tx_id, reverse_primer = reverse_primer,
-            product_size_range = c(350, 500))
+obj <- TsIO(sequence_id = tx_id, target_sequence = tx_seq, beads_oligo = beads_oligo,
+            reverse_primer = reverse_primer, product_size_range = c(350, 500))
 
-# different slot values can be accessed using accessor functions
-sequence_template(obj)
+# slot values can be accessed using accessor functions
+sequence_id(obj)
 sequence_id(obj) <- "Gene1"
 sequence_id(obj)
+
+# the sequence template (target sequence + reverse complement of beads-oligo-dt) for primer
+# design can be viewed as well
+sequence_template(obj)
 }
 \seealso{
 \url{http://primer3.org/manual.html} for Primer3 manual.
