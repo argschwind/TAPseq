@@ -35,7 +35,6 @@ can be assessed in an intuitive way using UMAP visualization.
 }
 \examples{
 \dontrun{
-library(TAPseq)
 library(Seurat)
 
 # example of mouse bone marrow 10x gene expression data

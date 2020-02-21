@@ -93,7 +93,7 @@ as input. If a polyA site overlaps a single transcript of a given gene, this tra
 truncated and returned. In case a polyA site overlaps multiple transcripts of the same gene, a
 "metatranscript" consisting of all annotated exons of the overlapping transcripts is generated
 and truncated. No statements about expressed transcripts can be made if no overlapping polyA
-sites are found for any transcripts of a gene. In that case a "metatranscript" consisting of
+sites are found for any transcripts of a gene. In that case a "meta transcript" consisting of
 the merged exons of that gene is generated and returned.
 }
 \section{Methods (by class)}{
@@ -105,7 +105,6 @@ the merged exons of that gene is generated and returned.
 }}
 
 \examples{
-library(TAPseq)
 library(GenomicRanges)
 
 # protein-coding exons of genes within chr11 region

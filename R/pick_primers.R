@@ -49,13 +49,13 @@ setMethod("pickPrimers", "TsIO", function(object, n, by) {
     # order primers based to penalty or number of off targets
     if (by == "penalty") {
       order <- order(primer_meta$penalty)
-    }else{
+    } else {
       order <- order(primer_meta$exonic_off_targets, primer_meta$intronic_off_targets,
                      primer_meta$intergenic_off_targets, primer_meta$penalty)
     }
 
     # pick top n primers
-    picked_primers <- primers[order[1:n]]
+    picked_primers <- primers[order[seq_len(n)]]
 
     # get pcr products for these primers (based on primer id for the unlikely case that pcr products
     # were reordered for some reason...)
@@ -66,7 +66,7 @@ setMethod("pickPrimers", "TsIO", function(object, n, by) {
     pcr_products(object) <- picked_pcr_prods
     return(object)
 
-  }else{
+  } else {
     warning("No primers found for sequence id: ", sequence_id(object), call. = FALSE)
     return(object)
   }

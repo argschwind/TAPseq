@@ -54,8 +54,6 @@ storing of Primer3 input and output for multiple target genes.
 }}
 
 \examples{
-library(TAPseq)
-
 # get example transcript sequences
 data("chr11_truncated_txs_seq")
 txs_seqs <- chr11_truncated_txs_seq[1:2]

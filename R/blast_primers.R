@@ -62,7 +62,6 @@
 #'   the number of potential off-targets added to the TAP-seq primer metadata.
 #' @examples
 #' \dontrun{
-#' library(TAPseq)
 #' library(BSgenome)
 #'
 #' # human genome (hg38) BSgenome object
@@ -90,10 +89,10 @@
 #' chr11_primers <- blastPrimers(chr11_primers, blastdb = blastdb, max_mismatch = 1)
 #' tapseq_primers(chr11_primers)
 #' }
-#' @name EstimateOffTargets
+#' @name estimateOffTargets
 NULL
 
-#' @describeIn EstimateOffTargets Create a genome and transcriptome TAP-seq BLAST database
+#' @describeIn estimateOffTargets Create a genome and transcriptome TAP-seq BLAST database
 #' @export
 createBLASTDb <- function(genome, annot, blastdb, standard_chromosomes = TRUE,
                           tx_id = "transcript_id", tx_name = "transcript_name",
@@ -170,7 +169,7 @@ createBLASTDb <- function(genome, annot, blastdb, standard_chromosomes = TRUE,
 
 }
 
-#' @rdname EstimateOffTargets
+#' @rdname estimateOffTargets
 #' @export
 setGeneric("blastPrimers",
            function(object, blastdb, max_mismatch = 0, min_aligned = 0.75,
@@ -179,7 +178,7 @@ setGeneric("blastPrimers",
              standardGeneric("blastPrimers")
 )
 
-#' @describeIn EstimateOffTargets BLAST primers in a \code{TsIO} object
+#' @describeIn estimateOffTargets BLAST primers in a \code{TsIO} object
 #' @export
 setMethod("blastPrimers", "TsIO", function(object, blastdb, max_mismatch, min_aligned,
                                            primer_targets, tmpdir, blastn) {
@@ -207,14 +206,14 @@ setMethod("blastPrimers", "TsIO", function(object, blastdb, max_mismatch, min_al
     tapseq_primers(object) <- primers
     return(object)
 
-  }else{
+  } else {
     message("No primers found in TsIO object!")
     return(object)
   }
 
 })
 
-#' @describeIn EstimateOffTargets BLAST primers in a \code{TsIOList} object
+#' @describeIn estimateOffTargets BLAST primers in a \code{TsIOList} object
 #' @export
 setMethod("blastPrimers", "TsIOList", function(object, blastdb, max_mismatch, min_aligned,
                                                primer_targets, tmpdir, blastn) {
@@ -251,7 +250,7 @@ setMethod("blastPrimers", "TsIOList", function(object, blastdb, max_mismatch, mi
     # add processed primers to every TsIO object
     mendoapply(FUN = `tapseq_primers<-`, object, primers_split)
 
-  }else{
+  } else {
     message("No primers found in TsIOList object!")
     return(object)
   }
@@ -313,7 +312,7 @@ get_gt_sequences <- function(genome, annot = NULL, tx_id = "transcript_id",
     # get sequences of all transcripts
     txs_seqs <- getTxsSeq(txs, genome = genome)
 
-  }else{
+  } else {
     txs_seqs <- DNAStringSet()
   }
 
@@ -325,7 +324,7 @@ get_gt_sequences <- function(genome, annot = NULL, tx_id = "transcript_id",
     # get chromosome names for which sequences should be extracted
     if (standard_chromosomes ==  TRUE) {
       chroms <- GenomeInfoDb::standardChromosomes(genome)
-    }else{
+    } else {
       chroms <- names(genome)
     }
 
@@ -335,7 +334,7 @@ get_gt_sequences <- function(genome, annot = NULL, tx_id = "transcript_id",
     # add "sequence type" to names
     names(genome_seq) <- paste("lcl|chromosome", names(genome_seq), sep = ";")
 
-  }else{
+  } else {
     genome_seq <- DNAStringSet()
   }
 

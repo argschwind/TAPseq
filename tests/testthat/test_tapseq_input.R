@@ -27,8 +27,8 @@ obj2 <- TAPseqInput(target_sequences = txs_seqs, beads_oligo = ds_oligo,
 # test TAPseqInput() -------------------------------------------------------------------------------
 
 test_that("TAPseqInput() output has correct format", {
-  expect_equivalent(class(obj1), "TsIOList")
-  expect_equivalent(class(obj1[[1]]), "TsIO")
+  expect_true(is(obj1, "TsIOList"))
+  expect_true(is(obj1[[1]], "TsIO"))
 })
 
 test_that("TAPseqInput() adds correct sequences to TsIOList", {
@@ -131,12 +131,12 @@ test_that("createIORecord() creates correct output from TsIO object", {
 
 test_that("createIORecord() handles optional thermo_params_path parameter correctly", {
   output <- createIORecord(obj1[[1]], thermo_params_path = "/path/to/primer3_config")
-  expect_equal(class(output), "character")
+  expect_true(is(output, "character"))
   expect_identical(output, expect_out2)
 })
 
 test_that("createIORecord() creates correct output from TsIOList object", {
   output <- createIORecord(obj1)
-  expect_equal(class(output), "character")
+  expect_true(is(output, "character"))
   expect_identical(output, expect_out3)
 })

@@ -59,8 +59,6 @@ them to files for viewing in a genome browser (e.g. IGV).
 }}
 
 \examples{
-library(TAPseq)
-
 # chr11 primers example data
 data("chr11_primers")
 

@@ -1,6 +1,6 @@
 ## Check that all required 3rd party programs are installed
 
-#' Check if required tools are installed
+#' Check required tools
 #'
 #' Check if required software is installed and return paths to executables (if found).
 #'
@@ -23,11 +23,8 @@ check_tool_installation <- function() {
 
 }
 
-#' Actions to perform when package is LOADED
-#'
-#' Check for required tools and set tool paths as package options.
-#'
-#' @keywords internal
+# actions to perform when package is LOADED. check for required tools and set tool paths as package
+# options
 .onLoad <- function(libname, pkgname) {
 
   # check for required tools
@@ -60,9 +57,7 @@ check_tool_installation <- function() {
 
 }
 
-#' Print startup message if package is ATTACHED
-#'
-#' @keywords internal
+# print startup message if package is ATTACHED
 .onAttach <- function(libname, pkgname) {
 
   # get all tools used by TAPseq

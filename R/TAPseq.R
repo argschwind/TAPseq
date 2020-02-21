@@ -15,7 +15,6 @@
 #' @name TAPseq
 #'
 #' @import methods
-#'
 #' @import GenomicRanges
 #' @import BiocGenerics
 #' @import BSgenome
@@ -24,8 +23,10 @@
 #' @importFrom tidyr separate pivot_wider
 #'
 #' @importFrom S4Vectors endoapply mendoapply queryHits subjectHits mcols DataFrame split
+#' @importFrom GenomicFeatures extractTranscriptSeqs
 #' @importFrom IRanges IRanges IRangesList Views
 #' @importFrom Biostrings DNAString DNAStringSet start end subseq reverseComplement matchPattern
+#'
 #' @importClassesFrom Biostrings DNAString DNAStringSet
 #' @importClassesFrom IRanges IRanges
 NULL

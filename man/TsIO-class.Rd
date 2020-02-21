@@ -199,8 +199,6 @@ Use \code{TsIO()} to construct a new TsIO object from scratch.
 }}
 
 \examples{
-library(TAPseq)
-
 # get example transcript sequence
 data("chr11_truncated_txs_seq")
 tx_seq <- chr11_truncated_txs_seq[[1]]

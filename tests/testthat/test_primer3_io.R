@@ -98,7 +98,7 @@ test_that("parsePrimer3Output() parses Primer3 output correctly", {
 
   # test that parsed primers for the AKIP1 are correct
   primers <- tapseq_primers(output[[1]])
-  expect_equivalent(class(primers), "IRanges")
+  expect_true(is(primers, "IRanges"))
   expect_length(primers, 2)
   expect_equal(primers, expect_primers)
 
@@ -112,7 +112,7 @@ test_that("parsePrimer3Output() parses Primer3 output correctly", {
   pcr_prod <- pcr_products(output[[1]])
 
   # test that parsePrimer3Output() infers correct PCR products
-  expect_equivalent(class(pcr_prod), "DNAStringSet")
+  expect_true(is(pcr_prod, "DNAStringSet"))
   expect_length(pcr_prod, 2)
   expect_equal(as.character(pcr_prod[[1]]), as.character(expect_pcr_prod[[1]]))
   expect_equal(as.character(pcr_prod[[2]]), as.character(expect_pcr_prod[[2]]))
@@ -139,12 +139,12 @@ test_that("parsePrimer3Output() handles errors correctly", {
 
   # check that correct primers and pcr products are returned
   primers <- tapseq_primers(output)
-  expect_equivalent(class(primers), "IRanges")
+  expect_true(is(primers, "IRanges"))
   expect_length(primers, 2)
   expect_equal(names(primers), c("AKIP1.primer_left_1", "ARFIP2.primer_left_0"))
 
   pcr_prod <- pcr_products(output)
-  expect_equivalent(class(pcr_prod), "DNAStringSet")
+  expect_true(is(pcr_prod, "DNAStringSet"))
   expect_length(pcr_prod, 2)
   expect_equal(names(pcr_prod), c("AKIP1.primer_left_1", "ARFIP2.primer_left_0"))
 
@@ -157,7 +157,7 @@ test_that("designPrimers() returns output in correct format", {
   # design primers
   output <- designPrimers(tapseq_io)
   primers <- tapseq_primers(output)
-  expect_equivalent(class(primers), "IRanges")
+  expect_true(is(primers, "IRanges"))
   expect_length(primers, 10)
   expect_equal(names(primers),
                c(paste0("AKIP1.primer_left_", 0:4), paste0("ARFIP2.primer_left_", 0:4)))
@@ -170,7 +170,7 @@ test_that("designPrimers() returns output in correct format", {
 
   # test that parsed primers are correct (equivalent data structure, not exact values)
   pcr_prod <- pcr_products(output)
-  expect_equivalent(class(pcr_prod), "DNAStringSet")
+  expect_true(is(pcr_prod, "DNAStringSet"))
   expect_length(pcr_prod, 10)
   expect_equal(names(pcr_prod),
                c(paste0("AKIP1.primer_left_", 0:4), paste0("ARFIP2.primer_left_", 0:4)))

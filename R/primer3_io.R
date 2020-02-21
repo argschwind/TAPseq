@@ -12,8 +12,6 @@
 #' @seealso \url{http://primer3.org/manual.html} for Primer3 manual and \code{\link[TAPseq]{TsIO}}
 #'   for TsIO class objects.
 #' @examples
-#' library(TAPseq)
-#'
 #' # chromosome 11 truncated transcript sequences and annotations
 #' data("chr11_truncated_txs_seq")
 #'
@@ -89,8 +87,6 @@ setMethod("designPrimers", "TsIOList", function(object, thermo_params_path, prim
 #' @return \code{TsIO} or \code{TsIOList} object with added Primer3 output
 #' @examples
 #' \dontrun{
-#' library(TAPseq)
-#'
 #' # chromosome 11 truncated transcript sequences
 #' data("chr11_truncated_txs_seq")
 #'
@@ -115,7 +111,7 @@ parsePrimer3Output <- function(object, primer3_output) {
   if (is(object, "TsIO")) {
     TsIO_input <- TRUE
     object <- TsIOList(object)
-  }else{
+  } else {
     TsIO_input <- FALSE
   }
 
@@ -134,7 +130,7 @@ parsePrimer3Output <- function(object, primer3_output) {
   # return output
   if (TsIO_input == TRUE) {
     output[[1]]
-  }else{
+  } else {
     output
   }
 
@@ -246,9 +242,9 @@ parse_primer <- function(primer, seq_template, seq_id){
     names(primer_range) <- paste(id_parts[!is.na(id_parts)], collapse = ".")
     return(primer_range)
 
-  }else if (length(primer_site) < 1) {
+  } else if (length(primer_site) < 1) {
     stop("No matching sequence found for primer '", primer_id, "' in template!", call. = FALSE)
-  }else{
+  } else {
     stop("More than 1 matching sequence found for primer '", primer_id, "' in template!",
          call. = FALSE)
   }

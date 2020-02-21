@@ -53,8 +53,6 @@ This function creates input for TAP-seq primer design from a DNAStringSet contai
 target sequences (typically transcript sequences).
 }
 \examples{
-library(TAPseq)
-
 # chromosome 11 truncated transcript sequences and annotations
 data("chr11_truncated_txs_seq")
 

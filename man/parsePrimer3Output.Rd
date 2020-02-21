@@ -23,8 +23,6 @@ Parse Primer3 output and add to input \code{\link[TAPseq]{TsIO}} or
 }
 \examples{
 \dontrun{
-library(TAPseq)
-
 # chromosome 11 truncated transcript sequences
 data("chr11_truncated_txs_seq")
 

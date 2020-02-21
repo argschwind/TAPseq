@@ -36,8 +36,6 @@
 #' @return A \code{TsIO} object.
 #' @seealso \url{http://primer3.org/manual.html} for Primer3 manual.
 #' @examples
-#' library(TAPseq)
-#'
 #' # get example transcript sequence
 #' data("chr11_truncated_txs_seq")
 #' tx_seq <- chr11_truncated_txs_seq[[1]]
@@ -149,31 +147,31 @@ setValidity("TsIO", function(object) {
   # check object slots
   if (length(seqname) > 1) {
     "multiple seqnames in target_annot"
-  }else if (length(strand) > 1) {
+  } else if (length(strand) > 1) {
     "conflicting strand information in target_annot"
-  }else if (length(annot) != length(annot_merge)) {
+  } else if (length(annot) != length(annot_merge)) {
     "overlapping exons found in target_annot"
-  }else if (!sum(width(annot_merge)) %in% c(0, length(object@target_sequence))) {
+  } else if (!sum(width(annot_merge)) %in% c(0, length(object@target_sequence))) {
     "exons in target_annot are incompatible with target_sequence"
-  }else if (length(object@sequence_id) != 1) {
+  } else if (length(object@sequence_id) != 1) {
     "sequence_id needs to be of length 1"
-  }else if (length(object@product_size_range) != 2) {
+  } else if (length(object@product_size_range) != 2) {
     "product_size_range needs to be an integer vector of length 2"
-  }else if (length(object@primer_num_return) != 1) {
+  } else if (length(object@primer_num_return) != 1) {
     "primer_num_return needs to be of length 1"
-  }else if (length(object@min_primer_region) != 1) {
+  } else if (length(object@min_primer_region) != 1) {
     "min_primer_region needs to be of length 1"
-  }else if (length(object@primer_opt_tm) != 1) {
+  } else if (length(object@primer_opt_tm) != 1) {
     "primer_opt_tm needs to be of length 1"
-  }else if (length(object@primer_min_tm) != 1) {
+  } else if (length(object@primer_min_tm) != 1) {
     "primer_min_tm needs to be of length 1"
-  }else if (length(object@primer_max_tm) != 1) {
+  } else if (length(object@primer_max_tm) != 1) {
     "primer_max_tm needs to be of length 1"
-  }else if (!any(is.na(c(object@product_size_range, object@min_primer_region)))) {
+  } else if (!any(is.na(c(object@product_size_range, object@min_primer_region)))) {
     if (diff(object@product_size_range) < object@min_primer_region) {
       "product_size_range too narrow to allow min_primer_range"
     }
-  }else{
+  } else {
     TRUE
   }
 })
@@ -189,8 +187,6 @@ setValidity("TsIO", function(object) {
 #' @return A \code{TsIOList} object.
 #' @seealso \link[TAPseq]{TsIO}
 #' @examples
-#' library(TAPseq)
-#'
 #' # get example transcript sequences
 #' data("chr11_truncated_txs_seq")
 #' txs_seqs <- chr11_truncated_txs_seq[1:2]
@@ -252,6 +248,32 @@ TsIOList <- function(...) {
 #'
 #' @param x A \code{TsIO} or \code{TsIOList} class object.
 #' @param value A valid value to assign to the chosen slot.
+#' @return Returns the stored value(s) of a slot, or sets a new value
+#' @examples
+#' # chr11 primers example data
+#' data("chr11_primers")
+#'
+#' # slot values of TsIO objects can be accessed using accessor functions
+#' tsio <- chr11_primers[[1]]
+#' sequence_id(tsio)
+#' sequence_id(tsio) <- "Gene1"
+#' sequence_id(tsio)
+#'
+#' # some slots can only be obtained, but not set as filling these is part of the TAPseq workflow
+#' tapseq_primers(tsio)
+#' pcr_products(tsio)
+#'
+#' # sequence templates can be created
+#' sequence_template(tsio)
+#'
+#' # values of TsIOList object slots can be extracted as well, but not set
+#' tsio_list <- chr11_primers[1:2]
+#' sequence_id(tsio_list)
+#' target_sequence(tsio_list)
+#' target_annot(tsio_list)
+#' tapseq_primers(tsio_list)
+#' pcr_products(tsio_list)
+#' sequence_template(tsio_list)
 #' @name accessors
 NULL
 
@@ -584,11 +606,9 @@ setMethod("pcr_products", "TsIOList", function(x) {
 })
 
 
-## Miscellaneous helper functions ==================================================================
+## MISCELLANEOUS FUNCTIONS =========================================================================
 
-#' Show method for TsIO objects
-#'
-#' @keywords internal
+# show method for TsIO objects to print information about the object to console
 setMethod("show", "TsIO", function(object) {
 
   beads_oligo <- beads_oligo(object)

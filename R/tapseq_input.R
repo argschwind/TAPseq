@@ -24,8 +24,6 @@
 #'   temperature. Set to NA to use Primer3s default values.
 #' @return \code{\link[TAPseq]{TsIOList}} object.
 #' @examples
-#' library(TAPseq)
-#'
 #' # chromosome 11 truncated transcript sequences and annotations
 #' data("chr11_truncated_txs_seq")
 #'
@@ -74,7 +72,7 @@ TAPseqInput <- function(target_sequences, product_size_range,
     target_sequences <- target_sequences[targets]
     target_annot <- target_annot[targets]
 
-  }else{
+  } else {
 
     # create empty list in case target_annot was not provided
     target_annot <- vector(mode = "list", length = length(target_sequences))
@@ -119,8 +117,6 @@ TAPseqInput <- function(target_sequences, product_size_range,
 #' @return A character vector containing the lines of the IO record.
 #' @seealso \url{http://primer3.org/manual.html} for Primer3 manual.
 #' @examples
-#' library(TAPseq)
-#'
 #' # chromosome 11 truncated transcript sequences
 #' data("chr11_truncated_txs_seq")
 #'
@@ -227,9 +223,9 @@ create_excluded_regions <- function(object) {
     max_product_size <- BiocGenerics::end(match)
     reverse_primer_start <- BiocGenerics::start(match)
     reverse_primer_length <- BiocGenerics::width(match)
-  }else if (length(match) > 1) {
+  } else if (length(match) > 1) {
     stop("reverse primer matches the sequence multiple times for: ", seq_id, call. = FALSE)
-  }else{
+  } else {
     stop("reverse primer doesn't match sequence template for: ", seq_id, call. = FALSE)
   }
 
@@ -258,12 +254,12 @@ create_excluded_regions <- function(object) {
     sprintf("%s,%s %s,%s", r1_start, r1_length, r2_start, r2_length)
 
     # create r2 as only excluded region if the region resulting from r2 is >= the min_primer_region
-  }else if (r2_start >= min_primer_region){
+  } else if (r2_start >= min_primer_region){
 
     sprintf("%s,%s", r2_start, r2_length)
 
     # else adapt r2 so that min_primer_size is respected (if possible)
-  }else if (min_primer_region < reverse_primer_start) {
+  } else if (min_primer_region < reverse_primer_start) {
 
     warning("Desired product size range not possible! Product size will be shorter for: ",
             seq_id, call. = FALSE)
@@ -272,7 +268,7 @@ create_excluded_regions <- function(object) {
     r2_length <- length(seq) - r2_start
     sprintf("%s,%s", r2_start, r2_length)
 
-  }else{
+  } else {
     stop("Can't respect min_primer_region, sequence too short for: ", seq_id, call. = FALSE)
   }
 }

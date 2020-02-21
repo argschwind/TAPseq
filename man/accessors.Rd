@@ -84,7 +84,36 @@ pcr_products(x)
 
 \item{value}{A valid value to assign to the chosen slot.}
 }
+\value{
+Returns the stored value(s) of a slot, or sets a new value
+}
 \description{
 A set of functions for getting/setting/modifying the data stored in \code{\link[TAPseq]{TsIO}}
 or \code{\link[TAPseq]{TsIOList}} class objects.
+}
+\examples{
+# chr11 primers example data
+data("chr11_primers")
+
+# slot values of TsIO objects can be accessed using accessor functions
+tsio <- chr11_primers[[1]]
+sequence_id(tsio)
+sequence_id(tsio) <- "Gene1"
+sequence_id(tsio)
+
+# some slots can only be obtained, but not set as filling these is part of the TAPseq workflow
+tapseq_primers(tsio)
+pcr_products(tsio)
+
+# sequence templates can be created
+sequence_template(tsio)
+
+# values of TsIOList object slots can be extracted as well, but not set
+tsio_list <- chr11_primers[1:2]
+sequence_id(tsio_list)
+target_sequence(tsio_list)
+target_annot(tsio_list)
+tapseq_primers(tsio_list)
+pcr_products(tsio_list)
+sequence_template(tsio_list)
 }

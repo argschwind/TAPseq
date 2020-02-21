@@ -41,8 +41,6 @@ conventional way.
 }}
 
 \examples{
-library(TAPseq)
-
 # chromosome 11 truncated transcript sequences
 data("chr11_truncated_txs_seq")
 

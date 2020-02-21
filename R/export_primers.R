@@ -11,8 +11,6 @@
 #'   specifications.
 #' @return For \code{createPrimerTrack} a \code{data.frame} with the primer track in BED format
 #' @examples
-#' library(TAPseq)
-#'
 #' # chr11 primers example data
 #' data("chr11_primers")
 #'
@@ -113,13 +111,13 @@ exportPrimerTrack <- function(..., con) {
     args <- list(...)
     if (length(args) == 0) {
       stop("Nothing to export...", call. = FALSE)
-    }else if (length(args) == 1) {
+    } else if (length(args) == 1) {
       stop('Argument "con" is missing, with no default', call. = FALSE)
-    }else{
+    } else {
       con <- args[[length(args)]]
       tracks <- args[-length(args)]
     }
-  }else{
+  } else {
     tracks <- list(...)
     if (length(tracks) == 0) {
       stop("Nothing to export...", call. = FALSE)
@@ -197,7 +195,7 @@ calc_coords_one_primer <- function(primer, exons, annot) {
   if (all(strand(annot) == "-")) {
     primer_start <- start(annot[primer_exons]) + end(exons[primer_exons]) - end(primer_site)
     primer_end <- start(annot[primer_exons]) + end(exons[primer_exons]) - start(primer_site)
-  }else{
+  } else {
     primer_start <-  start(annot[primer_exons]) + start(primer_site) - start(exons[primer_exons])
     primer_end <- start(annot[primer_exons]) + end(primer_site) - start(exons[primer_exons])
   }
@@ -274,7 +272,7 @@ create_primer_df <- function(object) {
                         stringsAsFactors = FALSE)
 
   # create output data.frame
-  output <- data.frame(seq_id = seq_id, seq_len = seq_len, primers_df[, 1:12],
+  output <- data.frame(seq_id = seq_id, seq_len = seq_len, primers_df[, seq_len(12)],
                        stringsAsFactors = FALSE)
   output <- dplyr::rename(output, primer_id = names, primer_len = width)
   output <- left_join(output, pcr_len, by = "primer_id")

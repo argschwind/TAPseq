@@ -2,7 +2,7 @@
 % Please edit documentation in R/onLoad.R
 \name{check_tool_installation}
 \alias{check_tool_installation}
-\title{Check if required tools are installed}
+\title{Check required tools}
 \usage{
 check_tool_installation()
 }

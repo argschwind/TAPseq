@@ -8,7 +8,7 @@ using Primer3 v.2.5.0 and blastn v.2.6.0. It's strongly suggested to use Primer3
 versions require a primer3_config directory, which needs to be provided whenever calling functions
 interacting with Primer3. Source code and installation instructions can be found under:
 
-Primer3: <https://github.com/primer3-org/primer3/releases>
+Primer3: <https://github.com/primer3-org/primer3/releases>  
 BLASTn: <https://www.ncbi.nlm.nih.gov/books/NBK279690/>
 
 Please install these tools first and add them to your PATH. If you don't want to add the tools to

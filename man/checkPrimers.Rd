@@ -61,15 +61,13 @@ complementarity issues when multiplexing. Uses Primer3's \code{check_primers} fu
 }}
 
 \examples{
-\dontrun{
-library(TAPseq)
 library(ggplot2)
 
 # chr11 primers example data
 data("chr11_primers")
 
-# pick best primers based on predicted off-targets
-best_primers <- pickPrimers(chr11_primers, n = 1, by = "off_targets")
+# pick best primers based on predicted off-targets for subset of all primers
+best_primers <- pickPrimers(chr11_primers[1:15], n = 1, by = "off_targets")
 
 # check for complementarity
 comp <- checkPrimers(best_primers)
@@ -81,7 +79,6 @@ ggplot(comp, aes(x = primer_pair_compl_any_th, y = primer_pair_compl_end_th)) +
   geom_vline(aes(xintercept = 47), colour = "darkgray", linetype = "dashed") +
   geom_point(alpha = 0.25) +
   theme_bw()
-}
 }
 \seealso{
 \url{http://primer3.org/manual.html} for Primer3 manual.

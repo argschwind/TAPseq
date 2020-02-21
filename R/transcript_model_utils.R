@@ -1,7 +1,7 @@
 # --------------------------------------------------------------------------------------------------
 # This file contains various utility functions for truncating transcript models by
 # truncate_txs_polyA(). These functions are not exported to the NAMESPACE and are intended to be
-# used as internal functions. Serious errors can occur when these functions are used out of their
+# used as internal functions. Serious errors can occur if these functions are used out of their
 # context. YOU HAVE BEEN WARNED!
 # --------------------------------------------------------------------------------------------------
 
@@ -38,16 +38,16 @@ truncate_tx_polyA <- function(transcripts, polyA_sites, extend_3prime_end = 0,
     # order sites according to strand of transcripts
     if (all(strand(transcripts) == "-")) {
       sites <- sort(sites, decreasing = TRUE)
-    }else{
+    } else {
       sites <- sort(sites)
     }
 
     # select polyA site for truncation based on polyA_select
     if (polyA_select == "downstream") {
       site <- sites[length(sites)]
-    }else if (polyA_select == "upstream") {
+    } else if (polyA_select == "upstream") {
       site <- sites[1]
-    }else{
+    } else {
       site <- sites[which.max(sites$score)]
     }
 
@@ -60,22 +60,22 @@ truncate_tx_polyA <- function(transcripts, polyA_sites, extend_3prime_end = 0,
     if (length(overlapping_txs) > 1) {
       tx <- reduce_gene(unlist(overlapping_txs), transcript_id = transcript_id, gene_id = gene_id,
                         exon_number = exon_number)
-    }else{
+    } else {
       tx <- sort(overlapping_txs[[1]])
     }
 
     # truncate overlapping transcript at selected polyA site
     if (all(strand(tx) == "-")) {
       restrict(tx, start = end(site)[length(site)] + 1, end = end(tx)[length(tx)])
-    }else{
+    } else {
       restrict(tx, start = start(tx)[1], end = start(site)[1] - 1)
     }
 
   # if no overlapping polyA sites are found, no statement about the expressed transcript can be made
   # and therefore the consensus (merge) of all transcripts is returned
-  }else if (length(unique(mcols(transcripts)[[transcript_id]])) == 1) {
+  } else if (length(unique(mcols(transcripts)[[transcript_id]])) == 1) {
      return(transcripts)
-  }else{
+  } else {
     reduce_gene(transcripts, transcript_id = transcript_id, gene_id = gene_id,
                 exon_number = exon_number)
   }
@@ -92,7 +92,7 @@ extend_tx <- function(tx, upstream = 0, downstream = 0) {
   if (all(strand(tx) == "-")) {
     start(tx[1]) <- start(tx[1]) - downstream
     end(tx[length(tx)]) <- end(tx[length(tx)]) + upstream
-  }else{
+  } else {
     end(tx[length(tx)]) <- end(tx[length(tx)]) + downstream
     start(tx[1]) <- start(tx[1]) - upstream
   }

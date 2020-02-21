@@ -17,8 +17,6 @@
 #' @return A \code{\link[Biostrings]{DNAString}} or \code{\link[Biostrings]{DNAStringSet}} object
 #'   containing the transcript sequence(s).
 #' @examples
-#' \dontrun{
-#' library(TAPseq)
 #' library(BSgenome)
 #'
 #' # protein-coding exons of transcripts within chr11 region
@@ -30,7 +28,6 @@
 #'
 #' # get sequences for all target transcripts on chr11
 #' txs_seqs <- getTxsSeq(target_txs, genome = hg38)
-#'}
 #' @export
 setGeneric("getTxsSeq", function(transcripts, genome) standardGeneric("getTxsSeq") )
 
@@ -39,7 +36,7 @@ setGeneric("getTxsSeq", function(transcripts, genome) standardGeneric("getTxsSeq
 setMethod("getTxsSeq", "GRangesList", function(transcripts, genome) {
 
   # abort if genome is not a BSgenome or DNAStringSet object
-  if (class(genome) != "BSgenome" & class(genome) != "DNAStringSet") {
+  if (!is(genome, "BSgenome") & !is(genome, "DNAStringSet")) {
     stop("genome must be of class BSgenome or DNAStringSet!", call. = FALSE)
   }
 
@@ -54,7 +51,7 @@ setMethod("getTxsSeq", "GRangesList", function(transcripts, genome) {
   txs_neg <- which(all(strand(transcripts) == "-"))
 
   # get transcripts with incorrect or conflicting strand information
-  bad_txs <- setdiff(1:length(transcripts), sort(c(txs_pos, txs_neg)))
+  bad_txs <- setdiff(seq_along(transcripts), sort(c(txs_pos, txs_neg)))
 
   # abort if any are found
   if (length(bad_txs) > 0) {
@@ -63,7 +60,7 @@ setMethod("getTxsSeq", "GRangesList", function(transcripts, genome) {
            "Strand of all exons per transcript must be '+' or '-' ('*' is not allowed).\n",
            "Check strand for transcript(s): ",
            paste(names(transcripts)[bad_txs], collapse = ", "), call. = FALSE)
-    }else{
+    } else {
       stop("Incorrect strand information in transcripts! ",
            "Strand of all exons per transcript must be '+' or '-' ('*' is not allowed).",
            call. = FALSE)
@@ -75,7 +72,7 @@ setMethod("getTxsSeq", "GRangesList", function(transcripts, genome) {
   transcripts[txs_neg] <- sort(transcripts[txs_neg], decreasing = TRUE)
 
   # get sequences of transcripts
-  GenomicFeatures::extractTranscriptSeqs(genome, transcripts = transcripts)
+  extractTranscriptSeqs(genome, transcripts = transcripts)
 
 }
 )
@@ -85,7 +82,7 @@ setMethod("getTxsSeq", "GRangesList", function(transcripts, genome) {
 setMethod("getTxsSeq", "GRanges", function(transcripts, genome) {
 
   # transform transcripts to GRangesList
-  transcripts <- GenomicRanges::GRangesList(transcripts)
+  transcripts <- GRangesList(transcripts)
 
   # obtain transcript sequence
   seq <- getTxsSeq(transcripts, genome = genome)

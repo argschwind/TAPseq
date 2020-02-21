@@ -17,7 +17,6 @@
 #' @return A character vector containing selected target gene identifiers.
 #' @examples
 #' \dontrun{
-#' library(TAPseq)
 #' library(Seurat)
 #'
 #' # example of mouse bone marrow 10x gene expression data
@@ -82,7 +81,7 @@ selectTargetGenes <- function(object, targets = NULL, expr_percentile = c(0.6, 0
     target_lambda <- cv_model$lambda.1se
     model <- cv_model$glmnet.fit
 
-  }else{
+  } else {
 
     message("Fitting model")
     model <- glmnet::glmnet(x = Matrix::t(gene_expr), y = cell_pops, family = "multinomial",

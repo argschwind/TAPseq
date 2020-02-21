@@ -1,12 +1,18 @@
 Package: TAPseq
 Type: Package
 Title: TAP-seq primer design
-Version: 0.4.0.9006
-Authors@R: person("Andreas", "Gschwind", email = "andreas.gschwind@stanford.edu",
-                  role = c("aut", "cre"), comment = c(ORCID = "0000-0002-0769-6907"))
-Description: Design primers for targeted single-cell RNA-seq. Create sequence templates for a
-  chosen target gene panel using Primer3 and assess potenial off-targets with BLAST.
+Version: 0.5.0
+Authors@R: c(
+  person("Andreas", "Gschwind", email = "andreas.gschwind@stanford.edu",
+         role = c("aut", "cre"), comment = c(ORCID = "0000-0002-0769-6907")),
+  person("Lars", "Velten", email = "lars.velten@crg.eu", role = "aut",
+         comment = c(ORCID = "0000-0002-1233-5874")),
+  person("Lars", "Steinmetz", role = "aut"))
+Description: Design primers for targeted single-cell RNA-seq used by TAP-seq. Create sequence
+  templates for target gene panels and design gene-specific primers using Primer3. Potenial
+  off-targets can be estimated with BLAST. Requires working installations of Primer3 and BLASTn.
 URL: https://github.com/argschwind/TAPseq
+BugRepots: https://github.com/argschwind/TAPseq/issues
 biocViews: SingleCell, Sequencing, Technology, CRISPR, PooledScreens
 License: MIT + file LICENSE
 Encoding: UTF-8
