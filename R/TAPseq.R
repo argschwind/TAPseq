@@ -24,7 +24,7 @@
 #'
 #' @importFrom S4Vectors endoapply mendoapply queryHits subjectHits mcols DataFrame split
 #' @importFrom GenomicFeatures extractTranscriptSeqs
-#' @importFrom IRanges IRanges IRangesList Views
+#' @importFrom IRanges IRanges IRangesList Views ranges
 #' @importFrom Biostrings DNAString DNAStringSet start end subseq reverseComplement matchPattern
 #'
 #' @importClassesFrom Biostrings DNAString DNAStringSet

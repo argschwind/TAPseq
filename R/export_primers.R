@@ -264,7 +264,8 @@ create_primer_df <- function(object) {
   if (length(primers) == 0) return(data.frame())
 
   # convert primers to data.frame
-  primers_df <- as.data.frame(primers)
+  primers_df <- as.data.frame(ranges(primers))
+  primers_df <- data.frame(primers_df, mcols(primers), stringsAsFactors = FALSE, row.names = NULL)
 
   # get target sequence length and expected pcr product sizes
   seq_len <-length(target_seq)
@@ -280,6 +281,6 @@ create_primer_df <- function(object) {
   # add off-targets to output if provided
   off_target_cols <- c("intergenic_off_targets", "intronic_off_targets", "exonic_off_targets")
   off_targets <- colnames(primers_df) %in% off_target_cols
-  cbind.data.frame(output, primers_df[, off_targets], stringsAsFactors = FALSE)
+  data.frame(output, primers_df[, off_targets], stringsAsFactors = FALSE)
 
 }

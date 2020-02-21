@@ -6,18 +6,18 @@ input <- pickPrimers(chr11_primers[1:2], n = 1, by = "off_targets")
 
 # test primerDataFrame() ---------------------------------------------------------------------------
 
-exp_out1 <- data.frame(seq_id = "AKIP1", seq_len = 924, start = 557, end = 576, primer_len = 20,
+exp_out1 <- data.frame(seq_id = "AKIP1", seq_len = 924L, start = 557L, end = 576L, primer_len = 20L,
                        primer_id = "AKIP1.primer_left_4", penalty = 0.473386,
                        sequence = "CAGAGGCGAGTCGAAGCTGC", tm = 63.473, gc_percent = 65,
                        self_any_th = 18.61, self_end_th = 0, hairpin_th = 0, end_stability = 5.25,
-                       pcr_product_size = 448, intergenic_off_targets = 0, intronic_off_targets = 0,
-                       exonic_off_targets = 0, stringsAsFactors = FALSE)
+                       pcr_product_size = 448L, intergenic_off_targets = 0,
+                       intronic_off_targets = 0, exonic_off_targets = 0, stringsAsFactors = FALSE)
 
-exp_out2 <- data.frame(seq_id = "ARFIP2", seq_len = 1888, start = 1538, end = 1557, primer_len = 20,
-                       primer_id = "ARFIP2.primer_left_2", penalty = 0.642407,
+exp_out2 <- data.frame(seq_id = "ARFIP2", seq_len = 1888L, start = 1538L, end = 1557L,
+                       primer_len = 20L, primer_id = "ARFIP2.primer_left_2", penalty = 0.642407,
                        sequence = "CTGGGGCCTGACACCAGTTT", tm = 62.358, gc_percent = 60,
                        self_any_th = 14.98, self_end_th = 0, hairpin_th = 45.21,
-                       end_stability = 2.66, pcr_product_size = 431, intergenic_off_targets = 4,
+                       end_stability = 2.66, pcr_product_size = 431L, intergenic_off_targets = 4,
                        intronic_off_targets = 3, exonic_off_targets = 0, stringsAsFactors = FALSE)
 exp_out2 <- rbind(exp_out1, exp_out2)
 
