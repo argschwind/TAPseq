@@ -1,5 +1,6 @@
 # TAPseq
-An R-package to design PCR primers for TAP-seq.
+An R-package to design PCR primers for TAP-seq. Use this branch to install the package for current
+R realeases (R >= 3.5).
 
 ## Installation
 
@@ -25,10 +26,11 @@ The R-package itself can be installed from source by using the devtools package.
 building vignettes.
 ```
 # minimal install without vignettes
-devtools::install_github("argschwind/TAPseq")
+devtools::install_github("argschwind/TAPseq", ref = "r_release_3.5")
 
 # install with building vignettes and also installing suggested dependencies
-devtools::install_github("argschwind/TAPseq", build_vignettes = TRUE, dependencies = TRUE)
+devtools::install_github("argschwind/TAPseq", build_vignettes = TRUE, dependencies = TRUE,
+                         ref = "r_release_3.5")
 ```
 
 Note: If missing Bioconductor dependencies fail to install from GitHub, please install them from
