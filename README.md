@@ -1,5 +1,6 @@
 # TAPseq
-An R-package to design PCR primers for TAP-seq.
+An R-package to design PCR primers for TAP-seq. The **master** branch is used for a submission to
+Bioconductor. Please use the **r_release_3.5** branch to install the package for current R releases.
 
 ## Installation
 
