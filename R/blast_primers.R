@@ -420,7 +420,7 @@ blast_primer_seqs <- function(primer_seqs, blastdb, tmpdir, blastn) {
   blastdb_bn <- file.path(blastdb, "gt_blast")
   outfmt <- c("qaccver", "qlen", "saccver", "length", "mismatch", "qend", "sstart", "send")
   blast_args <- paste0("-query ", primers_fasta, " -db ", blastdb_bn, " -task blastn-short ",
-                       "-outfmt '6 ", paste(outfmt, collapse = " "), "'")
+                       "-outfmt \"6 ", paste(outfmt, collapse = " "), "\"")
 
   # run blastn for short query sequences
   hits <- system2(command = blastn, args = blast_args, stdout = TRUE)
