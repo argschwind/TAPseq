@@ -67,9 +67,10 @@ library(ggplot2)
 data("chr11_primers")
 
 # pick best primers based on predicted off-targets for subset of all primers
-best_primers <- pickPrimers(chr11_primers[1:15], n = 1, by = "off_targets")
+best_primers <- pickPrimers(chr11_primers, n = 1, by = "off_targets")
 
 # check for complementarity
+\dontrun{
 comp <- checkPrimers(best_primers)
 
 # plot complementarity scores for every pair. the lines indicate complementarity scores of 47,
@@ -79,6 +80,7 @@ ggplot(comp, aes(x = primer_pair_compl_any_th, y = primer_pair_compl_end_th)) +
   geom_vline(aes(xintercept = 47), colour = "darkgray", linetype = "dashed") +
   geom_point(alpha = 0.25) +
   theme_bw()
+}
 }
 \seealso{
 \url{http://primer3.org/manual.html} for Primer3 manual.

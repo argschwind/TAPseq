@@ -16,7 +16,6 @@
 #' @param npcs (integer) Number of principal components to use for UMAP.
 #' @return A character vector containing selected target gene identifiers.
 #' @examples
-#' \dontrun{
 #' library(Seurat)
 #'
 #' # example of mouse bone marrow 10x gene expression data
@@ -32,7 +31,6 @@
 #' # create UMAP plots to compare cell type identification based on full dataset and selected 100
 #' # target genes
 #' plotTargetGenes(bone_marrow_genex, target_genes = target_genes)
-#' }
 #' @name selectTargetGenes
 NULL
 

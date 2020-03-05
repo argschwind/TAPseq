@@ -23,7 +23,7 @@ versions require a primer3_config directory, which needs to be specified wheneve
 interacting with Primer3. Source code and installation instructions can be found under:
 
 Primer3: <https://github.com/primer3-org/primer3/releases>  
-BLASTn: <https://www.ncbi.nlm.nih.gov/books/NBK279690/>
+BLASTn: <https://www.ncbi.nlm.nih.gov/books/NBK279690>
 
 Please install these tools first and add them to your PATH. If you don't want to add the tools to
 your "global" PATH, you can add the following code to your .Rprofile file. This should add the tools
@@ -42,7 +42,7 @@ functions (TAPseqInput(), designPrimers(), checkPrimers()).
 
 Let's start by creating transcript sequences for primer design for a target gene panel. First we try
 to infer likely polyadenylation (polyA) sites for the selected target genes.
-```{r, message=FALSE}
+```{r message=FALSE, warning=FALSE}
 library(TAPseq)
 library(GenomicRanges)
 library(BiocParallel)
@@ -112,16 +112,27 @@ First we create Primer3 input for outer forward primer design based on the obtai
 sequences. The reverse primer used in all PCR reactions is used, so that Primer3 can pick forward
 primers suitable to work with it. By default this function uses the 10x Beads-oligo-dT and right
 primer, and chooses optimal, minimum and maximum melting temperatures based on that. If another
-protocol (e.g. Drop-seq) is used, these parameters can be adapted (\code{?TAPseqInput}).
-```{r, message=FALSE, warning=FALSE, results="hide"}
+protocol (e.g. Drop-seq) is used, these parameters can be adapted (`?TAPseqInput`).
+```{r}
 # create TAPseq IO for outer forward primers from truncated transcript sequences
 outer_primers <- TAPseqInput(txs_seqs, target_annot = truncated_txs,
                              product_size_range = c(350, 500), primer_num_return = 5)
-                              
+```
+
+We can now use Primer3 to design Primers and add them to the objects.
+```{r, eval=FALSE}
 # design 5 outer primers for each target gene
 outer_primers <- designPrimers(outer_primers)
+```
+```{r, include=FALSE}
+# Primer3 and BLAST are not run in this vignette, because they might be missing on the build system.
+# already designed primers are loaded from internal data
+outer_primers <- TAPseq:::vignette_data$outer_primers
+```
 
-# the TsIO objects in outer_primers now contain the designed primers and expected amplicons
+The output TsIO objects contain the designed primers and expected amplicons:
+```{r, results="hide"}
+# get primers and pcr products for specific genes
 tapseq_primers(outer_primers$HBE1)
 pcr_products(outer_primers$HBE1)
 
@@ -138,9 +149,9 @@ best primer per gene, i.e. the primer with the fewest off-targets.
 ## BLAST primers
 
 Creating a BLAST database containing all annotated transcripts and chromosome sequences takes a
-couple of minutes (and ~2Gb of free storage). For this example, we generate a limited BLAST
+couple of minutes (and ~2Gb of free storage). For this example, we can generate a limited BLAST
 database, containing only transcripts of all target genes and the sequence of chromosome 11.
-```{r, message=FALSE}
+```{r, eval=FALSE}
 # chromosome 11 sequence
 chr11_genome <- DNAStringSet(getSeq(hg38, "chr11"))
 names(chr11_genome) <- "chr11"
@@ -176,7 +187,7 @@ intergenic off-targets for all primers. Note, that the number of exonic and intr
 provided on the level of genes, i.e. one exonic off-target means that a given primer might bind in
 exonic region(s) of one other gene. If the off-target binding site overlaps with exons of two genes,
 it will be counted twice, as it could bind to transcripts of two genes.
-```{r, message=FALSE, results="hide"}
+```{r, eval=FALSE}
 # now we can blast our outer primers against the create database
 outer_primers <- blastPrimers(outer_primers, blastdb = blastdb, max_mismatch = 0,
                               min_aligned = 0.75)
@@ -199,7 +210,7 @@ tapseq_primers(best_outer_primers$IFITM1)
 
 To design nested inner primers we simply need to repeat the same procedure with a smaller product
 size range.
-```{r, message=FALSE, warning=FALSE, results="hide"}
+```{r, eval=FALSE}
 # create new TsIO objects for inner primers, note the different product size
 inner_primers <- TAPseqInput(txs_seqs, target_annot = truncated_txs,
                              product_size_range = c(150, 300), primer_num_return = 5)
@@ -214,6 +225,9 @@ inner_primers <- blastPrimers(inner_primers, blastdb = blastdb, max_mismatch = 0
 # pick best primer per target gene
 best_inner_primers <- pickPrimers(inner_primers, n = 1, by = "off_targets")
 ```
+```{r, include=FALSE}
+best_inner_primers <- TAPseq:::vignette_data$best_inner_primers
+```
 
 Done! We succesfully designed TAP-seq outer and inner primer sets for our target gene panel.
 
@@ -221,10 +235,14 @@ Done! We succesfully designed TAP-seq outer and inner primer sets for our target
 
 As an additional step, we can verify if the designed primer sets are compatible for PCR
 multiplexing. For that we use Primer3's "check_primers" functionality:
-```{r, message=FALSE}
+```{r, eval=FALSE}
 # use checkPrimers to run Primer3's "check_primers" functionality for every possible primer pair
 outer_comp <- checkPrimers(best_outer_primers)
 inner_comp <- checkPrimers(best_inner_primers)
+```
+```{r, include=FALSE}
+outer_comp <- TAPseq:::vignette_data$outer_comp
+inner_comp <- TAPseq:::vignette_data$inner_comp
 ```
 
 We can now for instance plot the estimated complementarity scores for every pair. We highlight

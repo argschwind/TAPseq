@@ -61,12 +61,13 @@ check_tool_installation <- function() {
 .onAttach <- function(libname, pkgname) {
 
   # get all tools used by TAPseq
-  tool_ops <- c("TAPseq.primer3_core", "TAPseq.makeblastdb", "TAPseq.blastn")
-  tools <- unlist(lapply(tool_ops, FUN = getOption))
+  tools <- c("primer3_core", "makeblastdb", "blastn")
+  tool_ops <- paste0("TAPseq.", tools)
+  tool_paths <- unlist(lapply(tool_ops, FUN = getOption))
 
   # create printable strings listing tool names and path to tools
   tools_print <- lapply(seq_along(tools), FUN = function(x) {
-    paste(names(tools)[x], tools[[x]] , sep = ": ")
+    paste(tools[x], tool_paths[[x]] , sep = ": ")
   })
   tools_print <- paste(unlist(tools_print), collapse = "\n")
 

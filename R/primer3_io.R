@@ -19,9 +19,11 @@
 #' tapseq_io <- TAPseqInput(chr11_truncated_txs_seq[1:2], product_size_range = c(350, 500))
 #'
 #' # design primers
+#' \dontrun{
 #' tapseq_io <- designPrimers(tapseq_io)
+#' }
 #'
-#' # tapseq_io now contains the designed primers in the tapseq_primers slot
+#' # designed primers are stored in the tapseq_primers slot
 #' tapseq_primers(tapseq_io)
 #' @export
 setGeneric("designPrimers",

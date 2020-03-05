@@ -6,24 +6,6 @@ context("Estimate primer complementarity using Primer3")
 data("chr11_primers")
 primers <- pickPrimers(chr11_primers, n = 1, by = "off_targets")
 
-# expected output
-expect_out <- data.frame(primer1 = "AKIP1.primer_left_4",
-                         primer2 = "ARFIP2.primer_left_2",
-                         primer1_seq = "CAGAGGCGAGTCGAAGCTGC",
-                         primer2_seq = "CTGGGGCCTGACACCAGTTT",
-                         primer1_penalty = 0.473386,
-                         primer2_penalty = 0.642407,
-                         primer_pair_penalty = 1.115793,
-                         primer_pair_compl_any_th = 0,
-                         primer_pair_compl_end_th = 0,
-                         stringsAsFactors = FALSE)
-
-test_that("checkPrimers() returns correct output", {
-  out <- checkPrimers(primers[1:2])
-  expect_true(is(out, "data.frame"))
-  expect_identical(out, expect_out)
-})
-
 test_that("checkPrimers() aborts correctly if less than 2 primers are provided", {
   expect_error(checkPrimers(primers[[1]]),  "At least 2 TAP-seq primers needed!")
 })
@@ -128,6 +110,18 @@ primer3_output <- c(sequence_id = "AKIP1.primer_left_4-ARFIP2.primer_left_2",
                     primer_pair_0_compl_any_th = "0.00",
                     primer_pair_0_compl_end_th = "0.00",
                     primer_pair_0_product_size = "200")
+
+# expected output
+expect_out <- data.frame(primer1 = "AKIP1.primer_left_4",
+                         primer2 = "ARFIP2.primer_left_2",
+                         primer1_seq = "CAGAGGCGAGTCGAAGCTGC",
+                         primer2_seq = "CTGGGGCCTGACACCAGTTT",
+                         primer1_penalty = 0.473386,
+                         primer2_penalty = 0.642407,
+                         primer_pair_penalty = 1.115793,
+                         primer_pair_compl_any_th = 0,
+                         primer_pair_compl_end_th = 0,
+                         stringsAsFactors = FALSE)
 
 test_that("process_output_record() returns correct output", {
   out <- process_output_record(primer3_output)

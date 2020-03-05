@@ -11,8 +11,6 @@ txs_ids  <- names(txs_seqs)
 # create TsIOList from sequence templates
 tapseq_io <- TAPseqInput(target_sequences = txs_seqs, product_size_range = c(350, 500))
 
-# test parsePrimer3Output() ------------------------------------------------------------------------
-
 # raw Primer3 output
 primer3_output <- c(
   "SEQUENCE_ID=AKIP1",
@@ -78,6 +76,25 @@ primer3_output <- c(
   "PRIMER_LEFT_1_END_STABILITY=3.5600",
   "="
 )
+
+# test parse_primer3_output() ----------------------------------------------------------------------
+
+test_that("parse_primer3_output() parses Primer3 output correctly", {
+
+  # parse primer3 output into list
+  output <- parse_primer3_output(primer3_output)
+
+  # check general format of output. exact values are tested when testing parsePrimer3Output()
+  expect_true(is(output, "list"))
+  expect_length(output, 2)
+  expect_equal(names(output), c("1", "2"))
+  expect_true(is(output[[1]], "character"))
+  expect_length(output[[1]], 30)
+  expect_length(names(output[[1]]), 30)
+
+})
+
+# test parsePrimer3Output() ------------------------------------------------------------------------
 
 test_that("parsePrimer3Output() parses Primer3 output correctly", {
 
@@ -148,30 +165,4 @@ test_that("parsePrimer3Output() handles errors correctly", {
   expect_length(pcr_prod, 2)
   expect_equal(names(pcr_prod), c("AKIP1.primer_left_1", "ARFIP2.primer_left_0"))
 
-})
-
-# test designPrimers() -----------------------------------------------------------------------------
-
-test_that("designPrimers() returns output in correct format", {
-
-  # design primers
-  output <- designPrimers(tapseq_io)
-  primers <- tapseq_primers(output)
-  expect_true(is(primers, "IRanges"))
-  expect_length(primers, 10)
-  expect_equal(names(primers),
-               c(paste0("AKIP1.primer_left_", 0:4), paste0("ARFIP2.primer_left_", 0:4)))
-  expect_equal(names(mcols(primers)),
-               c("penalty", "sequence", "tm", "gc_percent", "self_any_th", "self_end_th",
-                 "hairpin_th", "end_stability"))
-  expect_equal(as.character(sapply(mcols(primers), class)),
-               c("numeric", "character", "numeric", "numeric", "numeric", "numeric", "numeric",
-                 "numeric"))
-
-  # test that parsed primers are correct (equivalent data structure, not exact values)
-  pcr_prod <- pcr_products(output)
-  expect_true(is(pcr_prod, "DNAStringSet"))
-  expect_length(pcr_prod, 10)
-  expect_equal(names(pcr_prod),
-               c(paste0("AKIP1.primer_left_", 0:4), paste0("ARFIP2.primer_left_", 0:4)))
 })
