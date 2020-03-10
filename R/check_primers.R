@@ -3,8 +3,8 @@
 #' Check a TAP-seq primer set, i.e. outer or inner primers for a target gene panel, for potential
 #' complementarity issues when multiplexing. Uses Primer3's \code{check_primers} functionality.
 #'
-#' @param object A \code{\link[TAPseq]{TsIO}} or \code{\link[TAPseq]{TsIOList}} object containing
-#'   designed primers.
+#' @param object A \code{\link[TAPseq:TsIO-class]{TsIO}} or
+#'   \code{\link[TAPseq:TsIOList-class]{TsIOList}} object containing designed primers.
 #' @param primer_opt_tm,primer_min_tm,primer_max_tm Optimal, minumum and maximum primer melting
 #'   temperature. Should be the same values that were used when designing the primers.
 #' @param thermo_params_path Optional path (character) to the \code{primer3_config} directory. Only

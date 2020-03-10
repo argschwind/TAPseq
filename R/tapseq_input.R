@@ -3,8 +3,8 @@
 #' This function creates input for TAP-seq primer design from a DNAStringSet containing the
 #' target sequences (typically transcript sequences).
 #'
-#' @param target_sequences A named \code{\link[Biostrings]{DNAStringSet}} object containing all
-#'   target sequences.
+#' @param target_sequences A named \code{\link[Biostrings:XStringSet-class]{DNAStringSet}} object
+#'   containing all target sequences.
 #' @param product_size_range Numerical vector of length 2 specifying the desired length of the
 #'   resulting amplicons.
 #' @param beads_oligo Beads-oligo-dT sequence for the used droplet sequencing protocol (10x,
@@ -13,16 +13,17 @@
 #'   bases need to be replaced by \code{N}.
 #' @param reverse_primer Reverse primer sequence used for all PCR reactions. Default is the 10x
 #'   primer sequence: \code{CTACACGACGCTCTTCCGATCT}.
-#' @param target_annot (optional) A named \code{\link[GenomicRanges]{GRangesList}} object with
-#'   transcript annotations in case the targets are transcripts of gene loci. If provided, each
-#'   \code{\link[GenomicRanges]{GRanges}} within the list should contain all exons of one
-#'   targeted transcripts. Names need to be the same as for \code{target_sequences}.
+#' @param target_annot (optional) A named \code{\link[GenomicRanges:GRangesList-class]{GRangesList}}
+#'   object with transcript annotations in case the targets are transcripts of gene loci.
+#'   If provided, each \code{\link[GenomicRanges:GRanges-class]{GRanges}} within the list
+#'   should contain all exons of one targeted transcripts. Names need to be the same as for
+#'   \code{target_sequences}.
 #' @param primer_num_return How many forward primers should be designed? (default: 5)
 #' @param min_primer_region Minimum sequence length required for primer design. Mostly relevant in
 #'   case a sequence template is too short to allow the specified \code{product_size_range}.
 #' @param primer_opt_tm,primer_min_tm,primer_max_tm Optimal, minumum and maximum primer melting
 #'   temperature. Set to NA to use Primer3s default values.
-#' @return \code{\link[TAPseq]{TsIOList}} object.
+#' @return \code{\link[TAPseq:TsIOList-class]{TsIOList}} object.
 #' @examples
 #' # chromosome 11 truncated transcript sequences and annotations
 #' data("chr11_truncated_txs_seq")
@@ -101,10 +102,10 @@ TAPseqInput <- function(target_sequences, product_size_range,
 
 #' Create boulder IO record
 #'
-#' Takes a \code{\link[TAPseq]{TsIO}} or \code{\link[TAPseq]{TsIOList}} object and converts it
-#' into a boulder IO record for Primer3. Essentially it converts it into a list of character vectors
-#' that each contain the tag and the value in the form: "TAG=VALUE". More on this format can be
-#' found in the \href{http://primer3.org/manual.html}{Primer3 manual}.
+#' Takes a \code{\link[TAPseq:TsIO-class]{TsIO}} or \code{\link[TAPseq:TsIOList-class]{TsIOList}}
+#' object and converts it into a boulder IO record for Primer3. Essentially it converts it into a
+#' list of character vectors that each contain the tag and the value in the form: "TAG=VALUE". More
+#' on this format can be found in the \href{http://primer3.org/manual.html}{Primer3 manual}.
 #'
 #' This function is usually not needed by the user, because functions such as
 #' \code{\link[TAPseq]{designPrimers}} handle IO record generation. However, this function can for

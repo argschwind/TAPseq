@@ -35,8 +35,8 @@ TsIOList(...)
 A \code{TsIOList} object.
 }
 \description{
-TsIOList class is a container to store multiple \code{\link[TAPseq]{TsIO}} objects. This enables
-storing of Primer3 input and output for multiple target genes.
+TsIOList class is a container to store multiple \code{\link[TAPseq:TsIO-class]{TsIO}} objects.
+This enables storing of Primer3 input and output for multiple target genes.
 }
 \section{Methods (by generic)}{
 \itemize{
@@ -85,5 +85,5 @@ obj <- TsIOList(tsio1 = tsio1, tsio2 = tsio2)
 sequence_template(obj)
 }
 \seealso{
-\link[TAPseq]{TsIO}
+\link[TAPseq:TsIO-class]{TsIO}
 }

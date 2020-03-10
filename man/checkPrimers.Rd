@@ -34,8 +34,8 @@ checkPrimers(
 )
 }
 \arguments{
-\item{object}{A \code{\link[TAPseq]{TsIO}} or \code{\link[TAPseq]{TsIOList}} object containing
-designed primers.}
+\item{object}{A \code{\link[TAPseq:TsIO-class]{TsIO}} or
+\code{\link[TAPseq:TsIOList-class]{TsIOList}} object containing designed primers.}
 
 \item{primer_opt_tm, primer_min_tm, primer_max_tm}{Optimal, minumum and maximum primer melting
 temperature. Should be the same values that were used when designing the primers.}

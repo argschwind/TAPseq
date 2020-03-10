@@ -18,8 +18,8 @@ TAPseqInput(
 )
 }
 \arguments{
-\item{target_sequences}{A named \code{\link[Biostrings]{DNAStringSet}} object containing all
-target sequences.}
+\item{target_sequences}{A named \code{\link[Biostrings:XStringSet-class]{DNAStringSet}} object
+containing all target sequences.}
 
 \item{product_size_range}{Numerical vector of length 2 specifying the desired length of the
 resulting amplicons.}
@@ -32,10 +32,11 @@ bases need to be replaced by \code{N}.}
 \item{reverse_primer}{Reverse primer sequence used for all PCR reactions. Default is the 10x
 primer sequence: \code{CTACACGACGCTCTTCCGATCT}.}
 
-\item{target_annot}{(optional) A named \code{\link[GenomicRanges]{GRangesList}} object with
-transcript annotations in case the targets are transcripts of gene loci. If provided, each
-\code{\link[GenomicRanges]{GRanges}} within the list should contain all exons of one
-targeted transcripts. Names need to be the same as for \code{target_sequences}.}
+\item{target_annot}{(optional) A named \code{\link[GenomicRanges:GRangesList-class]{GRangesList}}
+object with transcript annotations in case the targets are transcripts of gene loci.
+If provided, each \code{\link[GenomicRanges:GRanges-class]{GRanges}} within the list
+should contain all exons of one targeted transcripts. Names need to be the same as for
+\code{target_sequences}.}
 
 \item{primer_num_return}{How many forward primers should be designed? (default: 5)}
 
@@ -46,7 +47,7 @@ case a sequence template is too short to allow the specified \code{product_size_
 temperature. Set to NA to use Primer3s default values.}
 }
 \value{
-\code{\link[TAPseq]{TsIOList}} object.
+\code{\link[TAPseq:TsIOList-class]{TsIOList}} object.
 }
 \description{
 This function creates input for TAP-seq primer design from a DNAStringSet containing the

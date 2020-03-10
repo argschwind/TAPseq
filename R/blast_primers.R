@@ -22,15 +22,16 @@
 #' primer has for instance 3 BLAST hits in one gene, 2 exonic and 1 intronic, then one exonic hit
 #' and one intronic hit is counted for that gene.
 #'
-#' If sequence IDs of the designed primers (\code{\link[TAPseq]{sequence_id}}) refer to the target
-#' gene/transcripts and can be found in the BLAST database annotations via \code{primer_targets},
-#' then only off-target hits are counted. This is usually the case if input for primer design was
-#' produced from target gene annotations.
+#' If sequence IDs of the designed primers (\code{\link[TAPseq:accessors]{sequence_id}}) refer to
+#' the target gene/transcripts and can be found in the BLAST database annotations via
+#' \code{primer_targets}, then only off-target hits are counted. This is usually the case if input
+#' for primer design was produced from target gene annotations.
 #'
-#' @param genome A \code{\link[BSgenome]{BSgenome}} (or \code{\link[Biostrings]{DNAStringSet}})
-#'   object containing the sequences of all chromosomes to obtain genome and transcript sequences.
-#' @param annot A \code{\link[GenomicRanges]{GRanges}} object containing all exons of transcripts to
-#'   be considered.
+#' @param genome A \code{\link[BSgenome:BSgenome-class]{BSgenome}} (or
+#'   \code{\link[Biostrings:XStringSet-class]{DNAStringSet}}) object containing the sequences of all
+#'   chromosomes to obtain genome and transcript sequences.
+#' @param annot A \code{\link[GenomicRanges:GRanges-class]{GRanges}} object containing all exons of
+#'   transcripts to be considered.
 #' @param blastdb Path to the directory where the database should be created. Will be created if not
 #'   existing. If the directory already exist, the function will raise a warning, but overwrite any
 #'   previous blast database files (other files stay untouched).
@@ -43,23 +44,25 @@
 #' @param makeblastdb Path to the \code{makeblastdb} executable. Usually this is inferred when
 #'   loading/attaching the package.
 #' @param title Optional title for BLAST database.
-#' @param object A \code{\link[TAPseq]{TsIO}} or \code{\link[TAPseq]{TsIOList}} object containing
-#'   designed primers.
-#' @param blastdb TAP-seq BLAST database created with \code{\link[TAPseq]{createBLASTDb}}.
+#' @param object A \code{\link[TAPseq:TsIO-class]{TsIO}} or
+#'   \code{\link[TAPseq:TsIOList-class]{TsIOList}} object containing designed primers.
+#' @param blastdb TAP-seq BLAST database created with
+#'   \code{\link[TAPseq:estimateOffTargets]{createBLASTDb}}.
 #' @param max_mismatch Maximum number of mismatches allowed for off-target hits (default: 0).
 #' @param min_aligned Minimum portion of the primer sequence starting from the 3' end that must
 #'   align for off-target hits (default: 0.75).
 #' @param primer_targets Specifies what should be used to identify primer targets for off-target
-#'   identification. I.e. to what does the \code{\link[TAPseq]{sequence_id}} in TsIO objects refer?
-#'   Can be a subset of \code{transcript_id}, \code{transcript_name}, \code{gene_id} or
+#'   identification. I.e. to what does the \code{\link[TAPseq:accessors]{sequence_id}} in TsIO
+#'   objects refer? Can be a subset of \code{transcript_id}, \code{transcript_name}, \code{gene_id} or
 #'   \code{gene_name}. By default all 4 are checked. Set to \code{NULL} to disable any off-target
 #'   identification. See Details for more information.
 #' @param tmpdir Directory needed to store temporary files.
 #' @param blastn Path (character) to the \code{blastn} executable. Usually this is inferred when
 #'   loading/attaching the package.
 #' @return For \code{createBLASTDb} a directory containing the BLAST database. For
-#'   \code{blastPrimers} a \code{\link[TAPseq]{TsIO}} or \code{\link[TAPseq]{TsIOList}} object with
-#'   the number of potential off-targets added to the TAP-seq primer metadata.
+#'   \code{blastPrimers} a \code{\link[TAPseq:TsIO-class]{TsIO}} or
+#'   \code{\link[TAPseq:TsIOList-class]{TsIOList}} object with the number of potential off-targets
+#'   added to the TAP-seq primer metadata.
 #' @examples
 #' \dontrun{
 #' library(BSgenome)
@@ -262,13 +265,14 @@ setMethod("blastPrimers", "TsIOList", function(object, blastdb, max_mismatch, mi
 #' Get genome and transcriptome sequences
 #'
 #' Get DNA sequences of all chromosomes and all annotated transcripts of a genome. This function is
-#' used to create the sequences in \code{\link[TAPseq]{createBLASTDb}}.
+#' used to create the sequences in \code{\link[TAPseq:estimateOffTargets]{createBLASTDb}}.
 #'
-#' @param genome A \code{\link[BSgenome]{BSgenome}} (or \code{\link[Biostrings]{DNAStringSet}})
-#'   object containing the chromosome sequences to obtain genome and / or transcript sequences.
-#' @param annot A \code{\link[GenomicRanges]{GRanges}} object containing all exons of transcripts to
-#'   be considered. If not specified, no transcript sequences will be included in the output fasta
-#'   file.
+#' @param genome A \code{\link[BSgenome:BSgenome-class]{BSgenome}} (or
+#'   \code{\link[Biostrings:XStringSet-class]{DNAStringSet}}) object containing the chromosome
+#'   sequences to obtain genome and / or transcript sequences.
+#' @param annot A \code{\link[GenomicRanges:GRanges-class]{GRanges}} object containing all exons of
+#'   transcripts to be considered. If not specified, no transcript sequences will be included in the
+#'   output fasta file.
 #' @param tx_id,tx_name,gene_name,gene_id (character) Column names in annot metadata containing
 #'   transcript id, transcript name, gene name and gene id information. These column are mandatory,
 #'   but can contain internal names (e.g. "transcript-1" or "gene-1").
@@ -277,8 +281,8 @@ setMethod("blastPrimers", "TsIOList", function(object, blastdb, max_mismatch, mi
 #' @param standard_chromosomes (logical) Specifies whether only standard chromosomes should be
 #'   included in output genome sequences (e.g. chr1-22, chrX, chrY, chrM for homo sapiens).
 #' @param compress (logical) Create a gzipped output fasta file.
-#' @return A \code{\link[Biostrings]{DNAStringSet}} object containing the genome and transcriptome
-#'   sequences.
+#' @return A \code{\link[Biostrings:XStringSet-class]{DNAStringSet}} object containing the genome
+#'   and transcriptome sequences.
 #' @keywords internal
 get_gt_sequences <- function(genome, annot = NULL, tx_id = "transcript_id",
                             tx_name = "transcript_name", gene_name = "gene_name",

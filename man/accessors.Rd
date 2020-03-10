@@ -88,8 +88,9 @@ pcr_products(x)
 Returns the stored value(s) of a slot, or sets a new value
 }
 \description{
-A set of functions for getting/setting/modifying the data stored in \code{\link[TAPseq]{TsIO}}
-or \code{\link[TAPseq]{TsIOList}} class objects.
+A set of functions for getting/setting/modifying the data stored in
+\code{\link[TAPseq:TsIO-class]{TsIO}} or \code{\link[TAPseq:TsIOList-class]{TsIOList}} class
+objects.
 }
 \examples{
 # chr11 primers example data

@@ -11,9 +11,9 @@
 #'
 #' Use \code{TsIO()} to construct a new TsIO object from scratch.
 #'
-#' @param target_sequence A \code{\link[Biostrings]{DNAString}} or \code{character} object
-#'   containing the target sequence for which primers should be designed. Usually a transcript
-#'   sequence.
+#' @param target_sequence A \code{\link[Biostrings:DNAString-class]{DNAString}} or \code{character}
+#'   object containing the target sequence for which primers should be designed. Usually a
+#'   transcript sequence.
 #' @param beads_oligo Beads-oligo-dT sequence for the used droplet sequencing protocol (10x,
 #'   Drop-seq).
 #' @param reverse_primer Reverse primer sequence used for all PCR reactions.
@@ -21,9 +21,9 @@
 #'   resulting amplicons.
 #' @param sequence_id Name (\code{character}) of the target sequence, e.g. the gene name. It's
 #'  adviced to use meaningful sequence ids to savely assign designed primers to their targets.
-#' @param target_annot (optional) A \code{\link[GenomicRanges]{GRanges}} object with transcript
-#'   annotation in case the target is a transcript of a gene locus. If provided, it should contain
-#'   all exons of the targeted transcript.
+#' @param target_annot (optional) A \code{\link[GenomicRanges:GRanges-class]{GRanges}} object with
+#'   transcript annotation in case the target is a transcript of a gene locus. If provided, it
+#'   should contain all exons of the targeted transcript.
 #' @param primer_num_return How many forward primers should be designed? (default: 5)
 #' @param min_primer_region Minimum sequence length required for primer design. Mostly relevant in
 #'   case the sequence template is too short to allow the specified \code{product_size_range}.
@@ -179,13 +179,13 @@ setValidity("TsIO", function(object) {
 
 #' TsIOList class
 #'
-#' TsIOList class is a container to store multiple \code{\link[TAPseq]{TsIO}} objects. This enables
-#' storing of Primer3 input and output for multiple target genes.
+#' TsIOList class is a container to store multiple \code{\link[TAPseq:TsIO-class]{TsIO}} objects.
+#' This enables storing of Primer3 input and output for multiple target genes.
 #'
 #' @param ... Multiple TsIO objects from which a TsIOList object should be created.
 #' @param x A \code{TsIOList} object.
 #' @return A \code{TsIOList} object.
-#' @seealso \link[TAPseq]{TsIO}
+#' @seealso \link[TAPseq:TsIO-class]{TsIO}
 #' @examples
 #' # get example transcript sequences
 #' data("chr11_truncated_txs_seq")
@@ -243,8 +243,9 @@ TsIOList <- function(...) {
 
 #' Accessors for TsIO objects
 #'
-#' A set of functions for getting/setting/modifying the data stored in \code{\link[TAPseq]{TsIO}}
-#' or \code{\link[TAPseq]{TsIOList}} class objects.
+#' A set of functions for getting/setting/modifying the data stored in
+#' \code{\link[TAPseq:TsIO-class]{TsIO}} or \code{\link[TAPseq:TsIOList-class]{TsIOList}} class
+#' objects.
 #'
 #' @param x A \code{TsIO} or \code{TsIOList} class object.
 #' @param value A valid value to assign to the chosen slot.

@@ -7,19 +7,20 @@
 parsePrimer3Output(object, primer3_output)
 }
 \arguments{
-\item{object}{The \code{\link[TAPseq]{TsIO}} or \code{\link[TAPseq]{TsIOList}} object used to
-design primers. No errors or warnings if this is a different \code{TsIO} or \code{TsIOList}
-object!}
+\item{object}{The \code{\link[TAPseq:TsIO-class]{TsIO}} or
+\code{\link[TAPseq:TsIOList-class]{TsIOList}} object used to design primers. No errors or
+warnings if this is a different \code{TsIO} or \code{TsIOList} object!}
 
 \item{primer3_output}{Character vector containing raw Primer3 output.}
 }
 \value{
-\code{TsIO} or \code{TsIOList} object with added Primer3 output
+\code{\link[TAPseq:TsIO-class]{TsIO}} or \code{\link[TAPseq:TsIOList-class]{TsIOList}}
+  object with added Primer3 output
 }
 \description{
-Parse Primer3 output and add to input \code{\link[TAPseq]{TsIO}} or
-\code{\link[TAPseq]{TsIOList}} object. This function is usually not used by the user, as
-\code{\link[TAPseq]{designPrimers}} handles Primer3 output parsing.
+Parse Primer3 output and add to input \code{\link[TAPseq:TsIO-class]{TsIO}} or
+\code{\link[TAPseq:TsIOList-class]{TsIOList}} object. This function is usually not used by the
+user, as \code{\link[TAPseq]{designPrimers}} handles Primer3 output parsing.
 }
 \examples{
 \dontrun{

@@ -25,7 +25,8 @@ designPrimers(
 )
 }
 \arguments{
-\item{object}{TsIO of TsIOList object for which primers should be designed.}
+\item{object}{\code{\link[TAPseq:TsIO-class]{TsIO}} or
+\code{\link[TAPseq:TsIOList-class]{TsIOList}} object for which primers should be designed.}
 
 \item{thermo_params_path}{Optional path (character) to the \code{primer3_config} directory. Only
 required when using Primer3 < 2.5.0.}
@@ -34,11 +35,13 @@ required when using Primer3 < 2.5.0.}
 inferred when loading/attaching the package.}
 }
 \value{
-A new \code{TsIO} or \code{TsIOList} object containing all Primer3 output.
+A new \code{\link[TAPseq:TsIO-class]{TsIO}} or
+  \code{\link[TAPseq:TsIOList-class]{TsIOList}} object containing Primer3 output.
 }
 \description{
-Design primers based on \code{\link[TAPseq]{TsIO}} or \code{\link[TAPseq]{TsIOList}} objects.
-Creates boulder-IO records, passes input to Primer3 and parses the output.
+Design primers based on \code{\link[TAPseq:TsIO-class]{TsIO}} or
+\code{\link[TAPseq:TsIOList-class]{TsIOList}} objects. Creates boulder-IO records, passes input
+to Primer3 and parses the output.
 }
 \section{Methods (by class)}{
 \itemize{
@@ -63,6 +66,6 @@ tapseq_io <- designPrimers(tapseq_io)
 tapseq_primers(tapseq_io)
 }
 \seealso{
-\url{http://primer3.org/manual.html} for Primer3 manual and \code{\link[TAPseq]{TsIO}}
-  for TsIO class objects.
+\url{http://primer3.org/manual.html} for Primer3 manual and
+  \link[TAPseq:TsIO-class]{TsIO} for TsIO class objects.
 }

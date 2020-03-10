@@ -1,15 +1,16 @@
 #' Export TAP-seq primers
 #'
 #' A set of functions for TAP-seq primer export. Convert primers stored in
-#' \code{\link[TAPseq]{TsIO}} or \code{\link[TAPseq]{TsIOList}} objects to a simple
-#' \code{data.frame} for easier export. Or create BED format tracks for primers and write
-#' them to files for viewing in a genome browser (e.g. IGV).
+#' \code{\link[TAPseq:TsIO-class]{TsIO}} or \code{\link[TAPseq:TsIOList-class]{TsIOList}} objects to
+#' a simple \code{\link[base]{data.frame}} for easier export. Or create BED format tracks for
+#' primers and write them to files for viewing in a genome browser (e.g. IGV).
 #'
-#' @param object A \code{\link[TAPseq]{TsIO}} or \code{\link[TAPseq]{TsIOList}} object containing
-#'   designed primers.
+#' @param object A \code{\link[TAPseq:TsIO-class]{TsIO}} or
+#'   \code{\link[TAPseq:TsIOList-class]{TsIOList}} object containing designed primers.
 #' @param color Color used for the track (Default: black). Can be any of the three kinds of R color
 #'   specifications.
-#' @return For \code{createPrimerTrack} a \code{data.frame} with the primer track in BED format
+#' @return For \code{createPrimerTrack} a \code{\link[base]{data.frame}} with the primer track in
+#'   BED format.
 #' @examples
 #' # chr11 primers example data
 #' data("chr11_primers")
@@ -102,7 +103,8 @@ setMethod("createPrimerTrack", "TsIOList", function(object, color) {
 #' @describeIn exportPrimers Export primer BED tracks files
 #'
 #' @param con Connection to which tracks are written. Typically a .bed file.
-#' @param ... One or more primer BED tracks created by \code{\link[TAPseq]{createPrimerTrack}}.
+#' @param ... One or more primer BED tracks created by
+#'   \code{\link[TAPseq:exportPrimers]{createPrimerTrack}}.
 #' @export
 exportPrimerTrack <- function(..., con) {
 
@@ -138,8 +140,8 @@ exportPrimerTrack <- function(..., con) {
 
 #' @rdname exportPrimers
 #'
-#' @param object A \code{\link[TAPseq]{TsIO}} or \code{\link[TAPseq]{TsIOList}} object containing
-#'   designed primers.
+#' @param object A \code{\link[TAPseq:TsIO-class]{TsIO}} or
+#'   \code{\link[TAPseq:TsIOList-class]{TsIOList}} object containing designed primers.
 #' @export
 setGeneric("primerDataFrame", function(object) standardGeneric("primerDataFrame") )
 

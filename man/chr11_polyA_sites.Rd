@@ -4,7 +4,7 @@
 \name{chr11_polyA_sites}
 \alias{chr11_polyA_sites}
 \title{Chromosome 11 polyA sites}
-\format{object of \code{GRanges} class.}
+\format{object of \code{\link[GenomicRanges:GRanges-class]{GRanges}} class.}
 \usage{
 chr11_polyA_sites
 }

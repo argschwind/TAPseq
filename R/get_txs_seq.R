@@ -5,17 +5,19 @@
 #' which makes sure that the exons are correctly sorted according to their position in the
 #' transcript (3' to 5').
 #'
-#' @param transcripts A \code{\link[GenomicRanges]{GRanges}} or
-#'   \code{\link[GenomicRanges]{GRangesList}} object containing exons of transcripts for which
-#'   sequences should be extracted. All exons in a \code{\link[GenomicRanges]{GRanges}} object are
+#' @param transcripts A \code{\link[GenomicRanges:GRanges-class]{GRanges}} or
+#'   \code{\link[GenomicRanges:GRangesList-class]{GRangesList}} object containing exons of
+#'   transcripts for which sequences should be extracted. All exons in a \code{GRanges} object are
 #'   assumed to belong to the same transcript. Multiple transcripts can be provided in a
-#'   \code{\link[GenomicRanges]{GRangesList}} object.
-#' @param  genome A \code{\link[BSgenome]{BSgenome}} or \code{\link[Biostrings]{DNAStringSet}}
-#'   object containing chromosome sequences which should be used to extract transcript sequences.
-#'   Although using a \code{BSgenome} object is the easiest way, the genome sequence could also be
-#'   loaded from a FASTA file using \code{\link[Biostrings]{readDNAStringSet}}.
-#' @return A \code{\link[Biostrings]{DNAString}} or \code{\link[Biostrings]{DNAStringSet}} object
-#'   containing the transcript sequence(s).
+#'   \code{GRangesList} object.
+#' @param  genome A \code{\link[BSgenome:BSgenome-class]{BSgenome}} or
+#'   \code{\link[Biostrings:XStringSet-class]{DNAStringSet}} object containing chromosome sequences
+#'   which should be used to extract transcript sequences. Although using a \code{BSgenome} object
+#'   is the easiest way, the genome sequence could also be loaded from a FASTA file using
+#'   \code{\link[Biostrings:XStringSet-io]{readDNAStringSet}}.
+#' @return A \code{\link[Biostrings:DNAString-class]{DNAString}} or
+#'   \code{\link[Biostrings:XStringSet-class]{DNAStringSet}} object containing the transcript
+#'   sequence(s).
 #' @examples
 #' library(BSgenome)
 #'

@@ -1,4 +1,3 @@
-
 #' Infer polyA sites from droplet sequencing data
 #'
 #' Infer polyA sites from 10X, Drop-seq or similar 3' enriched sequencing data. Simple function
@@ -6,8 +5,8 @@
 #' chosen because they work reasonably well with the example data, but they should typically be
 #' empirically selected by verifying the output.
 #'
-#' @param genes \code{\link[GenomicRanges]{GRangesList}} object containing annotations of genes
-#'   for which polyA sites are to be estimated.
+#' @param genes \code{\link[GenomicRanges:GRangesList-class]{GRangesList}} object containing
+#'   annotations of genes for which polyA sites are to be estimated.
 #' @param bam Path to .bam file containing aligned reads used for polyA site estimation.
 #' @param polyA_downstream (numeric) How far downstream of a peak in coverage are polyA sites
 #'   expected? Somewhat depends on input DNA fragment size. (default: 100).
@@ -23,10 +22,10 @@
 #' @param perc_threshold (numeric) Only sequencing coverage peaks within \code{perc_threshold}
 #'   percentile of coverage are considered for polyA site estimation (default: 0.9). Avoids that
 #'   small peaks that in coverage are considered, resulting in manby false polyA sites.
-#' @param parallel (logical) Triggers parallel computing using the \code{BiocParallel} package.
-#'   This requires that a parallel back-end was registered prior to executing the function.
-#'   (default: FALSE).
-#' @return A \code{GRanges} object containing coordinates of estimated polyadenylation sites.
+#' @param parallel (logical) Triggers parallel computing using the
+#'   \code{\link[BiocParallel]{BiocParallel-package}} package. This requires that a parallel
+#'   back-end was registered prior to executing the function. (default: FALSE).
+#' @return A \code{\link[GenomicRanges:GRanges-class]{GRanges}} object containing coordinates of estimated polyadenylation sites.
 #' @examples
 #' library(GenomicRanges)
 #'

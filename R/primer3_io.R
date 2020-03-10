@@ -1,16 +1,19 @@
 #' Design primers
 #'
-#' Design primers based on \code{\link[TAPseq]{TsIO}} or \code{\link[TAPseq]{TsIOList}} objects.
-#' Creates boulder-IO records, passes input to Primer3 and parses the output.
+#' Design primers based on \code{\link[TAPseq:TsIO-class]{TsIO}} or
+#' \code{\link[TAPseq:TsIOList-class]{TsIOList}} objects. Creates boulder-IO records, passes input
+#' to Primer3 and parses the output.
 #'
-#' @param object TsIO of TsIOList object for which primers should be designed.
+#' @param object \code{\link[TAPseq:TsIO-class]{TsIO}} or
+#'   \code{\link[TAPseq:TsIOList-class]{TsIOList}} object for which primers should be designed.
 #' @param thermo_params_path Optional path (character) to the \code{primer3_config} directory. Only
 #'   required when using Primer3 < 2.5.0.
 #' @param primer3_core Path (character) to the \code{primer3_core} executable. Usually this is
 #'   inferred when loading/attaching the package.
-#' @return A new \code{TsIO} or \code{TsIOList} object containing all Primer3 output.
-#' @seealso \url{http://primer3.org/manual.html} for Primer3 manual and \code{\link[TAPseq]{TsIO}}
-#'   for TsIO class objects.
+#' @return A new \code{\link[TAPseq:TsIO-class]{TsIO}} or
+#'   \code{\link[TAPseq:TsIOList-class]{TsIOList}} object containing Primer3 output.
+#' @seealso \url{http://primer3.org/manual.html} for Primer3 manual and
+#'   \link[TAPseq:TsIO-class]{TsIO} for TsIO class objects.
 #' @examples
 #' # chromosome 11 truncated transcript sequences and annotations
 #' data("chr11_truncated_txs_seq")
@@ -78,15 +81,16 @@ setMethod("designPrimers", "TsIOList", function(object, thermo_params_path, prim
 
 #' Parse Primer3 Output
 #'
-#' Parse Primer3 output and add to input \code{\link[TAPseq]{TsIO}} or
-#' \code{\link[TAPseq]{TsIOList}} object. This function is usually not used by the user, as
-#' \code{\link[TAPseq]{designPrimers}} handles Primer3 output parsing.
+#' Parse Primer3 output and add to input \code{\link[TAPseq:TsIO-class]{TsIO}} or
+#' \code{\link[TAPseq:TsIOList-class]{TsIOList}} object. This function is usually not used by the
+#' user, as \code{\link[TAPseq]{designPrimers}} handles Primer3 output parsing.
 #'
-#' @param object The \code{\link[TAPseq]{TsIO}} or \code{\link[TAPseq]{TsIOList}} object used to
-#'   design primers. No errors or warnings if this is a different \code{TsIO} or \code{TsIOList}
-#'   object!
+#' @param object The \code{\link[TAPseq:TsIO-class]{TsIO}} or
+#'   \code{\link[TAPseq:TsIOList-class]{TsIOList}} object used to design primers. No errors or
+#'   warnings if this is a different \code{TsIO} or \code{TsIOList} object!
 #' @param primer3_output Character vector containing raw Primer3 output.
-#' @return \code{TsIO} or \code{TsIOList} object with added Primer3 output
+#' @return \code{\link[TAPseq:TsIO-class]{TsIO}} or \code{\link[TAPseq:TsIOList-class]{TsIOList}}
+#'   object with added Primer3 output
 #' @examples
 #' \dontrun{
 #' # chromosome 11 truncated transcript sequences

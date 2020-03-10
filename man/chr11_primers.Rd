@@ -4,12 +4,12 @@
 \name{chr11_primers}
 \alias{chr11_primers}
 \title{Chromosome 11 primers}
-\format{object of \code{TsIOList} class.}
+\format{object of \code{\link[TAPseq:TsIOList-class]{TsIOList}} class.}
 \usage{
 chr11_primers
 }
 \description{
-Example of a \code{\link[TAPseq]{TsIOList}} object containing input and output for chromosome 11
-genes primer design.
+Example of a \code{\link[TAPseq:TsIOList-class]{TsIOList}} object containing input and output for
+chromosome 11 genes primer design.
 }
 \keyword{datasets}

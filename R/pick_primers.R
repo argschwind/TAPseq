@@ -1,17 +1,18 @@
 #' Pick best TAP-seq primers
 #'
 #' Pick based primers from designed primers for every target based on Primer3 penalty score or
-#' off-target priming estimated with \code{\link[TAPseq]{blastPrimers}}.
+#' off-target priming estimated with \code{\link[TAPseq:estimateOffTargets]{blastPrimers}}.
 #'
 #' If \code{by} is set to \code{off_targets} top primers are picked based on the lowest number of
 #' exonic, intronic and intergenic off-targets (in that priority).
 #'
-#' @param object A \code{\link[TAPseq]{TsIO}} or \code{\link[TAPseq]{TsIOList}} object containing
-#'   designed primers.
+#' @param object A \code{\link[TAPseq:TsIO-class]{TsIO}} or
+#'   \code{\link[TAPseq:TsIOList-class]{TsIOList}} object containing designed primers.
 #' @param n The number of top primers to pick (default: 1, which returns the best primer).
 #' @param by Attribute by which primers should be picked. Can be either \code{penalty} or
 #'  \code{off_targets}.
-#' @return A \code{TsIO} or \code{TsIOList} object containing the picked primers.
+#' @return A \code{\link[TAPseq:TsIO-class]{TsIO}} or \code{\link[TAPseq:TsIOList-class]{TsIOList}}
+#'   object containing the picked primers.
 #' @examples
 #' # chr11 primers examples
 #' data("chr11_primers")

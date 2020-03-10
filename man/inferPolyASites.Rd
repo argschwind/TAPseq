@@ -17,8 +17,8 @@ inferPolyASites(
 )
 }
 \arguments{
-\item{genes}{\code{\link[GenomicRanges]{GRangesList}} object containing annotations of genes
-for which polyA sites are to be estimated.}
+\item{genes}{\code{\link[GenomicRanges:GRangesList-class]{GRangesList}} object containing
+annotations of genes for which polyA sites are to be estimated.}
 
 \item{bam}{Path to .bam file containing aligned reads used for polyA site estimation.}
 
@@ -42,12 +42,12 @@ allows to account for polyA sites that fall a few basepairs downstream of termin
 percentile of coverage are considered for polyA site estimation (default: 0.9). Avoids that
 small peaks that in coverage are considered, resulting in manby false polyA sites.}
 
-\item{parallel}{(logical) Triggers parallel computing using the \code{BiocParallel} package.
-This requires that a parallel back-end was registered prior to executing the function.
-(default: FALSE).}
+\item{parallel}{(logical) Triggers parallel computing using the
+\code{\link[BiocParallel]{BiocParallel-package}} package. This requires that a parallel
+back-end was registered prior to executing the function. (default: FALSE).}
 }
 \value{
-A \code{GRanges} object containing coordinates of estimated polyadenylation sites.
+A \code{\link[GenomicRanges:GRanges-class]{GRanges}} object containing coordinates of estimated polyadenylation sites.
 }
 \description{
 Infer polyA sites from 10X, Drop-seq or similar 3' enriched sequencing data. Simple function

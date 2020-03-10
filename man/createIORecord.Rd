@@ -22,10 +22,10 @@ required when using Primer3 < 2.5.0.}
 A character vector containing the lines of the IO record.
 }
 \description{
-Takes a \code{\link[TAPseq]{TsIO}} or \code{\link[TAPseq]{TsIOList}} object and converts it
-into a boulder IO record for Primer3. Essentially it converts it into a list of character vectors
-that each contain the tag and the value in the form: "TAG=VALUE". More on this format can be
-found in the \href{http://primer3.org/manual.html}{Primer3 manual}.
+Takes a \code{\link[TAPseq:TsIO-class]{TsIO}} or \code{\link[TAPseq:TsIOList-class]{TsIOList}}
+object and converts it into a boulder IO record for Primer3. Essentially it converts it into a
+list of character vectors that each contain the tag and the value in the form: "TAG=VALUE". More
+on this format can be found in the \href{http://primer3.org/manual.html}{Primer3 manual}.
 }
 \details{
 This function is usually not needed by the user, because functions such as

@@ -13,8 +13,8 @@ pickPrimers(object, n = 1, by = c("penalty", "off_targets"))
 \S4method{pickPrimers}{TsIOList}(object, n = 1, by = c("penalty", "off_targets"))
 }
 \arguments{
-\item{object}{A \code{\link[TAPseq]{TsIO}} or \code{\link[TAPseq]{TsIOList}} object containing
-designed primers.}
+\item{object}{A \code{\link[TAPseq:TsIO-class]{TsIO}} or
+\code{\link[TAPseq:TsIOList-class]{TsIOList}} object containing designed primers.}
 
 \item{n}{The number of top primers to pick (default: 1, which returns the best primer).}
 
@@ -22,11 +22,12 @@ designed primers.}
 \code{off_targets}.}
 }
 \value{
-A \code{TsIO} or \code{TsIOList} object containing the picked primers.
+A \code{\link[TAPseq:TsIO-class]{TsIO}} or \code{\link[TAPseq:TsIOList-class]{TsIOList}}
+  object containing the picked primers.
 }
 \description{
 Pick based primers from designed primers for every target based on Primer3 penalty score or
-off-target priming estimated with \code{\link[TAPseq]{blastPrimers}}.
+off-target priming estimated with \code{\link[TAPseq:estimateOffTargets]{blastPrimers}}.
 }
 \details{
 If \code{by} is set to \code{off_targets} top primers are picked based on the lowest number of

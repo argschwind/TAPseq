@@ -99,9 +99,9 @@ TsIO(
 \item{sequence_id}{Name (\code{character}) of the target sequence, e.g. the gene name. It's
 adviced to use meaningful sequence ids to savely assign designed primers to their targets.}
 
-\item{target_sequence}{A \code{\link[Biostrings]{DNAString}} or \code{character} object
-containing the target sequence for which primers should be designed. Usually a transcript
-sequence.}
+\item{target_sequence}{A \code{\link[Biostrings:DNAString-class]{DNAString}} or \code{character}
+object containing the target sequence for which primers should be designed. Usually a
+transcript sequence.}
 
 \item{beads_oligo}{Beads-oligo-dT sequence for the used droplet sequencing protocol (10x,
 Drop-seq).}
@@ -111,9 +111,9 @@ Drop-seq).}
 \item{product_size_range}{Numerical vector of length 2 specifying the desired length of the
 resulting amplicons.}
 
-\item{target_annot}{(optional) A \code{\link[GenomicRanges]{GRanges}} object with transcript
-annotation in case the target is a transcript of a gene locus. If provided, it should contain
-all exons of the targeted transcript.}
+\item{target_annot}{(optional) A \code{\link[GenomicRanges:GRanges-class]{GRanges}} object with
+transcript annotation in case the target is a transcript of a gene locus. If provided, it
+should contain all exons of the targeted transcript.}
 
 \item{primer_num_return}{How many forward primers should be designed? (default: 5)}
 

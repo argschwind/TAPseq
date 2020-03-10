@@ -16,12 +16,13 @@ get_gt_sequences(
 )
 }
 \arguments{
-\item{genome}{A \code{\link[BSgenome]{BSgenome}} (or \code{\link[Biostrings]{DNAStringSet}})
-object containing the chromosome sequences to obtain genome and / or transcript sequences.}
+\item{genome}{A \code{\link[BSgenome:BSgenome-class]{BSgenome}} (or
+\code{\link[Biostrings:XStringSet-class]{DNAStringSet}}) object containing the chromosome
+sequences to obtain genome and / or transcript sequences.}
 
-\item{annot}{A \code{\link[GenomicRanges]{GRanges}} object containing all exons of transcripts to
-be considered. If not specified, no transcript sequences will be included in the output fasta
-file.}
+\item{annot}{A \code{\link[GenomicRanges:GRanges-class]{GRanges}} object containing all exons of
+transcripts to be considered. If not specified, no transcript sequences will be included in the
+output fasta file.}
 
 \item{tx_id, tx_name, gene_name, gene_id}{(character) Column names in annot metadata containing
 transcript id, transcript name, gene name and gene id information. These column are mandatory,
@@ -36,11 +37,11 @@ included in output genome sequences (e.g. chr1-22, chrX, chrY, chrM for homo sap
 \item{compress}{(logical) Create a gzipped output fasta file.}
 }
 \value{
-A \code{\link[Biostrings]{DNAStringSet}} object containing the genome and transcriptome
-  sequences.
+A \code{\link[Biostrings:XStringSet-class]{DNAStringSet}} object containing the genome
+  and transcriptome sequences.
 }
 \description{
 Get DNA sequences of all chromosomes and all annotated transcripts of a genome. This function is
-used to create the sequences in \code{\link[TAPseq]{createBLASTDb}}.
+used to create the sequences in \code{\link[TAPseq:estimateOffTargets]{createBLASTDb}}.
 }
 \keyword{internal}

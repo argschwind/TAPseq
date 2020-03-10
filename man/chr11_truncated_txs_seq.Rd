@@ -4,7 +4,7 @@
 \name{chr11_truncated_txs_seq}
 \alias{chr11_truncated_txs_seq}
 \title{Chromosome 11 truncated transcript sequences}
-\format{object of \code{DNAStringSet} class.}
+\format{object of \code{\link[Biostrings:XStringSet-class]{DNAStringSet}} class.}
 \usage{
 chr11_truncated_txs_seq
 }

@@ -26,24 +26,26 @@ primerDataFrame(object)
 \S4method{primerDataFrame}{TsIOList}(object)
 }
 \arguments{
-\item{object}{A \code{\link[TAPseq]{TsIO}} or \code{\link[TAPseq]{TsIOList}} object containing
-designed primers.}
+\item{object}{A \code{\link[TAPseq:TsIO-class]{TsIO}} or
+\code{\link[TAPseq:TsIOList-class]{TsIOList}} object containing designed primers.}
 
 \item{color}{Color used for the track (Default: black). Can be any of the three kinds of R color
 specifications.}
 
-\item{...}{One or more primer BED tracks created by \code{\link[TAPseq]{createPrimerTrack}}.}
+\item{...}{One or more primer BED tracks created by
+\code{\link[TAPseq:exportPrimers]{createPrimerTrack}}.}
 
 \item{con}{Connection to which tracks are written. Typically a .bed file.}
 }
 \value{
-For \code{createPrimerTrack} a \code{data.frame} with the primer track in BED format
+For \code{createPrimerTrack} a \code{\link[base]{data.frame}} with the primer track in
+  BED format.
 }
 \description{
 A set of functions for TAP-seq primer export. Convert primers stored in
-\code{\link[TAPseq]{TsIO}} or \code{\link[TAPseq]{TsIOList}} objects to a simple
-\code{data.frame} for easier export. Or create BED format tracks for primers and write
-them to files for viewing in a genome browser (e.g. IGV).
+\code{\link[TAPseq:TsIO-class]{TsIO}} or \code{\link[TAPseq:TsIOList-class]{TsIOList}} objects to
+a simple \code{\link[base]{data.frame}} for easier export. Or create BED format tracks for
+primers and write them to files for viewing in a genome browser (e.g. IGV).
 }
 \section{Functions}{
 \itemize{

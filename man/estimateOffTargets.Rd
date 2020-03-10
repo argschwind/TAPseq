@@ -53,13 +53,15 @@ blastPrimers(
 )
 }
 \arguments{
-\item{genome}{A \code{\link[BSgenome]{BSgenome}} (or \code{\link[Biostrings]{DNAStringSet}})
-object containing the sequences of all chromosomes to obtain genome and transcript sequences.}
+\item{genome}{A \code{\link[BSgenome:BSgenome-class]{BSgenome}} (or
+\code{\link[Biostrings:XStringSet-class]{DNAStringSet}}) object containing the sequences of all
+chromosomes to obtain genome and transcript sequences.}
 
-\item{annot}{A \code{\link[GenomicRanges]{GRanges}} object containing all exons of transcripts to
-be considered.}
+\item{annot}{A \code{\link[GenomicRanges:GRanges-class]{GRanges}} object containing all exons of
+transcripts to be considered.}
 
-\item{blastdb}{TAP-seq BLAST database created with \code{\link[TAPseq]{createBLASTDb}}.}
+\item{blastdb}{TAP-seq BLAST database created with
+\code{\link[TAPseq:estimateOffTargets]{createBLASTDb}}.}
 
 \item{standard_chromosomes}{(logical) Specifies whether only standard chromosomes should be
 included in output genome sequences (e.g. chr1-22, chrX, chrY, chrM for homo sapiens).}
@@ -75,8 +77,8 @@ printed to the console. Default: \code{FALSE}.}
 \item{makeblastdb}{Path to the \code{makeblastdb} executable. Usually this is inferred when
 loading/attaching the package.}
 
-\item{object}{A \code{\link[TAPseq]{TsIO}} or \code{\link[TAPseq]{TsIOList}} object containing
-designed primers.}
+\item{object}{A \code{\link[TAPseq:TsIO-class]{TsIO}} or
+\code{\link[TAPseq:TsIOList-class]{TsIOList}} object containing designed primers.}
 
 \item{max_mismatch}{Maximum number of mismatches allowed for off-target hits (default: 0).}
 
@@ -84,8 +86,8 @@ designed primers.}
 align for off-target hits (default: 0.75).}
 
 \item{primer_targets}{Specifies what should be used to identify primer targets for off-target
-identification. I.e. to what does the \code{\link[TAPseq]{sequence_id}} in TsIO objects refer?
-Can be a subset of \code{transcript_id}, \code{transcript_name}, \code{gene_id} or
+identification. I.e. to what does the \code{\link[TAPseq:accessors]{sequence_id}} in TsIO
+objects refer? Can be a subset of \code{transcript_id}, \code{transcript_name}, \code{gene_id} or
 \code{gene_name}. By default all 4 are checked. Set to \code{NULL} to disable any off-target
 identification. See Details for more information.}
 
@@ -96,8 +98,9 @@ loading/attaching the package.}
 }
 \value{
 For \code{createBLASTDb} a directory containing the BLAST database. For
-  \code{blastPrimers} a \code{\link[TAPseq]{TsIO}} or \code{\link[TAPseq]{TsIOList}} object with
-  the number of potential off-targets added to the TAP-seq primer metadata.
+  \code{blastPrimers} a \code{\link[TAPseq:TsIO-class]{TsIO}} or
+  \code{\link[TAPseq:TsIOList-class]{TsIOList}} object with the number of potential off-targets
+  added to the TAP-seq primer metadata.
 }
 \description{
 Functions to use BLAST to align TAP-seq primers against a genome and chromosome reference to
@@ -123,10 +126,10 @@ transcript, intronic for another transcript), only the exonic hit is counted for
 primer has for instance 3 BLAST hits in one gene, 2 exonic and 1 intronic, then one exonic hit
 and one intronic hit is counted for that gene.
 
-If sequence IDs of the designed primers (\code{\link[TAPseq]{sequence_id}}) refer to the target
-gene/transcripts and can be found in the BLAST database annotations via \code{primer_targets},
-then only off-target hits are counted. This is usually the case if input for primer design was
-produced from target gene annotations.
+If sequence IDs of the designed primers (\code{\link[TAPseq:accessors]{sequence_id}}) refer to
+the target gene/transcripts and can be found in the BLAST database annotations via
+\code{primer_targets}, then only off-target hits are counted. This is usually the case if input
+for primer design was produced from target gene annotations.
 }
 \section{Functions}{
 \itemize{
