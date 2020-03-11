@@ -1,4 +1,5 @@
 library(Seurat)
+library(Matrix)
 
 ## create Seurat object containing cell population example data
 
@@ -22,19 +23,24 @@ cell_idents <- Idents(NicheData10x_filt)
 object <- CreateSeuratObject(counts = counts)
 Idents(object) <- cell_idents
 
-# subsample cells to about 10% of cells (~350cells)
-set.seed("20200115")
+# get top 5% cells per population (~180cells)
+n_txs <- colSums(object)
+cell_idents <- cell_idents[names(sort(n_txs, decreasing = TRUE))]
 idents_split <- split(cell_idents, f = cell_idents)
-idents_sampled <- lapply(idents_split, FUN = function(x) {
-  sample(x, size = length(x) * 0.10)
+idents_top <- lapply(idents_split, FUN = function(x) {
+  head(x, n = length(x) * 0.05)
 })
 
 # create vector with cell ids for these cells
-names(idents_sampled) <- NULL
-sampled_cells <- names(unlist(idents_sampled))
+names(idents_top) <- NULL
+top_cells <- names(unlist(idents_top))
 
 # subset object to these cells
-bone_marrow_genex <- subset(object, cells = sampled_cells)
+bone_marrow_genex <- subset(object, cells = top_cells)
+
+# remove any genes with less than 10 total transcripts
+txs <- rowSums(GetAssayData(bone_marrow_genex))
+bone_marrow_genex <- subset(bone_marrow_genex, features = names(txs[txs > 10]))
 
 # save data as RData files in data directory
 usethis::use_data(bone_marrow_genex, overwrite = TRUE)

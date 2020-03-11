@@ -70,11 +70,11 @@ length(target_genes_100)
 To intuitively assess how well a chosen set of target genes distinguishes cell types, we can use
 UMAP plots based on the full gene expression data and on target genes only.
 ```{r, message=FALSE, warning=FALSE, fig.height=3, fig.width=7.15}
-plotTargetGenes(bone_marrow_genex, target_genes = target_genes_cv)
+plotTargetGenes(bone_marrow_genex, target_genes = target_genes_100)
 ```
 
-We can see that the expression of  the `r length(target_genes_cv)` automatically selected target
-genes groups cells of different populations together.
+We can see that the expression of  the `r length(target_genes_100)` selected target genes groups 
+cells of different populations together.
 
 A good follow up would be to cluster the cells based on only the target genes following the same
 workflow used to define the cell identities in the original object. This could then be used to
