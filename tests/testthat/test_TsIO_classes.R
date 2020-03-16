@@ -177,6 +177,6 @@ test_that("TsIO() raises errors/warnings with wrong input formats", {
 })
 
 test_that("TsIOList aborts with wrong input formats", {
-  expect_error(TsIOList(tsio_obj1, "a"), "all elements in 'x' must be TsIO objects")
-  expect_error(TsIOList(tsio_obj1, 1), "all elements in 'x' must be TsIO objects")
+  expect_error(TsIOList(tsio_obj1, "a"), "must be a list containing TsIO objects")
+  expect_error(TsIOList(tsio_obj1, 1), "must be a list containing TsIO objects")
 })

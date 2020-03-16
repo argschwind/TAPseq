@@ -145,35 +145,42 @@ setValidity("TsIO", function(object) {
   annot_merge <- reduce(annot)
 
   # check object slots
-  if (length(seqname) > 1) {
-    "multiple seqnames in target_annot"
-  } else if (length(strand) > 1) {
-    "conflicting strand information in target_annot"
-  } else if (length(annot) != length(annot_merge)) {
-    "overlapping exons found in target_annot"
-  } else if (!sum(width(annot_merge)) %in% c(0, length(object@target_sequence))) {
-    "exons in target_annot are incompatible with target_sequence"
-  } else if (length(object@sequence_id) != 1) {
-    "sequence_id needs to be of length 1"
-  } else if (length(object@product_size_range) != 2) {
-    "product_size_range needs to be an integer vector of length 2"
-  } else if (length(object@primer_num_return) != 1) {
-    "primer_num_return needs to be of length 1"
-  } else if (length(object@min_primer_region) != 1) {
-    "min_primer_region needs to be of length 1"
-  } else if (length(object@primer_opt_tm) != 1) {
-    "primer_opt_tm needs to be of length 1"
-  } else if (length(object@primer_min_tm) != 1) {
-    "primer_min_tm needs to be of length 1"
-  } else if (length(object@primer_max_tm) != 1) {
-    "primer_max_tm needs to be of length 1"
-  } else if (!any(is.na(c(object@product_size_range, object@min_primer_region)))) {
-    if (diff(object@product_size_range) < object@min_primer_region) {
-      "product_size_range too narrow to allow min_primer_range"
+  err <- character()
+  if (length(seqname) > 1)
+    err <- c(err, "multiple seqnames in target_annot")
+  if (length(strand) > 1)
+    err <- c(err, "conflicting strand information in target_annot")
+  if (length(annot) != length(annot_merge))
+    err <- c(err, "overlapping exons found in target_annot")
+  if (!sum(width(annot_merge)) %in% c(0, length(object@target_sequence)))
+    err <- c(err, "exons in target_annot are incompatible with target_sequence")
+  if (length(object@sequence_id) != 1)
+    err <- c(err, "sequence_id needs to be of length 1")
+  if (length(object@product_size_range) != 2)
+    err <- c(err, "product_size_range needs to be an integer vector of length 2")
+  if (length(object@primer_num_return) != 1)
+    err <- c(err, "primer_num_return needs to be of length 1")
+  if (length(object@min_primer_region) != 1)
+    err <- c(err, "min_primer_region needs to be of length 1")
+  if (length(object@primer_opt_tm) != 1)
+    err <- c(err, "primer_opt_tm needs to be of length 1")
+  if (length(object@primer_min_tm) != 1)
+    err <- c(err, "primer_min_tm needs to be of length 1")
+  if (length(object@primer_max_tm) != 1)
+    err <- c(err, "primer_max_tm needs to be of length 1")
+
+  # check that specified product_size_range and min_primer_range are compatible
+  if (length(object@product_size_range) == 2) {
+    if (!any(is.na(c(object@product_size_range, object@min_primer_region)))) {
+      if (diff(object@product_size_range) < object@min_primer_region) {
+        err <- c(err, "product_size_range too narrow to allow min_primer_range")
+      }
     }
-  } else {
-    TRUE
   }
+
+  # return all slot errors if any are found
+  if (length(err) > 0) err else TRUE
+
 })
 
 
@@ -216,9 +223,7 @@ setValidity("TsIO", function(object) {
 #'
 #' # as with TsIO objects, some values can be accessed using accessor functions
 #' sequence_template(obj)
-setClass("TsIOList",
-         contains = "SimpleList",
-         prototype = prototype(elementType = "TsIO"))
+setClass("TsIOList", contains = "SimpleList", prototype = "TsIO")
 
 #' @rdname TsIOList-class
 #' @export
@@ -227,14 +232,17 @@ TsIOList <- function(...) {
   # create list containing all passed TsIO objects
   objects <- list(...)
 
-  # if already a list was passed to the function, this created a list of a list and needs to be
-  # reverted
-  if (length(objects) == 1L && is.list(objects[[1L]])) {
-    objects <- objects[[1L]]
+  # if already a list or TsIOList was passed to the function, this created a list of a list and
+  # needs to be reverted
+  if (length(objects) == 1L) {
+    tmp <- objects[[1L]]
+    if (is.list(tmp) | is(tmp, "List")) {
+      objects <- tmp
+    }
   }
 
   # create and return TsIOList object
-  S4Vectors:::new_SimpleList_from_list(Class = "TsIOList", x = objects)
+  new("TsIOList", objects, elementType = "TsIO")
 
 }
 
@@ -395,7 +403,7 @@ setMethod("sequence_id", "TsIO", function(x) x@sequence_id)
 
 #' @describeIn TsIO Set sequence_id
 #' @export
-setMethod("sequence_id<-", "TsIO", function(x, value) {
+setReplaceMethod("sequence_id", "TsIO", function(x, value) {
   x@sequence_id <- as.character(value)
   validObject(x)
   x
@@ -407,7 +415,7 @@ setMethod("target_sequence", "TsIO", function(x) x@target_sequence)
 
 #' @describeIn TsIO Set target_sequence
 #' @export
-setMethod("target_sequence<-", "TsIO", function(x, value) {
+setReplaceMethod("target_sequence", "TsIO", function(x, value) {
   value <- as(value, "DNAString")
   x@target_sequence <- value
   validObject(x)
@@ -420,7 +428,7 @@ setMethod("beads_oligo", "TsIO", function(x) x@beads_oligo)
 
 #' @describeIn TsIO Set beads_oligo
 #' @export
-setMethod("beads_oligo<-", "TsIO", function(x, value) {
+setReplaceMethod("beads_oligo", "TsIO", function(x, value) {
   value <- as(value, "DNAString")
   x@beads_oligo <- value
   validObject(x)
@@ -433,7 +441,7 @@ setMethod("reverse_primer", "TsIO", function(x) x@reverse_primer)
 
 #' @describeIn TsIO Set reverse_primer
 #' @export
-setMethod("reverse_primer<-", "TsIO", function(x, value) {
+setReplaceMethod("reverse_primer", "TsIO", function(x, value) {
   value <- as(value, "DNAString")
   x@reverse_primer <- value
   validObject(x)
@@ -446,7 +454,7 @@ setMethod("target_annot", "TsIO", function(x) x@target_annot)
 
 #' @describeIn TsIO Set target_annot
 #' @export
-setMethod("target_annot<-", "TsIO", function(x, value) {
+setReplaceMethod("target_annot", "TsIO", function(x, value) {
   x@target_annot <- value
   validObject(x)
   x
@@ -458,7 +466,7 @@ setMethod("product_size_range", "TsIO", function(x) x@product_size_range)
 
 #' @describeIn TsIO Set product_size_range
 #' @export
-setMethod("product_size_range<-", "TsIO", function(x, value) {
+setReplaceMethod("product_size_range", "TsIO", function(x, value) {
   value <- sort(as(value, "integer"), na.last = TRUE)
   x@product_size_range <- value
   validObject(x)
@@ -471,7 +479,7 @@ setMethod("primer_num_return", "TsIO", function(x) x@primer_num_return)
 
 #' @describeIn TsIO Set primer_num_return
 #' @export
-setMethod("primer_num_return<-", "TsIO", function(x, value) {
+setReplaceMethod("primer_num_return", "TsIO", function(x, value) {
   value <- as(value, "integer")
   x@primer_num_return <- value
   validObject(x)
@@ -484,7 +492,7 @@ setMethod("min_primer_region", "TsIO", function(x) x@min_primer_region)
 
 #' @describeIn TsIO Set min_primer_region
 #' @export
-setMethod("min_primer_region<-", "TsIO", function(x, value) {
+setReplaceMethod("min_primer_region", "TsIO", function(x, value) {
   value <- as(value, "integer")
   x@min_primer_region <- value
   validObject(x)
@@ -497,7 +505,7 @@ setMethod("primer_opt_tm", "TsIO", function(x) x@primer_opt_tm)
 
 #' @describeIn TsIO Set primer_opt_tm
 #' @export
-setMethod("primer_opt_tm<-", "TsIO", function(x, value) {
+setReplaceMethod("primer_opt_tm", "TsIO", function(x, value) {
   value <- as(value, "integer")
   x@primer_opt_tm <- value
   validObject(x)
@@ -510,7 +518,7 @@ setMethod("primer_min_tm", "TsIO", function(x) x@primer_min_tm)
 
 #' @describeIn TsIO Set primer_min_tm
 #' @export
-setMethod("primer_min_tm<-", "TsIO", function(x, value) {
+setReplaceMethod("primer_min_tm", "TsIO", function(x, value) {
   value <- as(value, "integer")
   x@primer_min_tm <- value
   validObject(x)
@@ -523,7 +531,7 @@ setMethod("primer_max_tm", "TsIO", function(x) x@primer_max_tm)
 
 #' @describeIn TsIO Set primer_max_tm
 #' @export
-setMethod("primer_max_tm<-", "TsIO", function(x, value) {
+setReplaceMethod("primer_max_tm", "TsIO", function(x, value) {
   value <- as(value, "integer")
   x@primer_max_tm <- value
   validObject(x)
@@ -543,7 +551,7 @@ setMethod("sequence_template", "TsIO", function(x) {
 setMethod("tapseq_primers", "TsIO", function(x) x@tapseq_primers)
 
 #' @keywords internal
-setMethod("tapseq_primers<-", "TsIO", function(x, value) {
+setReplaceMethod("tapseq_primers", "TsIO", function(x, value) {
   x@tapseq_primers <- value
   validObject(x)
   x
@@ -554,7 +562,7 @@ setMethod("tapseq_primers<-", "TsIO", function(x, value) {
 setMethod("pcr_products", "TsIO", function(x) x@pcr_products)
 
 #' @keywords internal
-setMethod("pcr_products<-", "TsIO", function(x, value) {
+setReplaceMethod("pcr_products", "TsIO", function(x, value) {
   x@pcr_products <- value
   validObject(x)
   x
