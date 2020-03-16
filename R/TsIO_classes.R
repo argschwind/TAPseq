@@ -628,12 +628,15 @@ setMethod("show", "TsIO", function(object) {
 
   prod_size <- product_size_range(object)
 
+  primers <- length(tapseq_primers(object))
+  if (primers == 0) primers <- "None"
+
   cat(is(object)[[1]], " instance", "\n",
       "  ", length(sequence_template(object)), " bp sequence template", "\n",
       "  Sequence ID: ", sequence_id(object), "\n",
       "  Beads oligo: ", as.character(beads_oligo), "\n",
       "  Right primer: ", as.character(reverse_primer), "\n",
-      "  Specified product size range: ", prod_size[1], "-",
-      prod_size[2], " basepairs",
+      "  Specified product size range: ", prod_size[1], "-", prod_size[2], " basepairs", "\n",
+      "  Designed left primers: ", primers, "\n",
       sep = "")
 })
