@@ -12,9 +12,9 @@ interacting with Primer3. Source code and installation instructions can be found
 Primer3: <https://github.com/primer3-org/primer3/releases>  
 BLASTn: <https://www.ncbi.nlm.nih.gov/books/NBK279690/>
 
-Please install these tools first and add them to your PATH. If you don't want to add the tools to
-your "global" PATH, you can add the following code to an ~/.Rprofile file. This should add the tools
-to your PATH in R whenever you start a new session.
+Please install these tools first and add them to your `PATH`. If you don't want to add the tools to
+your "global" `PATH`, you can add the following code to an `~/.Rprofile file`. This should add the
+tools to your `PATH` in R whenever you start a new session.
 ```
 Sys.setenv(PATH = paste("/full/path/to/primer3-x.x.x/src", Sys.getenv("PATH"), sep = ":"))
 
@@ -22,18 +22,13 @@ Sys.setenv(PATH = paste("/full/path/to/blast+/ncbi-blast-x.x.x+/bin", Sys.getenv
                         sep = ":"))
 ```
 
-The R-package itself can be installed from source by using the devtools package. This also allows
-building vignettes.
+The R-package itself and its R dependencies can be installed from the Bioconductor devel branch
+using the `BiocManager` package. This requires R >= 4.0.0.
 ```
-# minimal install without vignettes
-devtools::install_github("argschwind/TAPseq")
-
-# install with building vignettes and also installing suggested dependencies
-devtools::install_github("argschwind/TAPseq", build_vignettes = TRUE, dependencies = TRUE)
+if (!requireNamespace("BiocManager", quietly=TRUE))
+    install.packages("BiocManager")
+BiocManager::install("TAPseq", version = "devel")
 ```
-
-Note: If missing Bioconductor dependencies fail to install from GitHub, please install them from
-Bioconductor (see: <http://bioconductor.org/install/>).
 
 ## Examples
 An example of the TAPseq primer design workflow can be found in a vignette. To view the vignette,

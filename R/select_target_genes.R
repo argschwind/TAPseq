@@ -137,7 +137,7 @@ plotTargetGenes <- function(object, target_genes, npcs = 15) {
   # compute UMAPs
   message("Compute UMAP")
   object <- Seurat::RunUMAP(object, reduction = "pca", dims = seq_len(npcs))
-  targets_object <- Seurat::RunUMAP(targets_object, reduction = "pca", seq_len(npcs))
+  targets_object <- Seurat::RunUMAP(targets_object, reduction = "pca", dims = seq_len(npcs))
 
   # create UMAP plots
   p1 <- Seurat::DimPlot(object, reduction = "umap") +
