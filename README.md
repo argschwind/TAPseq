@@ -1,13 +1,14 @@
 # TAPseq
-An R-package to design PCR primers for TAP-seq. The **master** branch is used for a submission to
-Bioconductor. Please use the **r_release_3.5** branch to install the package for current R releases.
+An R-package to design PCR primers for TAP-seq published in
+[Nature Methods, 2020](https://www.nature.com/articles/s41592-020-0837-5). `TAPseq` is available
+through [Bioconductor](http://bioconductor.org/packages/release/bioc/html/TAPseq.html).
 
 ## Installation
 
-This package requires local installations of Primer3 and BLASTn. TAPseq was developed and tested
-using Primer3 v.2.5.0 and blastn v.2.6.0. It's strongly suggested to use Primer3 >= 2.5.0! Earlier
-versions require a primer3_config directory, which needs to be provided whenever calling functions
-interacting with Primer3. Source code and installation instructions can be found under:
+This package requires local installations of Primer3 and BLASTn. `TAPseq` has been developed and
+tested using Primer3 v.2.5.0 and blastn v.2.6.0. It's strongly suggested to use Primer3 >= 2.5.0!
+Earlier versions require a primer3_config directory, which needs to be provided whenever calling
+functions interacting with Primer3. Source code and installation instructions can be found under:
 
 Primer3: <https://github.com/primer3-org/primer3/releases>  
 BLASTn: <https://www.ncbi.nlm.nih.gov/books/NBK279690/>
@@ -22,12 +23,24 @@ Sys.setenv(PATH = paste("/full/path/to/blast+/ncbi-blast-x.x.x+/bin", Sys.getenv
                         sep = ":"))
 ```
 
-The R-package itself and its R dependencies can be installed from the Bioconductor devel branch
-using the `BiocManager` package. This requires R >= 4.0.0.
+The R-package and its R dependencies can be installed from Bioconductor using the `BiocManager`
+package. This requires `R >= 4.0.0`.
 ```
 if (!requireNamespace("BiocManager", quietly=TRUE))
     install.packages("BiocManager")
-BiocManager::install("TAPseq", version = "devel")
+BiocManager::install("TAPseq")
+```
+
+`TAPseq` can also be installed directly from GitHub using the `devtools` package. This also allows
+to install an older version, which work for `R >= 3.5`.
+```
+install.packages("devtools")
+
+# latest development version
+devtools::install_github("argschwind/TAPseq", dependencies = TRUE)
+
+# installing a previous version for R >= 3.5
+devtools::install_github("argschwind/TAPseq@r_release_3.5", dependencies = TRUE)
 ```
 
 ## Examples
