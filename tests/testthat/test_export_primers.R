@@ -36,9 +36,9 @@ exp_out_track1 <- data.frame(chrom = "chr11", start = 8914881, end = 8914901,
                              blockCount = 1, blockSizes = "20", blockStarts = "0",
                              stringsAsFactors = FALSE)
 
-exp_out_track2 <- data.frame(chrom = "chr11", start = 6480404, end = 6480424,
+exp_out_track2 <- data.frame(chrom = "chr11", start = 6476971, end = 6476991,
                              name = "ARFIP2.primer_left_2", score = 0.642407, strand = "-",
-                             thickStart = 6480404, thickEnd = 6480424, itemRgb = "0,0,0",
+                             thickStart = 6476971, thickEnd = 6476991, itemRgb = "0,0,0",
                              blockCount = 1, blockSizes = "20", blockStarts = "0",
                              stringsAsFactors = FALSE)
 exp_out_track2 <- rbind(exp_out_track1, exp_out_track2)

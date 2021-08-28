@@ -1,0 +1,27 @@
+citHeader("To cite TAPseq in publications please use:")
+citEntry(entry = "article",
+    title   = "Targeted Perturb-seq enables genome-scale genetic screens in single cells",
+    author  = personList(
+                    person("Daniel", "Schraivogel"), 
+                    person(c("Andreas", "R."), "Gschwind"),
+                    person(c("Jennifer", "H."), "Milbank"),
+                    person(c("Daniel", "R."), "Leonce"),
+                    person("Petra", "Jakob"),
+                    person("Lukas", "Mathur"),
+                    person(c("Jan", "O."), "Korbel"),
+                    person(c("Christoph", "A."), "Merten"),
+                    person("Lars", "Velten"),
+                    person(c("Lars", "M."), "Steinmetz") ),
+    journal = "Nature Methods",
+    volume  = "17",
+    issue   = "6",
+    pages   = "629 - 635",
+    year    = "2020",
+    issn    = "1548-7091",
+    doi     = "10.1038/s41592-020-0837-5",
+    pmid    = "32483332",
+    textVersion  = paste(
+      "Schraivogel, D., Gschwind, A.R., Milbank, J.H. et al.",
+      "Targeted Perturb-seq enables genome-scale genetic screens in single cells.",
+      "Nature Methods 17, 629-635 (2020).") )
+      

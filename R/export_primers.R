@@ -163,10 +163,16 @@ setMethod("primerDataFrame", "TsIOList", function(object) {
 # get primer coordinates for primers in one TsIO object
 calc_coords_primers <- function(object) {
 
-  # get designed primers and target sequence and annotations
+  # get designed primers and target annotations
   primers <- tapseq_primers(object)
   annot <- target_annot(object)
-  seq <- target_sequence(object)
+  
+  # sort target annotations according to strand
+  if (all(strand(annot) == "-")) {
+    annot <- sort(annot, decreasing = TRUE)
+  } else {
+    annot <- sort(annot)
+  }
 
   # the start and end positions of the genes exons within the transcript are inferred based on the
   # provided gene annotation. the cumulative sum of exon lengths is used to get end position of

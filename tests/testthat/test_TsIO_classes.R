@@ -125,14 +125,14 @@ test_that("other TsIOList accessor functions return correct data", {
 test_that("TsIO() raises errors/warnings with wrong input formats", {
   expect_error(TsIO(target_sequence = 1, beads_oligo = beads_oligo, reverse_primer = reverse_primer,
                     sequence_id = txs_ids[1], product_size_range = c(350, 500)),
-               "no method or default for coercing \"numeric\" to \"DNAString\"")
+               "no method or default for coercing")
   expect_error(TsIO(target_sequence = txs_seqs[[1]], beads_oligo = 1,
                     reverse_primer = reverse_primer, sequence_id = txs_ids[1],
                     product_size_range = c(350, 500)),
-               "no method or default for coercing \"numeric\" to \"DNAString\"")
+               "no method or default for coercing")
   expect_error(TsIO(target_sequence = txs_seqs[[1]], beads_oligo = beads_oligo, reverse_primer = 1,
                     sequence_id = txs_ids[1], product_size_range = c(350, 500)),
-               "no method or default for coercing \"numeric\" to \"DNAString\"")
+               "no method or default for coercing")
   expect_error(TsIO(target_sequence = txs_seqs[[1]], beads_oligo = beads_oligo,
                     reverse_primer = reverse_primer, sequence_id = txs_ids[1],
                     target_annot = txs_annot[[2]], product_size_range = c(350, 500)),
