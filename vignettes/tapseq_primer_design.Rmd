@@ -1,8 +1,11 @@
 ---
 title: "TAP-seq primer design workflow"
-author: "Andreas Gschwind"
+author: 
+  name: "Andreas Gschwind"
+  affiliation: "Department of Genetics, Stanford University"
+package: TAPseq
 date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
+output: BiocStyle::html_document
 vignette: >
   %\VignetteIndexEntry{TAP-seq primer design workflow}
   %\VignetteEngine{knitr::rmarkdown}
@@ -16,7 +19,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-## Installation
+# Installation
 This package requires local installations of Primer3 and BLASTn. TAPseq was developed and tested
 using Primer3 v.2.5.0 and blastn v.2.6.0. It's strongly suggested to use Primer3 >= 2.5.0! Earlier
 versions require a primer3_config directory, which needs to be specified whenever calling functions
@@ -38,7 +41,7 @@ Sys.setenv(PATH = paste(Sys.getenv("PATH"), "/full/path/to/blast+/ncbi-blast-x.x
 Alternatively you can specify the paths to 3rd party software as arguments when calling TAPseq
 functions (TAPseqInput(), designPrimers(), checkPrimers()).
 
-## Transcript sequences
+# Transcript sequences
 
 Let's start by creating transcript sequences for primer design for a target gene panel. First we try
 to infer likely polyadenylation (polyA) sites for the selected target genes.
@@ -102,7 +105,7 @@ hg38 <- getBSgenome("BSgenome.Hsapiens.UCSC.hg38")
 txs_seqs <- getTxsSeq(truncated_txs, genome = hg38)
 ```
  
-## Design outer primers
+# Design outer primers
 
 Primer3 uses boulder-IO records for input and output (see: http://primer3.org/manual.html). TAPseq
 implements TsIO and TsIOList objects, which store Primer3 input and output for TAP-seq primer
@@ -146,7 +149,7 @@ gene we could just pick the primer with the lowest penalty score. However, we wi
 try to estimate potential off-target priming for every primer. We will use this to then select the
 best primer per gene, i.e. the primer with the fewest off-targets.
 
-## BLAST primers
+# BLAST primers
 
 Creating a BLAST database containing all annotated transcripts and chromosome sequences takes a
 couple of minutes (and ~2Gb of free storage). For this example, we can generate a limited BLAST
@@ -206,7 +209,7 @@ best_outer_primers <- pickPrimers(outer_primers, n = 1, by = "off_targets")
 tapseq_primers(best_outer_primers$IFITM1)
 ```
 
-## Design inner primers
+# Design inner primers
 
 To design nested inner primers we simply need to repeat the same procedure with a smaller product
 size range.
@@ -231,7 +234,7 @@ best_inner_primers <- TAPseq:::vignette_data$best_inner_primers
 
 Done! We succesfully designed TAP-seq outer and inner primer sets for our target gene panel.
 
-## Multiplex compatibility
+# Multiplex compatibility
 
 As an additional step, we can verify if the designed primer sets are compatible for PCR
 multiplexing. For that we use Primer3's "check_primers" functionality:
@@ -276,7 +279,7 @@ ggplot(comp, aes(x = primer_pair_compl_any_th, y = primer_pair_compl_end_th)) +
 No primer pairs with complementarity scores above 47 were found, so they should be ok to use in
 multiplex PCRs.
 
-## Export primers
+# Export primers
 
 To finish the workflow, we can export the designed primers to data.frames, which can be written to
 .csv files for easy storage of primer sets.
@@ -311,4 +314,11 @@ Alternatively, primer tracks can be easily created for outer and inner primers a
 exportPrimerTrack(createPrimerTrack(best_outer_primers, color = "steelblue3"),
                   createPrimerTrack(best_inner_primers, color = "goldenrod1"),
                   con = "path/to/primers.bed")
+```
+
+# Session information
+
+All of the output in this vignette was produced under the following conditions:
+```{r}
+sessionInfo()
 ```

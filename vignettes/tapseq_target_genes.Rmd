@@ -1,8 +1,11 @@
 ---
 title: "Select target genes for TAP-seq"
-author: "Andreas Gschwind"
+author: 
+  name: "Andreas Gschwind"
+  affiliation: "Department of Genetics, Stanford University"
+package: TAPseq
 date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
+output: BiocStyle::html_document
 vignette: >
   %\VignetteIndexEntry{Select target genes for TAP-seq}
   %\VignetteEngine{knitr::rmarkdown}
@@ -23,7 +26,7 @@ cell type markers based on differentially expressed genes between cell types.
 This optional functionality requires additional R-packages such as Seurat. Please install the TAPseq
 package with all suggested dependencies.
 
-## Data
+# Data
 The TAPseq package contains a small subset of the mouse bone marrow data from Baccin et al., 2019
 (https://www.nature.com/articles/s41556-019-0439-6). The full dataset can be downloaded
 [here](https://static-content.springer.com/esm/art%3A10.1038%2Fs41556-019-0439-6/MediaObjects/41556_2019_439_MOESM4_ESM.zip).
@@ -43,7 +46,7 @@ GetAssayData(bone_marrow_genex)[1:10, 1:10]
 table(Idents(bone_marrow_genex))
 ```
 
-## Select target genes
+# Select target genes
 A linear model with lasso regularization is used to select target genes that best identify cell
 types. By default 10-fold cross-validation is used to select the number of target genes based on the
 largest value of lambda within 1 standard error of the minimum. See `?glmnet::cv.glmnet` for more
@@ -66,7 +69,7 @@ target_genes_100 <- selectTargetGenes(bone_marrow_genex, targets = 100)
 length(target_genes_100)
 ```
 
-## Assess target gene panels
+# Assess target gene panels
 To intuitively assess how well a chosen set of target genes distinguishes cell types, we can use
 UMAP plots based on the full gene expression data and on target genes only.
 ```{r, message=FALSE, warning=FALSE, fig.height=3, fig.width=7.15}
@@ -79,3 +82,10 @@ cells of different populations together.
 A good follow up would be to cluster the cells based on only the target genes following the same
 workflow used to define the cell identities in the original object. This could then be used to
 verify that the selected target genes reliably identify the correct cell types.
+
+# Session information
+
+All of the output in this vignette was produced under the following conditions:
+```{r}
+sessionInfo()
+```

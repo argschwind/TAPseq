@@ -1,7 +1,7 @@
 Package: TAPseq
 Type: Package
 Title: Targeted scRNA-seq primer design for TAP-seq
-Version: 1.5.2
+Version: 1.5.3
 Authors@R: c(
   person(c("Andreas", "R."), "Gschwind", email = "andreas.gschwind@stanford.edu",
          role = c("aut", "cre"), comment = c(ORCID = "0000-0002-0769-6907")),
@@ -18,7 +18,7 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 RoxygenNote: 7.1.2
 VignetteBuilder: knitr
-Depends: R (>= 4.0)
+Depends: R (>= 4.0.0)
 Imports:
     methods,
     GenomicAlignments,
@@ -43,7 +43,8 @@ Suggests:
     glmnet,
     cowplot,
     Matrix,
-    rtracklayer
+    rtracklayer,
+    BiocStyle
 SystemRequirements:
     Primer3 (>= 2.5.0),
     BLAST+ (>=2.6.0)

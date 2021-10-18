@@ -58,11 +58,11 @@ polyA sites. This needs to contain a metadata entry names "score" if the option
 looking for overlapping polyA sites (default = 0). This enables capturing of polyA sites that
 occur downstream of annotated 3' ends.}
 
-\item{polyA_select}{Specifies which eurisic should be used to select the polyA site used to
+\item{polyA_select}{Specifies which heuristic should be used to select the polyA site used to
 truncate the transcripts if multiple overlapping polyA sites are found. By default
-\code{"downstream"} is used which choses the most downstream polyA site. \code{"score"} selects
-the polyA site with the highest score, which correspons to the read coverage when using
-\code{\link[TAPseq]{inferPolyASites}} to estimate polyA sites.}
+\code{"downstream"} is used which chooses the most downstream polyA site. \code{"score"}
+selects the polyA site with the highest score, which corresponds to the read coverage when
+using \code{\link[TAPseq]{inferPolyASites}} to estimate polyA sites.}
 
 \item{transcript_id}{(character) Name of the column in the metadata of \code{transcripts}
 providing transcript id for each exon (default: \code{"transcript_id"}). Set to \code{NULL} to
