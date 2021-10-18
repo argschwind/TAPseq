@@ -4,7 +4,9 @@
 \name{chr11_truncated_txs}
 \alias{chr11_truncated_txs}
 \title{Chromosome 11 truncated transcripts}
-\format{object of \code{\link[GenomicRanges:GRangesList-class]{GRangesList}} class.}
+\format{
+object of \code{\link[GenomicRanges:GRangesList-class]{GRangesList}} class.
+}
 \usage{
 chr11_truncated_txs
 }

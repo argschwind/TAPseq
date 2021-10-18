@@ -4,7 +4,9 @@
 \name{chr11_primers}
 \alias{chr11_primers}
 \title{Chromosome 11 primers}
-\format{object of \code{\link[TAPseq:TsIOList-class]{TsIOList}} class.}
+\format{
+object of \code{\link[TAPseq:TsIOList-class]{TsIOList}} class.
+}
 \usage{
 chr11_primers
 }

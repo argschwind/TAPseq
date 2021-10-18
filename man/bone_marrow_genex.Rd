@@ -4,7 +4,9 @@
 \name{bone_marrow_genex}
 \alias{bone_marrow_genex}
 \title{Mouse bone marrow 10x data}
-\format{object of \code{\link[Seurat:Seurat-class]{Seurat}} class.}
+\format{
+object of \code{\link[Seurat:Seurat-class]{Seurat}} class.
+}
 \usage{
 bone_marrow_genex
 }

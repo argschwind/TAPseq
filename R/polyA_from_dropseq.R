@@ -25,7 +25,8 @@
 #' @param parallel (logical) Triggers parallel computing using the
 #'   \code{\link[BiocParallel]{BiocParallel-package}} package. This requires that a parallel
 #'   back-end was registered prior to executing the function. (default: FALSE).
-#' @return A \code{\link[GenomicRanges:GRanges-class]{GRanges}} object containing coordinates of estimated polyadenylation sites.
+#' @return A \code{\link[GenomicRanges:GRanges-class]{GRanges}} object containing coordinates of 
+#'   estimated polyadenylation sites.
 #' @examples
 #' library(GenomicRanges)
 #'

@@ -51,8 +51,8 @@ objects within a \code{GRangesList}.}
 \item{polyA_sites}{A \code{\link[GenomicRanges:GRanges-class]{GRanges}} object containing the
 polyA sites. This needs to contain a metadata entry names "score" if the option
 \code{polyA_select = "score"} is used. PolyA sites can be either obtained via running
-\code{\link[TAPseq]{inferPolyASites}} or imported from an existing .bed file via
-\code{\link[rtracklayer:export]{import}}.}
+\code{\link[TAPseq]{inferPolyASites}} or imported from an existing .bed file
+(\code{\link[rtracklayer]{BEDFile}}).}
 
 \item{extend_3prime_end}{Specifies how far (bp) 3' ends of transcripts should be extended when
 looking for overlapping polyA sites (default = 0). This enables capturing of polyA sites that

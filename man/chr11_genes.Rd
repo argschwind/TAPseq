@@ -4,7 +4,9 @@
 \name{chr11_genes}
 \alias{chr11_genes}
 \title{Chromosome 11 genes}
-\format{object of \code{\link[GenomicRanges:GRanges-class]{GRanges}} class.}
+\format{
+object of \code{\link[GenomicRanges:GRanges-class]{GRanges}} class.
+}
 \usage{
 chr11_genes
 }

@@ -47,7 +47,8 @@ small peaks that in coverage are considered, resulting in manby false polyA site
 back-end was registered prior to executing the function. (default: FALSE).}
 }
 \value{
-A \code{\link[GenomicRanges:GRanges-class]{GRanges}} object containing coordinates of estimated polyadenylation sites.
+A \code{\link[GenomicRanges:GRanges-class]{GRanges}} object containing coordinates of 
+  estimated polyadenylation sites.
 }
 \description{
 Infer polyA sites from 10X, Drop-seq or similar 3' enriched sequencing data. Simple function
