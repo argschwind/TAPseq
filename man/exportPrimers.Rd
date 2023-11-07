@@ -49,17 +49,17 @@ primers and write them to files for viewing in a genome browser (e.g. IGV).
 }
 \section{Functions}{
 \itemize{
-\item \code{createPrimerTrack,TsIO-method}: Create primer BED track from \code{TsIO} objects
+\item \code{createPrimerTrack(TsIO)}: Create primer BED track from \code{TsIO} objects
 
-\item \code{createPrimerTrack,TsIOList-method}: Create primer BED track from \code{TsIOList} objects
+\item \code{createPrimerTrack(TsIOList)}: Create primer BED track from \code{TsIOList} objects
 
-\item \code{exportPrimerTrack}: Export primer BED tracks files
+\item \code{exportPrimerTrack()}: Export primer BED tracks files
 
-\item \code{primerDataFrame,TsIO-method}: Create a \code{data.frame} with primer data from \code{TsIO}
+\item \code{primerDataFrame(TsIO)}: Create a \code{data.frame} with primer data from \code{TsIO}
 
-\item \code{primerDataFrame,TsIOList-method}: Create a \code{data.frame} with primer data from \code{TsIOList}
+\item \code{primerDataFrame(TsIOList)}: Create a \code{data.frame} with primer data from \code{TsIOList}
+
 }}
-
 \examples{
 # chr11 primers example data
 data("chr11_primers")

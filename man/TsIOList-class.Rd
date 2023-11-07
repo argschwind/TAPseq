@@ -40,19 +40,19 @@ This enables storing of Primer3 input and output for multiple target genes.
 }
 \section{Methods (by generic)}{
 \itemize{
-\item \code{sequence_id}: Get sequence_id
+\item \code{sequence_id(TsIOList)}: Get sequence_id
 
-\item \code{target_sequence}: Get target_sequence
+\item \code{target_sequence(TsIOList)}: Get target_sequence
 
-\item \code{sequence_template}: Create sequence_template
+\item \code{sequence_template(TsIOList)}: Create sequence_template
 
-\item \code{target_annot}: Get target_annot
+\item \code{target_annot(TsIOList)}: Get target_annot
 
-\item \code{tapseq_primers}: Get tapseq_primers
+\item \code{tapseq_primers(TsIOList)}: Get tapseq_primers
 
-\item \code{pcr_products}: Get pcr_products
+\item \code{pcr_products(TsIOList)}: Get pcr_products
+
 }}
-
 \examples{
 # get example transcript sequences
 data("chr11_truncated_txs_seq")

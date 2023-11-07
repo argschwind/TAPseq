@@ -16,7 +16,7 @@ BugRepots: https://github.com/argschwind/TAPseq/issues
 biocViews: SingleCell, Sequencing, Technology, CRISPR, PooledScreens
 License: MIT + file LICENSE
 Encoding: UTF-8
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.3
 VignetteBuilder: knitr
 Depends: R (>= 4.0.0)
 Imports:

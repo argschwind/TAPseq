@@ -45,11 +45,11 @@ to Primer3 and parses the output.
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{TsIO}: Design primers using Primer3 from a \code{TsIO} object
+\item \code{designPrimers(TsIO)}: Design primers using Primer3 from a \code{TsIO} object
 
-\item \code{TsIOList}: Design primers using Primer3 from a \code{TsIOList} object
+\item \code{designPrimers(TsIOList)}: Design primers using Primer3 from a \code{TsIOList} object
+
 }}
-
 \examples{
 # chromosome 11 truncated transcript sequences and annotations
 data("chr11_truncated_txs_seq")

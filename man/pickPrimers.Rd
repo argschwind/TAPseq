@@ -35,11 +35,11 @@ exonic, intronic and intergenic off-targets (in that priority).
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{TsIO}: Pick best primers in a \code{TsIO} object
+\item \code{pickPrimers(TsIO)}: Pick best primers in a \code{TsIO} object
 
-\item \code{TsIOList}: Pick best primers per target in a \code{TsIOList} object
+\item \code{pickPrimers(TsIOList)}: Pick best primers per target in a \code{TsIOList} object
+
 }}
-
 \examples{
 # chr11 primers examples
 data("chr11_primers")
