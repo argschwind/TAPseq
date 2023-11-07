@@ -35,11 +35,11 @@ conventional way.
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{TsIO}: Create IO record from \code{TsIO} objects.
+\item \code{createIORecord(TsIO)}: Create IO record from \code{TsIO} objects.
 
-\item \code{TsIOList}: Create IO record from \code{TsIO} objects.
+\item \code{createIORecord(TsIOList)}: Create IO record from \code{TsIO} objects.
+
 }}
-
 \examples{
 # chromosome 11 truncated transcript sequences
 data("chr11_truncated_txs_seq")

@@ -38,11 +38,11 @@ transcript (3' to 5').
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{GRangesList}: Obtain transcript sequence from \code{GRangesList} input
+\item \code{getTxsSeq(GRangesList)}: Obtain transcript sequence from \code{GRangesList} input
 
-\item \code{GRanges}: Obtain transcript sequence from \code{GRanges} input
+\item \code{getTxsSeq(GRanges)}: Obtain transcript sequence from \code{GRanges} input
+
 }}
-
 \examples{
 library(BSgenome)
 

@@ -147,57 +147,57 @@ Use \code{TsIO()} to construct a new TsIO object from scratch.
 }
 \section{Methods (by generic)}{
 \itemize{
-\item \code{sequence_id}: Get sequence_id
+\item \code{sequence_id(TsIO)}: Get sequence_id
 
-\item \code{sequence_id<-}: Set sequence_id
+\item \code{sequence_id(TsIO) <- value}: Set sequence_id
 
-\item \code{target_sequence}: Get target_sequence
+\item \code{target_sequence(TsIO)}: Get target_sequence
 
-\item \code{target_sequence<-}: Set target_sequence
+\item \code{target_sequence(TsIO) <- value}: Set target_sequence
 
-\item \code{beads_oligo}: Get beads_oligo
+\item \code{beads_oligo(TsIO)}: Get beads_oligo
 
-\item \code{beads_oligo<-}: Set beads_oligo
+\item \code{beads_oligo(TsIO) <- value}: Set beads_oligo
 
-\item \code{reverse_primer}: Get reverse_primer
+\item \code{reverse_primer(TsIO)}: Get reverse_primer
 
-\item \code{reverse_primer<-}: Set reverse_primer
+\item \code{reverse_primer(TsIO) <- value}: Set reverse_primer
 
-\item \code{target_annot}: Get target_annot
+\item \code{target_annot(TsIO)}: Get target_annot
 
-\item \code{target_annot<-}: Set target_annot
+\item \code{target_annot(TsIO) <- value}: Set target_annot
 
-\item \code{product_size_range}: Get product_size_range
+\item \code{product_size_range(TsIO)}: Get product_size_range
 
-\item \code{product_size_range<-}: Set product_size_range
+\item \code{product_size_range(TsIO) <- value}: Set product_size_range
 
-\item \code{primer_num_return}: Get primer_num_return
+\item \code{primer_num_return(TsIO)}: Get primer_num_return
 
-\item \code{primer_num_return<-}: Set primer_num_return
+\item \code{primer_num_return(TsIO) <- value}: Set primer_num_return
 
-\item \code{min_primer_region}: Get min_primer_region
+\item \code{min_primer_region(TsIO)}: Get min_primer_region
 
-\item \code{min_primer_region<-}: Set min_primer_region
+\item \code{min_primer_region(TsIO) <- value}: Set min_primer_region
 
-\item \code{primer_opt_tm}: Get primer_opt_tm
+\item \code{primer_opt_tm(TsIO)}: Get primer_opt_tm
 
-\item \code{primer_opt_tm<-}: Set primer_opt_tm
+\item \code{primer_opt_tm(TsIO) <- value}: Set primer_opt_tm
 
-\item \code{primer_min_tm}: Get primer_min_tm
+\item \code{primer_min_tm(TsIO)}: Get primer_min_tm
 
-\item \code{primer_min_tm<-}: Set primer_min_tm
+\item \code{primer_min_tm(TsIO) <- value}: Set primer_min_tm
 
-\item \code{primer_max_tm}: Get primer_max_tm
+\item \code{primer_max_tm(TsIO)}: Get primer_max_tm
 
-\item \code{primer_max_tm<-}: Set primer_max_tm
+\item \code{primer_max_tm(TsIO) <- value}: Set primer_max_tm
 
-\item \code{sequence_template}: Create sequence_template
+\item \code{sequence_template(TsIO)}: Create sequence_template
 
-\item \code{tapseq_primers}: Get tapseq_primers
+\item \code{tapseq_primers(TsIO)}: Get tapseq_primers
 
-\item \code{pcr_products}: Get pcr_products
+\item \code{pcr_products(TsIO)}: Get pcr_products
+
 }}
-
 \examples{
 # get example transcript sequence
 data("chr11_truncated_txs_seq")

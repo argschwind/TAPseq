@@ -99,12 +99,12 @@ the merged exons of that gene is generated and returned.
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{GRanges}: Truncate transcripts of one gene provided as \code{GRanges} object
+\item \code{truncateTxsPolyA(GRanges)}: Truncate transcripts of one gene provided as \code{GRanges} object
 
-\item \code{GRangesList}: Truncate transcripts of multiple genes provided as
+\item \code{truncateTxsPolyA(GRangesList)}: Truncate transcripts of multiple genes provided as
 \code{GRangesList}
-}}
 
+}}
 \examples{
 library(GenomicRanges)
 

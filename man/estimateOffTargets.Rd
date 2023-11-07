@@ -133,13 +133,13 @@ for primer design was produced from target gene annotations.
 }
 \section{Functions}{
 \itemize{
-\item \code{createBLASTDb}: Create a genome and transcriptome TAP-seq BLAST database
+\item \code{createBLASTDb()}: Create a genome and transcriptome TAP-seq BLAST database
 
-\item \code{blastPrimers,TsIO-method}: BLAST primers in a \code{TsIO} object
+\item \code{blastPrimers(TsIO)}: BLAST primers in a \code{TsIO} object
 
-\item \code{blastPrimers,TsIOList-method}: BLAST primers in a \code{TsIOList} object
+\item \code{blastPrimers(TsIOList)}: BLAST primers in a \code{TsIOList} object
+
 }}
-
 \examples{
 \dontrun{
 library(BSgenome)

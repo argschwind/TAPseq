@@ -62,7 +62,7 @@ target_genes <- target_genes[18:27]
 dropseq_bam <- system.file("extdata", "chr11_k562_dropseq.bam", package = "TAPseq")
 
 # register backend for parallelization
-register(MulticoreParam(workers = 5))
+register(MulticoreParam(workers = 2))
 
 # infer polyA sites from Drop-seq data
 polyA_sites <- inferPolyASites(target_genes, bam = dropseq_bam, polyA_downstream = 50,

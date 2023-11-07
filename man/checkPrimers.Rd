@@ -55,11 +55,11 @@ complementarity issues when multiplexing. Uses Primer3's \code{check_primers} fu
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{TsIO}: Check primers from \code{TsIO} objects.
+\item \code{checkPrimers(TsIO)}: Check primers from \code{TsIO} objects.
 
-\item \code{TsIOList}: Check primers from \code{TsIOList} objects.
+\item \code{checkPrimers(TsIOList)}: Check primers from \code{TsIOList} objects.
+
 }}
-
 \examples{
 library(ggplot2)
 
