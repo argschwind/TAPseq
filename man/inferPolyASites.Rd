@@ -23,7 +23,9 @@ annotations of genes for which polyA sites are to be estimated.}
 \item{bam}{Path to .bam file containing aligned reads used for polyA site estimation.}
 
 \item{polyA_downstream}{(numeric) How far downstream of a peak in coverage are polyA sites
-expected? Somewhat depends on input DNA fragment size. (default: 100).}
+expected? Somewhat depends on input DNA fragment size. (default: 100). Importantly, this value
+should not be larger than half of the window size (wdsize), else polyA sites might be moved
+outside of the transcripts, even if they were extended using the extend_downstream parameter.}
 
 \item{min_cvrg}{(numeric) Minimal coverage for peaks to be considered for polyA site estimation
 (default: 0).}
