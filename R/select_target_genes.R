@@ -48,14 +48,14 @@ selectTargetGenes <- function(object, targets = NULL, expr_percentile = c(0.6, 0
   }
 
   # normalize raw data
-  object <- Seurat::NormalizeData(object, normalization.method = "LogNormalize", assay = "RNA")
+  object <- Seurat::NormalizeData(object, assay = "RNA", normalization.method = "LogNormalize")
 
   # identify marker genes for different cell populations
   message("Finding all marker genes")
-  all_markers <- Seurat::FindAllMarkers(object = object, only.pos = TRUE, assay = "RNA")
+  all_markers <- Seurat::FindAllMarkers(object = object, assay = "RNA", only.pos = TRUE)
 
   # get genes that are within specified expression percentiles
-  counts <- Seurat::GetAssayData(object, slot = "counts", assay = "RNA")
+  counts <- Seurat::GetAssayData(object, assay = "RNA", layer = "counts")
   avg_expr <- Matrix::rowMeans(counts)
   expr_quantiles <- stats::quantile(avg_expr, probs = expr_percentile)
   filt_genes  <- names(avg_expr[avg_expr >= expr_quantiles[1] & avg_expr <= expr_quantiles[2]])
@@ -65,7 +65,7 @@ selectTargetGenes <- function(object, targets = NULL, expr_percentile = c(0.6, 0
   filt_object  <- subset(object, features = unique(filt_markers$gene))
 
   # extract gene expression and cell identities
-  gene_expr <- Seurat::GetAssayData(filt_object, slot = "data", assay = "RNA")
+  gene_expr <- Seurat::GetAssayData(filt_object, assay = "RNA", layer = "data")
   cell_pops <- Seurat::Idents(filt_object)
 
   # fit lasso glm
@@ -88,6 +88,7 @@ selectTargetGenes <- function(object, targets = NULL, expr_percentile = c(0.6, 0
     # define lambda that results in at least the requested number of targets
     target_df <- which.min(abs(targets - model$df))
     target_lambda <- model$lambda[target_df]
+    
   }
 
   # get gene names with non-zero coefficients for the chosen lambda

@@ -40,7 +40,7 @@ library(Seurat)
 data("bone_marrow_genex")
 
 # transcript counts
-GetAssayData(bone_marrow_genex)[1:10, 1:10]
+GetAssayData(bone_marrow_genex, layer = "counts", assay = "RNA")[1:10, 1:10]
 
 # number of cells per cell type
 table(Idents(bone_marrow_genex))
